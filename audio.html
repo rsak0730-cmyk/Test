@@ -79,7 +79,7 @@
 
                     <div id="musicPlayerUI" class="hidden w-full max-w-sm flex flex-col items-center relative z-10 py-2">
                         <div class="w-48 h-48 rounded-xl shadow-2xl mb-6 overflow-hidden border-2 border-themeBorder">
-                            <img id="uiThumbnail" src="" class="w-full h-full object-cover" alt="Cover Art">
+                            <img id="uiThumbnail" crossorigin="Anonymous" src="" class="w-full h-full object-cover" alt="Cover Art">
                         </div>
                         <div class="text-center w-full px-4 mb-5">
                             <h2 id="uiTitle" class="text-lg font-bold text-themeAccent truncate">Song Title</h2>
@@ -87,7 +87,7 @@
                         </div>
                         <div class="w-full flex items-center space-x-3 mb-6 px-2">
                             <span id="currentTimeDisplay" class="text-xs text-themeText font-mono">0:00</span>
-                            <input type="range" id="timelineSlider" value="0" min="0" max="100" step="0.1" class="flex-1 h-2 bg-black/40 rounded-full appearance-none cursor-pointer">
+                            <input type="range" id="timelineSlider" value="0" min="0" max="100" step="0.1" class="flex-1 h-2 bg-black/40 rounded-full appearance-none cursor-pointer" onchange="seekTimeline(this.value)">
                             <span id="durationDisplay" class="text-xs text-themeText font-mono">0:00</span>
                         </div>
                         <div id="hostPlaybackControls" class="hidden flex items-center space-x-4">
@@ -136,11 +136,31 @@
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         function notifyParent(action, code='') { window.parent.postMessage({ sender: 'syncbeat', tab: 2, action, code }, '*'); }
+        const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200';
         let ws = null; let wsUrl = 'wss://syncbeat-backend2.onrender.com';
         let currentRoomCode = null; let isHost = false; let inRoom = false; let ytPlayer = null; let ytApiReady = false; 
         let currentUserName = localStorage.getItem('syncbeat_name') || 'User';
 
         document.getElementById('userNameInput').value = currentUserName;
+
+        function applyThumbnailTheme() {
+            if (!inRoom || !isHost) return;
+            const img = document.getElementById('uiThumbnail');
+            if (!img.complete || img.naturalHeight === 0) return;
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = img.naturalWidth || img.width; canvas.height = img.naturalHeight || img.height;
+            try {
+                ctx.drawImage(img, 0, 0);
+                const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                let r=0, g=0, b=0, count=0;
+                for (let i = 0; i < data.length; i += 16) { r += data[i]; g += data[i+1]; b += data[i+2]; count++; }
+                r = Math.floor(r/count); g = Math.floor(g/count); b = Math.floor(b/count);
+                const accentStr = `${r} ${g} ${b}`;
+                const root = document.documentElement;
+                root.style.setProperty('--color-accent', accentStr);
+            } catch (e) {}
+        }
+        document.getElementById('uiThumbnail').onload = applyThumbnailTheme;
 
         function updateStatus(status) {
             if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'UPDATE_STATUS', name: currentUserName, status: status }));
@@ -156,8 +176,13 @@
                 if (msg.type === 'ROOM_CREATED' || msg.type === 'ROOM_HOSTED_SUCCESS') { currentRoomCode = msg.code; isHost = true; onRoomJoined(); }
                 else if (msg.type === 'ROOM_JOINED' || msg.type === 'ROOM_JOIN_SUCCESS') { currentRoomCode = msg.code; isHost = false; onRoomJoined(); }
                 else if (msg.type === 'PEER_LIST') { updatePeerList(msg.peers); }
-                else if (msg.type === 'PLAY_YOUTUBE' || msg.type === 'LOAD_VIDEO') { if (!isHost) loadAndPlayYouTube(msg.ytId, msg.time || 0, msg); }
+                else if (msg.type === 'PLAY_YOUTUBE' || msg.type === 'LOAD_VIDEO') { if (!isHost) loadAndPlayYouTube(msg.ytId || msg.videoId, msg.time || 0, msg); }
                 else if (msg.type === 'PLAY_SOUND') { document.getElementById(`sfx-${msg.sound}`).play().catch(e => {}); }
+                else if (msg.type === 'SYNC_TIME') {
+                    if (!isHost && ytPlayer && typeof ytPlayer.seekTo === 'function') {
+                        if (Math.abs(ytPlayer.getCurrentTime() - msg.time) > 0.5) ytPlayer.seekTo(msg.time, true);
+                    }
+                }
             };
         }
         connectWebSocket();
@@ -177,7 +202,14 @@
         }
 
         function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('youtubePlayer', { height: '100%', width: '100%', playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0 }, events: { 'onReady': () => { ytApiReady = true; } } });
+            ytPlayer = new YT.Player('youtubePlayer', {
+                height: '100%', width: '100%',
+                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0 },
+                events: { 'onReady': () => { ytApiReady = true; }, 'onStateChange': (e) => {
+                    if(e.data === YT.PlayerState.PLAYING) notifyParent('MEDIA_PLAYING');
+                    else notifyParent('MEDIA_PAUSED');
+                }}
+            });
         }
 
         function onRoomJoined() {
@@ -204,7 +236,8 @@
         async function searchMedia() {
             const query = document.getElementById('mediaUrlInput').value.trim();
             if (!query) return;
-            playSelectedVideo({ videoId: 'dQw4w9WgXcQ', title: query, uploaderName: 'YouTube Stream', thumbUrl: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg' });
+            const videoId = query.length === 11 ? query : 'dQw4w9WgXcQ';
+            playSelectedVideo({ videoId, title: query, uploaderName: 'YouTube Stream', thumbUrl: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` });
         }
 
         function playSelectedVideo(videoData) {
@@ -215,7 +248,11 @@
         function loadAndPlayYouTube(ytId, startTime = 0, meta = null) {
             document.getElementById('playerPlaceholder').classList.add('hidden');
             document.getElementById('musicPlayerUI').classList.remove('hidden');
-            if(meta) { document.getElementById('uiTitle').textContent = meta.title; document.getElementById('uiArtist').textContent = meta.artist; document.getElementById('uiThumbnail').src = meta.thumb; }
+            if(meta) {
+                document.getElementById('uiTitle').textContent = meta.title;
+                document.getElementById('uiArtist').textContent = meta.artist;
+                document.getElementById('uiThumbnail').src = meta.thumb || `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`;
+            }
             if(ytApiReady && ytPlayer) ytPlayer.loadVideoById({videoId: ytId, startSeconds: startTime});
         }
 
@@ -223,6 +260,13 @@
             if(!ytPlayer) return;
             if(ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
             else ytPlayer.playVideo();
+        }
+
+        function seekTimeline(val) {
+            if(!ytPlayer || !ytPlayer.getDuration) return;
+            const t = (val / 100) * ytPlayer.getDuration();
+            ytPlayer.seekTo(t, true);
+            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'SEEK_TIME', time: t }));
         }
 
         function playSound(soundId) {
@@ -238,6 +282,15 @@
                 listContainer.innerHTML += `<div class="flex items-center justify-between bg-black/20 border border-themeBorder/40 px-3 py-2 rounded-lg text-xs"><span>👤 ${peer.name} (${peer.status || 'Online'})</span><span class="font-bold">${peer.role}</span></div>`;
             });
         }
+
+        setInterval(() => {
+            if (ytPlayer && ytPlayer.getCurrentTime && !document.getElementById('musicPlayerUI').classList.contains('hidden')) {
+                const cur = ytPlayer.getCurrentTime(); const dur = ytPlayer.getDuration() || 1;
+                document.getElementById('currentTimeDisplay').textContent = Math.floor(cur / 60) + ':' + Math.floor(cur % 60).toString().padStart(2, '0');
+                document.getElementById('durationDisplay').textContent = Math.floor(dur / 60) + ':' + Math.floor(dur % 60).toString().padStart(2, '0');
+                document.getElementById('timelineSlider').value = (cur / dur) * 100;
+            }
+        }, 500);
     </script>
 </body>
 </html>
