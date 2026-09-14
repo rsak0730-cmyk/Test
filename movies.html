@@ -6,385 +6,465 @@
     <title>Streamflix - Watch Party</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root {
-            --bg-main: #f8fafc; --text-main: #0f172a; --card-bg: #ffffff;
-            --accent: #ef4444; --accent-light: #fef2f2; --accent-border: #fca5a5;
-            --player-bg: #000000; --text-muted: #6b7280;
-        }
-        body.theme-cyberpunk {
-            --bg-main: #050510; --text-main: #00ffcc; --card-bg: #0a0a1a;
-            --accent: #ff00ff; --accent-light: #200030; --accent-border: #ff00ff;
-            --player-bg: #000000; --text-muted: #0088aa;
-        }
-        body.theme-retro {
-            --bg-main: #2b2b2b; --text-main: #ffcc00; --card-bg: #1a1a1a;
-            --accent: #00ffff; --accent-light: #003333; --accent-border: #00ffff;
-            --player-bg: #111; --text-muted: #aaaaaa;
-            font-family: 'Courier New', Courier, monospace;
-        }
         * { box-sizing: border-box; }
         html, body {
-            width: 100%; min-height: 100vh; margin: 0; padding: 12px; padding-bottom: 95px !important;
+            width: 100vw; min-height: 100vh; margin: 0; padding: 12px; padding-bottom: 95px !important;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-main); color: var(--text-main);
-            display: flex; flex-direction: column; align-items: center; overflow-x: hidden; transition: all 0.3s ease;
+            background-color: #f8fafc; color: #0f172a;
+            display: flex; flex-direction: column; align-items: center; overflow-x: hidden;
         }
         .container { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
-        .card { width: 100%; background: var(--card-bg); border: 1px solid var(--accent-border); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-        .card.black-player-box { background-color: var(--player-bg) !important; border: 1px solid #27272a !important; color: #ffffff !important; }
-        .card-header-sm { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-        .code-box { background: var(--card-bg); border: 2px dashed var(--accent-border); border-radius: 14px; padding: 12px; text-align: center; font-size: 22px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 12px; width: 100%; }
+        .card { width: 100%; background: #ffffff; border: 1px solid #fca5a5; border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.05); }
+        .card.black-player-box { background-color: #000000 !important; border: 1px solid #27272a !important; color: #ffffff !important; }
+        .card-header-sm { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #ef4444; margin-bottom: 8px; }
+        .dot { height: 8px; width: 8px; background-color: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .code-box { background: #ffffff; border: 2px dashed #fca5a5; border-radius: 14px; padding: 12px; text-align: center; font-size: 22px; font-weight: 900; color: #991b1b; letter-spacing: 2px; margin-bottom: 12px; width: 100%; }
         .code-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; width: 100%; }
-        .code-action-btn { background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); font-weight: 700; font-size: 11px; padding: 10px 4px; border-radius: 12px; text-align: center; cursor: pointer; width: 100%; }
-        .search-input, .code-input, select { width: 100%; background: transparent; border: 1px solid var(--accent-border); color: var(--text-main); padding: 12px 14px; border-radius: 12px; font-size: 14px; outline: none; margin-bottom: 8px; font-weight: 600; }
-        .btn-purple { background: var(--accent); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
-        .iframe-wrapper { position: relative; width: 100%; height: 240px; border-radius: 12px; overflow: hidden; background: #000; margin-top: 8px; border: 1px solid #475569; }
-        #qrCodeContainer { width: 100%; display: flex; justify-content: center; }
-        #qrCodeContainer img { margin: 0 auto; border-radius: 8px; padding: 5px; background: white; }
-        .soundboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; width: 100%; }
-        .sound-btn { background: var(--accent-light); border: 1px solid var(--accent-border); padding: 8px; border-radius: 10px; font-size: 16px; text-align: center; cursor: pointer; }
-        .status-badge { font-size: 10px; padding: 3px 6px; border-radius: 4px; margin-left: 6px; font-weight: 800; }
-        .status-host { background: #dcfce7; color: #16a34a; }
-        .status-afk { background: #fef08a; color: #854d0e; }
-        .status-vip { background: #e879f9; color: #701a75; }
+        .code-action-btn { background: #fef2f2; border: 1px solid #fca5a5; color: #ef4444; font-weight: 700; font-size: 11px; padding: 10px 4px; border-radius: 12px; text-align: center; cursor: pointer; width: 100%; }
+        .close-session-btn { background: #1e293b; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        .player-info { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+        .album-art { width: 60px; height: 85px; background: #333; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .track-title { font-size: 15px; font-weight: 800; color: #ffffff; margin-bottom: 4px; word-break: break-word; line-height: 1.2; }
+        .track-artist { font-size: 12px; color: #9ca3af; font-weight: 600; }
+        .countdown-btn-lg { background: linear-gradient(135deg, #10b981, #059669); color: white; width: 100%; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 800; border: none; cursor: pointer; text-transform: uppercase; }
+        .search-input, .code-input { width: 100%; background: #f9fafb; border: 1px solid #e5e7eb; padding: 12px 14px; border-radius: 12px; font-size: 14px; outline: none; margin-bottom: 8px; font-weight: 600; }
+        .movie-search-results { max-height: 250px; overflow-y: auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 4px; display: none; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .movie-result-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-bottom: 1px solid #f3f4f6; cursor: pointer; border-radius: 8px; }
+        .movie-result-item:hover { background: #fef2f2; }
+        .movie-result-poster { width: 40px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+        .movie-result-info { flex: 1; overflow: hidden; }
+        .movie-result-title { font-size: 13px; font-weight: 800; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .emoji-keyboard-container { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 12px; margin-top: 10px; width: 100%; }
+        .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px 2px; border-bottom: 1px solid #e2e8f0; margin-bottom: 10px; }
+        .kb-tab-btn { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .kb-tab-btn.active { background: #ef4444; color: white; border-color: #ef4444; }
+        .emoji-grid-box { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-height: 210px; overflow-y: auto; padding: 8px 4px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .emoji-key { background: none; border: none; font-size: 26px; cursor: pointer; padding: 8px; border-radius: 8px; text-align: center; }
+        #roomPopupContainer { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 999999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: 90%; max-width: 380px; }
+        .room-popup-card { background: rgba(153, 27, 27, 0.95); color: white; padding: 12px 18px; border-radius: 16px; width: 100%; pointer-events: auto; }
+        .floating-reaction { position: fixed; bottom: 100px; font-size: 38px; animation: floatUp 2.2s ease-out forwards; z-index: 3000; pointer-events: none; }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-360px); opacity: 0; } }
+        .peer-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #fef2f2; width: 100%; }
+        .peer-info { display: flex; align-items: center; gap: 10px; }
+        .peer-icon { width: 32px; height: 32px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .btn-purple { background: #ef4444; color: white; border: none; width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
+        #toastModal { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #111827; color: white; padding: 12px 24px; border-radius: 20px; font-size: 13px; font-weight: 700; z-index: 10000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        #toastModal.show { opacity: 1; }
         .hidden { display: none !important; }
-        #sleepOverlay { position: fixed; inset: 0; background: #000; z-index: 999999999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+        .iframe-wrapper { position: relative; width: 100%; height: 240px; border-radius: 12px; overflow: hidden; background: #000; margin-top: 8px; border: 1px solid #475569; }
+        .host-tabs { display: flex; gap: 6px; margin-bottom: 12px; background: #f1f5f9; padding: 4px; border-radius: 12px; width: 100%; }
+        .host-tab { flex: 1; padding: 10px 6px; font-size: 12px; font-weight: 800; color: #64748b; background: transparent; border: none; border-radius: 8px; cursor: pointer; }
+        .host-tab.active { background: #ef4444; color: white; }
+        .server-btn { background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
+        .server-btn.active { background: #1e293b; color: white; border-color: #1e293b; }
+        .file-select-banner { background: #fef2f2; border: 2px dashed #fca5a5; border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; margin-bottom: 8px; width: 100%; }
+        .progress-track { background: #334155; height: 8px; border-radius: 4px; cursor: pointer; position: relative; margin-top: 10px; width: 100%; }
+        .progress-fill { background: #ef4444; width: 0%; height: 100%; border-radius: 4px; position: relative; }
+        .progress-thumb { position: absolute; right: -6px; top: -4px; width: 16px; height: 16px; background: #ef4444; border: 2px solid #ffffff; border-radius: 50%; }
+        .play-pause-lg { background: #ef4444; color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: none; cursor: pointer; margin: 0 auto; }
+        #liveChatFloatingContainer { position: fixed; bottom: 95px; right: 16px; z-index: 9999; }
+        .floating-chat-window { width: 310px; max-width: calc(100vw - 32px); background: #ffffff; border: 1px solid #fca5a5; border-radius: 16px; overflow: hidden; margin-bottom: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        .floating-chat-header { background: #fee2e2; padding: 10px 14px; font-weight: 800; font-size: 12px; color: #ef4444; display: flex; justify-content: space-between; align-items: center; }
+        .live-chat-launcher { background: #ef4444; color: white; padding: 10px 18px; border-radius: 30px; font-weight: 800; font-size: 12px; border: none; cursor: pointer; }
         .header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         #mainLandingView, #hostSessionView { width: 100%; display: flex; flex-direction: column; align-items: center; }
     </style>
 </head>
 <body>
-    <div id="sleepOverlay" class="hidden">
-        <h1 style="color: #60a5fa;">🌙 Sleep Timer Active</h1>
-        <p>The room has been paused and muted due to inactivity or sleep timer.</p>
-        <button class="btn-purple" style="width: 200px; margin-top: 20px;" onclick="wakeUpRoom()">Wake Up</button>
+    <div id="interactionOverlay" class="hidden" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.92); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; text-align:center;">
+        <h2 style="margin-bottom: 5px; font-size:24px;">🍿 Joined Room!</h2>
+        <p style="margin-bottom: 25px; color:#cbd5e1; font-size:13px;">Tap below to enable room sync audio & video.</p>
+        <button class="btn-purple" style="width: 240px; font-size: 16px; padding: 16px; border-radius: 30px;" onclick="unlockMediaContext()">🟢 Connect Media</button>
     </div>
-
+    <div id="roomPopupContainer"></div>
     <div class="container">
-        <!-- Customization Card -->
-        <div class="card" id="settingsCard">
-            <div class="card-header-sm"><span>⚙️ Virtual Themes & Profile</span></div>
-            <select id="themeSelector" onchange="changeTheme(this.value)">
-                <option value="default">Default Light Theme</option>
-                <option value="cyberpunk">Cyberpunk Neon</option>
-                <option value="retro">Retro VHS</option>
-            </select>
-            <select id="statusSelector" onchange="updateUserStatus(this.value)" style="margin-top: 8px;">
-                <option value="Online">Status: Online</option>
-                <option value="AFK">Status: AFK</option>
-                <option value="VIP">Status: VIP 👑</option>
-            </select>
-            <input type="text" id="userNameInput" class="code-input" placeholder="Your Name" style="margin-top: 8px;" oninput="saveProfileChanges()">
-            <button class="code-action-btn" style="width: 100%; margin-top: 4px;" onclick="connectBiometrics()">❤️ Connect Mood Ring (Bluetooth HR)</button>
-        </div>
-
         <div id="mainLandingView">
             <div class="header">
-                <div class="logo-area"><h1 style="margin:0; font-size:22px; color:var(--accent);">Streamflix</h1></div>
+                <div class="logo-area"><h1 style="margin: 0; font-size: 22px; font-weight: 800; color: #ef4444;">Streamflix</h1></div>
+                <div style="display:flex; gap:6px;"><span style="background:#ffffff; border:1px solid #fca5a5; padding:5px 10px; border-radius:20px; font-size:11px; font-weight:600; color:#ef4444;">📶 Online</span></div>
             </div>
-            <div class="card" onclick="startHostingSession()" style="cursor:pointer;"><div style="font-weight: 800; color: var(--accent);">🎬 Host Movie Room</div></div>
+            <div style="font-size: 12px; color: #6b7280; margin-top: -10px; margin-bottom: 15px; width: 100%;">Stream Commercial Movies or Local Files Together</div>
             <div class="card">
-                <div class="card-header-sm"><span>JOIN WITH CODE</span></div>
-                <input type="text" id="roomCodeInput" class="code-input" placeholder="Room Code">
-                <button class="btn-purple" onclick="connectToRoom()">⚡ CONNECT</button>
+                <div class="card-header-sm"><span>👤 YOUR PROFILE & DEVICE ID</span></div>
+                <div style="font-size: 11px; color: #ef4444; font-weight: 700; margin-bottom: 8px;" id="deviceAccountDisplay">Permanent ID: Generating...</div>
+                <input type="text" id="userNameInput" class="code-input" placeholder="Enter Your Name" oninput="autoSaveProfileName()">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+                    <button class="code-action-btn" onclick="saveProfileChanges()">💾 Save</button>
+                    <button class="code-action-btn" style="background: #f1f5f9; color: #64748b; border-color: #cbd5e1;" onclick="resetDeviceProfile()">🔄 Reset</button>
+                </div>
+            </div>
+            <div class="card" onclick="startHostingSession()" style="cursor: pointer; display:flex; align-items:center; justify-content:space-between; background: linear-gradient(135deg, #fef2f2, #fee2e2);">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="background:#ef4444; color:white; width:45px; height:45px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px;">🎬</div>
+                    <div><div style="font-weight:700; font-size:15px; color:#7f1d1d;">Host Movie Room</div><div style="font-size:11px; color:#991b1b;">Host controls movie sync for everyone</div></div>
+                </div>
+                <div style="background:#ef4444; color:white; width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">→</div>
+            </div>
+            <div class="card">
+                <div class="card-header-sm"><span>CONNECT TO HOST</span></div>
+                <input type="text" id="roomCodeInput" class="code-input" placeholder="Room Code (e.g. SYNC-4B9X)" maxlength="10">
+                <button class="btn-purple" onclick="connectToRoom()">⚡ CONNECT AS MEMBER</button>
             </div>
         </div>
 
         <div id="hostSessionView" class="hidden">
             <div class="header" style="justify-content: flex-start; gap: 12px;">
-                <button class="back-btn" onclick="exitRoom()" style="background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-main);">←</button>
-                <h2 style="font-size: 16px; margin:0;">Room Session</h2>
+                <button onclick="goBackToHome()" style="background:none; border:none; font-size:22px; font-weight:bold; cursor:pointer;">←</button>
+                <div><div style="font-size: 15px; font-weight: 800;" id="sessionHeaderTitle">Room Session</div><div style="font-size: 10px; color: #6b7280;">Connected to Cloud</div></div>
             </div>
-            
-            <div class="card">
-                <div class="card-header-sm"><span>ROOM CODE & QR JOIN</span></div>
+            <div class="card" style="background: linear-gradient(135deg, #fef2f2, #fee2e2); border-color: #fca5a5;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; font-size: 12px; font-weight: 800; color: #10b981;"><span class="dot"></span> ACTIVE</div>
+                    <div style="font-size: 11px; font-weight: 700; color: #ef4444;" id="roleIndicatorBadge">Role: Host</div>
+                </div>
                 <div class="code-box"><span id="displayRoomCode">SYNC-0000</span></div>
-                <div id="qrCodeContainer"></div>
-                <div class="code-actions" style="margin-top: 10px;">
-                    <button class="code-action-btn" onclick="copyCode()">📋 Copy</button>
-                    <button class="code-action-btn" onclick="generateCalendarInvite()">📅 ICS Invite</button>
+                <div class="code-actions">
+                    <button class="code-action-btn" onclick="copyCode()">📋 Copy Code</button>
+                    <button class="code-action-btn" onclick="shareCode()">📡 Share</button>
                 </div>
+                <button class="close-session-btn" onclick="closeRoomAndReturnHome()">⚡ LEAVE ROOM</button>
             </div>
 
-            <!-- Host Controls -->
-            <div class="card" id="hostControlsWrapper">
-                <div class="card-header-sm"><span>🎛️ Master Sync Controls</span></div>
-                <label style="font-size: 12px; font-weight: bold; color: var(--text-muted);">Master Volume Sync</label>
-                <input type="range" id="masterVolume" min="0" max="1" step="0.1" value="1" style="width: 100%; margin-bottom: 12px;" onchange="syncMasterVolume(this.value)">
-                
-                <label style="font-size: 12px; font-weight: bold; color: var(--text-muted);">Smart Sleep Timer (Minutes)</label>
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                    <input type="number" id="sleepTimerInput" class="code-input" placeholder="45" style="margin-bottom: 0;">
-                    <button class="btn-purple" style="width: auto; padding: 12px;" onclick="startSleepTimer()">Set</button>
-                </div>
-
-                <button class="code-action-btn" style="width: 100%; padding: 12px;" onclick="initP2PStream()">📁 Broadcast Local P2P Stream File</button>
-                <input type="file" id="localMovieFile" class="hidden" accept="video/*" onchange="handleFileSelected(this)">
-            </div>
-
-            <!-- Video Player -->
             <div class="card black-player-box">
-                <div class="card-header-sm"><span>📺 Screen</span></div>
-                <div id="iframeWrapper" class="iframe-wrapper">
-                    <iframe id="movieIframe" src="" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+                <div class="card-header-sm" style="color:#fca5a5;"><span>● Room Sync Status</span></div>
+                <div class="player-info">
+                    <img class="album-art" id="sessionPoster" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='85'><rect width='60' height='85' fill='%23333'/></svg>" alt="Poster">
+                    <div style="overflow: hidden; flex: 1;">
+                        <div class="track-title" id="sessionTitle">No Movie Selected</div>
+                        <div class="track-artist" id="sessionArtist">Waiting for Host...</div>
+                    </div>
                 </div>
-                <video id="syncVideoPlayer" style="width: 100%; display: none;" controls></video>
+                <div id="hostSyncControls" style="margin-top: 10px; border-top: 1px solid #334155; padding-top: 12px;">
+                    <button class="countdown-btn-lg" onclick="triggerPlayCountdown()">⏱️ Send 3-Sec "Play" Countdown</button>
+                </div>
+                <div id="localSyncControls" class="hidden" style="margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;">
+                    <div class="progress-track" id="progressTrackScrubber" onclick="seekTrack(event)"><div class="progress-fill" id="sessionFill"><div class="progress-thumb"></div></div></div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; margin-bottom:10px; font-weight:700;"><span id="sessionCurrentTime">0:00</span><span id="sessionTotalDuration">0:00</span></div>
+                    <button class="play-pause-lg" id="sessionPlayBtn" onclick="togglePlaySession()">▶</button>
+                </div>
             </div>
 
-            <!-- Interactive Soundboard -->
-            <div class="card">
-                <div class="card-header-sm"><span>🔊 Interactive Soundboard</span></div>
-                <div class="soundboard-grid">
-                    <div class="sound-btn" onclick="playSound('rimshot')">🥁</div>
-                    <div class="sound-btn" onclick="playSound('airhorn')">📯</div>
-                    <div class="sound-btn" onclick="playSound('cricket')">🦗</div>
-                    <div class="sound-btn" onclick="playSound('gasp')">😱</div>
+            <div class="card" id="hostUrlControls" style="border-color: #e2e8f0; background: #fff;">
+                <div class="host-tabs" id="hostModeTabs">
+                    <button class="host-tab active" id="tabOnline" onclick="switchHostMode('online')">🌐 Online Stream</button>
+                    <button class="host-tab" id="tabLocal" onclick="switchHostMode('local')">📁 Local File Sync</button>
+                </div>
+                <div class="card-header-sm" id="controllerCardHeader" style="color: #475569;"><span style="font-size: 13px;" id="modeHeaderTitle">🔍 TMDb Global Movie Search</span></div>
+                <div id="onlineModeUI">
+                    <input type="text" class="search-input" id="movieSearchInput" placeholder="Search any movie (e.g., Inception, Avengers)..." oninput="searchImdbMovies(this.value)">
+                    <div id="movieSearchResults" class="movie-search-results"></div>
+                    <div id="serverSelector" class="hidden" style="display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px;">
+                        <button class="server-btn active" id="srvBtn1" onclick="switchOnlineServer(1)">Server 1 (Auto)</button>
+                        <button class="server-btn" id="srvBtn2" onclick="switchOnlineServer(2)">Server 2 (Multi)</button>
+                        <button class="server-btn" id="srvBtn3" onclick="switchOnlineServer(3)">Server 3 (Smashy)</button>
+                        <button class="server-btn" id="srvBtn4" onclick="switchOnlineServer(4)">Server 4 (2Embed)</button>
+                    </div>
+                    <div class="iframe-wrapper"><iframe id="movieIframe" src="" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe></div>
+                </div>
+                <div id="localModeUI" class="hidden">
+                    <input type="file" id="localVideoFileInput" accept="video/*" class="hidden" onchange="handleLocalFileSelected(this)">
+                    <div class="file-select-banner" onclick="document.getElementById('localVideoFileInput').click()">
+                        <div style="font-size: 24px; margin-bottom: 4px;">📁</div>
+                        <div style="font-size: 13px; font-weight: 800; color: #7f1d1d;">Select Downloaded Movie File</div>
+                    </div>
+                    <div class="iframe-wrapper"><video id="localVideoPlayer" style="width:100%; height:100%; object-fit:contain; background:#000;" playsinline preload="auto"></video></div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header-sm"><span>IN THIS ROOM</span></div>
-                <div id="peerListContainer" style="width: 100%;"></div>
+                <div class="card-header-sm" style="color:#ef4444;"><span>Room Reactions</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="font-size: 12px; font-weight:700;">Quick Emoji Tap:</div>
+                    <button class="code-action-btn" style="width:auto; padding: 4px 10px; font-size: 10px;" onclick="toggleEmojiKeyboard()">⌨️ Expand</button>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                    <button class="code-action-btn" style="font-size:22px; padding:6px;" onclick="sendReaction('😂')">😂</button>
+                    <button class="code-action-btn" style="font-size:22px; padding:6px;" onclick="sendReaction('🍿')">🍿</button>
+                    <button class="code-action-btn" style="font-size:22px; padding:6px;" onclick="sendReaction('😱')">😱</button>
+                    <button class="code-action-btn" style="font-size:22px; padding:6px;" onclick="sendReaction('🤯')">🤯</button>
+                    <button class="code-action-btn" style="font-size:22px; padding:6px;" onclick="sendReaction('💖')">💖</button>
+                </div>
+                <div id="phoneEmojiKeyboardSection" class="emoji-keyboard-container hidden">
+                    <div class="keyboard-tabs-row">
+                        <button class="kb-tab-btn active" onclick="switchEmojiCategory(event, 'smileys')">😀 Smileys</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'gestures')">👋 Gestures</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'animals')">🐶 Animals</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'food')">🍿 Food</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'hearts')">❤️ Hearts</button>
+                    </div>
+                    <div class="emoji-grid-box" id="kbEmojiGrid"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-sm" style="color:#ef4444;"><span>IN THIS ROOM</span></div>
+                <div id="peerListContainer"><div class="peer-item"><div class="peer-info"><div class="peer-icon">👤</div><div><div style="font-weight:700;" id="initialPeerName">User</div></div></div><span style="font-size:10px; font-weight:700;" id="peerRoleTag">PEER</span></div></div>
             </div>
         </div>
     </div>
 
-    <!-- Hidden Audio Elements -->
-    <audio id="sfx-rimshot" src="https://www.myinstants.com/media/sounds/rimshot.mp3"></audio>
-    <audio id="sfx-airhorn" src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"></audio>
-    <audio id="sfx-cricket" src="https://www.myinstants.com/media/sounds/crickets.mp3"></audio>
-    <audio id="sfx-gasp" src="https://www.myinstants.com/media/sounds/gasp.mp3"></audio>
+    <!-- Floating Live Chat -->
+    <div id="liveChatFloatingContainer" class="hidden">
+        <div id="liveChatWindow" class="floating-chat-window hidden">
+            <div class="floating-chat-header"><span>💬 LIVE CHAT</span><button onclick="toggleLiveChatWindow()" style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;">−</button></div>
+            <div style="padding: 12px;">
+                <div id="chatMessagesContainer" style="height: 140px; overflow-y: auto; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px; margin-bottom: 8px; font-size: 12px;">
+                    <div style="color: #9ca3af; text-align: center; font-style: italic;">No messages yet. Say hello!</div>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <input type="text" id="chatInput" class="search-input" style="margin-bottom:0;" placeholder="Type message..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                    <button style="padding: 8px 12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+        <button id="liveChatLauncherBtn" class="live-chat-launcher" onclick="toggleLiveChatWindow()">💬 LIVE CHAT</button>
+    </div>
+
+    <div id="toastModal">Notification</div>
 
     <script>
-        const BACKEND_WS = 'wss://syncbeat-backend2.onrender.com'; 
-        let ws = null; 
-        let isHosting = false; 
-        let currentRoomCode = ""; 
-        let currentUserName = localStorage.getItem('syncbeat_device_name') || "User";
-        let currentUserStatus = "Online";
-        let currentHeartRate = null;
-        let sleepTimeout = null;
-        let videoPlayer = document.getElementById('syncVideoPlayer');
-        let peerConnections = {};
+        function notifyParent(action, code='') { window.parent.postMessage({ sender: 'syncbeat', tab: 0, action, code }, '*'); }
+        const BACKEND_WS = 'wss://syncbeat-backend2.onrender.com'; const TMDB_API_KEY = '3fd2be6f0c70a2a598f084ddfb75487c';
+        let ws = null; let isHosting = false; let currentRoomCode = ""; let currentUserName = "User"; let currentAccountId = ""; 
+        let searchTimeout = null; let activeSyncMode = 'online'; let currentOnlineImdbId = ""; let currentOnlineTitle = ""; 
+        let currentOnlinePoster = ""; let currentOnlineYear = ""; let streamflixPlayer = null; let isSessionPlaying = false;
+        const emojiCategories = { 'smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🥳'], 'gestures': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎'], 'animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤'], 'food': ['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🍍','🥥','🥝','🍅','🍆','🥑'], 'hearts': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','❣️','💕','💞','💓','💗','💖','💘','💝'] };
+        let activeEmojiCategory = 'smileys';
 
-        document.getElementById('userNameInput').value = currentUserName;
+        window.addEventListener('DOMContentLoaded', () => { initPermanentDeviceAccount(); renderEmojiGrid(); document.getElementById('interactionOverlay').classList.add('hidden'); });
 
-        function changeTheme(themeName) {
-            document.body.className = '';
-            if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
+        function switchHostMode(mode) {
+            activeSyncMode = mode;
+            document.getElementById('tabOnline').classList.toggle('active', mode === 'online');
+            document.getElementById('tabLocal').classList.toggle('active', mode === 'local');
+            document.getElementById('onlineModeUI').classList.toggle('hidden', mode !== 'online');
+            document.getElementById('localModeUI').classList.toggle('hidden', mode !== 'local');
+            document.getElementById('hostSyncControls').classList.toggle('hidden', mode !== 'online');
+            document.getElementById('localSyncControls').classList.toggle('hidden', mode !== 'local');
         }
 
-        function updateUserStatus(status) {
-            currentUserStatus = status;
-            sendPresence();
+        function unlockMediaContext() { document.getElementById('interactionOverlay').classList.add('hidden'); if(streamflixPlayer) streamflixPlayer.play().catch(e=>{}); showToast("Connected!"); }
+
+        function searchImdbMovies(query) {
+            const resultsBox = document.getElementById('movieSearchResults');
+            if (!query || query.trim().length < 2) { resultsBox.style.display = 'none'; return; }
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query.trim())}`);
+                    const data = await res.json();
+                    resultsBox.innerHTML = '';
+                    (data.results || []).forEach(movie => {
+                        const title = movie.title || movie.name || "Unknown";
+                        const year = movie.release_date ? `(${movie.release_date.split('-')[0]})` : "";
+                        const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : "";
+                        const item = document.createElement('div');
+                        item.className = 'movie-result-item';
+                        item.innerHTML = `<img src="${posterUrl}" class="movie-result-poster"><div class="movie-result-info"><div class="movie-result-title">${escapeHtml(title)} ${year}</div></div>`;
+                        item.onclick = async () => {
+                            resultsBox.style.display = 'none';
+                            const extRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/external_ids?api_key=${TMDB_API_KEY}`);
+                            const extData = await extRes.json();
+                            loadImdbMovie(extData.imdb_id || `tmdb-${movie.id}`, title, posterUrl, movie.release_date ? movie.release_date.split('-')[0] : "");
+                        };
+                        resultsBox.appendChild(item);
+                    });
+                    resultsBox.style.display = 'block';
+                } catch(e) {}
+            }, 300);
         }
 
-        function saveProfileChanges() {
-            currentUserName = document.getElementById('userNameInput').value || "User";
-            localStorage.setItem('syncbeat_device_name', currentUserName);
-            sendPresence();
+        function loadImdbMovie(imdbId, title, posterUrl, year) {
+            if (!isHosting) return;
+            currentOnlineImdbId = imdbId; currentOnlineTitle = title; currentOnlinePoster = posterUrl; currentOnlineYear = year;
+            document.getElementById('serverSelector').classList.remove('hidden');
+            switchOnlineServer(1);
         }
 
-        function sendPresence() {
+        function switchOnlineServer(serverNum) {
+            if (!isHosting || !currentOnlineImdbId) return;
+            document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('srvBtn' + serverNum).classList.add('active');
+            let embedUrl = serverNum === 1 ? `https://autoembed.co/movie/imdb/${currentOnlineImdbId}` :
+                           serverNum === 2 ? `https://multiembed.mov/?video_id=${currentOnlineImdbId}&tmdb=0` :
+                           serverNum === 3 ? `https://player.smashy.stream/movie/${currentOnlineImdbId}` : `https://www.2embed.cc/embed/${currentOnlineImdbId}`;
+            updatePlayerUI(currentOnlineTitle, currentOnlineYear, currentOnlinePoster, embedUrl);
             if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ type: 'UPDATE_STATUS', name: currentUserName, status: currentUserStatus, hr: currentHeartRate }));
+                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'online', imdbId: currentOnlineImdbId, title: currentOnlineTitle, posterUrl: currentOnlinePoster, year: currentOnlineYear, embedUrl: embedUrl }));
             }
         }
 
-        async function connectBiometrics() {
-            try {
-                const device = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
-                const server = await device.gatt.connect();
-                const service = await server.getPrimaryService('heart_rate');
-                const characteristic = await service.getCharacteristic('heart_rate_measurement');
-                await characteristic.startNotifications();
-                characteristic.addEventListener('characteristicvaluechanged', (e) => {
-                    currentHeartRate = e.target.value.getUint8(1);
-                    sendPresence();
-                });
-                alert("Mood Ring connected successfully via Bluetooth!");
-            } catch (err) {
-                console.error("Bluetooth pairing failed:", err);
-                alert("Could not connect biometric wearable.");
-            }
+        function updatePlayerUI(title, year, posterUrl, embedUrl) {
+            document.getElementById('sessionTitle').textContent = title;
+            document.getElementById('sessionArtist').textContent = `Released: ${year}`;
+            document.getElementById('sessionPoster').src = posterUrl;
+            document.getElementById('movieIframe').src = embedUrl;
+            notifyParent('MEDIA_PLAYING');
         }
 
-        function initP2PStream() {
-            if(!isHosting) return;
-            document.getElementById('localMovieFile').click();
+        function triggerPlayCountdown() {
+            if (!isHosting) return;
+            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'PLAY_COUNTDOWN' }));
+            showCountdownOverlay();
         }
 
-        function handleFileSelected(input) {
+        function showCountdownOverlay() {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.92); color:white; z-index:9999999; display:flex; flex-direction:column; align-items:center; justify-content:center;";
+            document.body.appendChild(overlay);
+            let count = 3;
+            overlay.innerHTML = `<div id="cdNum" style="font-size:160px; color:#ef4444; font-weight:900;">${count}</div>`;
+            const intv = setInterval(() => {
+                count--;
+                if(count > 0) document.getElementById('cdNum').textContent = count;
+                else { clearInterval(intv); overlay.remove(); }
+            }, 1000);
+        }
+
+        function handleLocalFileSelected(input) {
             const file = input.files[0];
             if(!file) return;
-            document.getElementById('iframeWrapper').classList.add('hidden');
-            videoPlayer.style.display = 'block';
-            videoPlayer.src = URL.createObjectURL(file);
-            videoPlayer.play();
-            alert("Local P2P stream loaded.");
+            switchHostMode('local');
+            streamflixPlayer = document.getElementById('localVideoPlayer');
+            streamflixPlayer.src = URL.createObjectURL(file);
+            streamflixPlayer.load();
+            streamflixPlayer.play();
+            document.getElementById('sessionTitle').textContent = file.name;
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', fileName: file.name }));
+            }
         }
 
-        function connectWebSocket(onSuccess) { 
-            if (ws && ws.readyState === WebSocket.OPEN) { if (onSuccess) onSuccess(); return; } 
-            ws = new WebSocket(BACKEND_WS); 
-            ws.onopen = () => { if (onSuccess) onSuccess(); }; 
-            ws.onmessage = async (event) => { 
-                const data = JSON.parse(event.data); 
-                if(data.type === 'PEER_LIST') {
-                    renderPeers(data.peers);
-                } else if (data.type === 'SYNC_VOLUME') {
-                    videoPlayer.volume = data.level;
-                } else if (data.type === 'PLAY_SOUND') {
-                    document.getElementById(`sfx-${data.sound}`).play().catch(e => {});
-                } else if (data.type === 'SLEEP_TRIGGER') {
-                    triggerSleepMode();
-                } else if (data.type === 'webrtc_offer' && !isHosting) {
-                    handleWebRtcOffer(data);
-                } else if (data.type === 'webrtc_answer' && isHosting) {
-                    if(peerConnections[data.senderAccountId]) {
-                        await peerConnections[data.senderAccountId].setRemoteDescription(new RTCSessionDescription(data.answer));
-                    }
-                } else if (data.type === 'ice_candidate') {
-                    const pc = peerConnections[data.senderAccountId] || window.clientPC;
-                    if(pc) await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                }
-            }; 
-        }
-
-        async function handleWebRtcOffer(data) {
-            const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-            window.clientPC = pc;
-            pc.ontrack = (event) => {
-                document.getElementById('iframeWrapper').classList.add('hidden');
-                videoPlayer.style.display = 'block';
-                videoPlayer.srcObject = event.streams[0];
-                videoPlayer.play();
+        function connectWebSocket(onSuccess) {
+            if (ws && ws.readyState === WebSocket.OPEN) { if (onSuccess) onSuccess(); return; }
+            ws = new WebSocket(BACKEND_WS);
+            ws.onopen = () => { if (onSuccess) onSuccess(); };
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'ROOM_HOSTED_SUCCESS') { showToast("Room ready!"); showLiveChatFloatingUI(true); notifyParent('ROOM_OPENED', currentRoomCode); }
+                else if (data.type === 'ROOM_JOIN_SUCCESS') {
+                    isHosting = false; currentRoomCode = data.code;
+                    document.getElementById('displayRoomCode').textContent = data.code;
+                    document.getElementById('sessionHeaderTitle').textContent = "Member Session";
+                    document.getElementById('mainLandingView').classList.add('hidden');
+                    document.getElementById('hostSessionView').classList.remove('hidden');
+                    showLiveChatFloatingUI(true); switchHostMode('online'); notifyParent('ROOM_OPENED', currentRoomCode);
+                } else if (data.type === 'PEER_LIST') {
+                    (data.peers || []).forEach(peer => {
+                        const container = document.getElementById('peerListContainer');
+                        container.innerHTML = `<div class="peer-item"><div class="peer-info"><div class="peer-icon">👤</div><div><div style="font-weight:700;">${escapeHtml(peer.name)}</div></div></div><span style="font-size:10px; font-weight:700;">${peer.role}</span></div>`;
+                    });
+                } else if (data.type === 'LOAD_VIDEO') {
+                    if (data.mode === 'online') { switchHostMode('online'); updatePlayerUI(data.title, data.year, data.posterUrl, data.embedUrl); }
+                    else { switchHostMode('local'); document.getElementById('sessionTitle').textContent = data.fileName; document.getElementById('interactionOverlay').classList.remove('hidden'); }
+                } else if (data.type === 'CHAT_MESSAGE') { appendChatMessage(data.name, data.message); }
+                else if (data.type === 'REACTION') { showFloatingReaction(data.emoji); }
+                else if (data.type === 'PLAY_COUNTDOWN') { showCountdownOverlay(); }
+                else if (data.type === 'ROOM_CLOSED') { goBackToHome(); showToast("Room closed by host."); }
             };
-            pc.onicecandidate = (e) => {
-                if(e.candidate) ws.send(JSON.stringify({ type: 'ice_candidate', candidate: e.candidate, targetAccountId: data.senderAccountId }));
-            };
-            await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-            ws.send(JSON.stringify({ type: 'webrtc_answer', answer: answer, targetAccountId: data.senderAccountId }));
         }
 
         function startHostingSession() {
-            currentRoomCode = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase(); 
-            connectWebSocket(() => { 
-                isHosting = true; 
-                ws.send(JSON.stringify({ type: 'HOST_ROOM', code: currentRoomCode, name: currentUserName })); 
-                setupRoomUI(currentRoomCode);
-                generateQR(currentRoomCode);
-            }); 
+            currentUserName = getUserInputName();
+            currentRoomCode = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            connectWebSocket(() => {
+                isHosting = true;
+                ws.send(JSON.stringify({ type: 'HOST_ROOM', code: currentRoomCode, name: currentUserName, accountId: currentAccountId }));
+                document.getElementById('displayRoomCode').textContent = currentRoomCode;
+                document.getElementById('sessionHeaderTitle').textContent = "Host Session";
+                document.getElementById('mainLandingView').classList.add('hidden');
+                document.getElementById('hostSessionView').classList.remove('hidden');
+                showLiveChatFloatingUI(true); notifyParent('ROOM_OPENED', currentRoomCode);
+            });
         }
 
         function connectToRoom() {
+            currentUserName = getUserInputName();
             const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
-            if(!code) return;
+            if(code.length < 4) return;
             currentRoomCode = code;
-            connectWebSocket(() => {
-                isHosting = false;
-                ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: currentUserName }));
-                setupRoomUI(code);
-            });
+            connectWebSocket(() => ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: currentUserName, accountId: currentAccountId })));
         }
 
-        function setupRoomUI(code) {
-            document.getElementById('mainLandingView').classList.add('hidden');
-            document.getElementById('settingsCard').classList.add('hidden');
-            document.getElementById('hostSessionView').classList.remove('hidden');
-            document.getElementById('displayRoomCode').textContent = code;
-            document.getElementById('hostControlsWrapper').classList.toggle('hidden', !isHosting);
-            sendPresence();
-        }
+        function copyCode() { navigator.clipboard.writeText(currentRoomCode); showToast("Copied!"); }
+        function shareCode() { if (navigator.share) navigator.share({ title: 'Room', text: currentRoomCode }); }
+        function closeRoomAndReturnHome() { if(ws) ws.close(); goBackToHome(); showLiveChatFloatingUI(false); notifyParent('ROOM_CLOSED'); }
+        function goBackToHome() { document.getElementById('hostSessionView').classList.add('hidden'); document.getElementById('mainLandingView').classList.remove('hidden'); }
 
-        function exitRoom() {
-            if(ws) ws.close();
-            document.getElementById('hostSessionView').classList.add('hidden');
-            document.getElementById('mainLandingView').classList.remove('hidden');
-            document.getElementById('settingsCard').classList.remove('hidden');
-            document.getElementById('qrCodeContainer').innerHTML = '';
-            document.getElementById('movieIframe').src = '';
-            videoPlayer.src = '';
-            isHosting = false;
-            clearTimeout(sleepTimeout);
-        }
-
-        function generateQR(code) {
-            const container = document.getElementById('qrCodeContainer');
-            container.innerHTML = '';
-            new QRCode(container, { text: `${window.location.origin}/movies.html?join=${code}`, width: 128, height: 128 });
-        }
-
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const joinCode = params.get('join');
-            if (joinCode) {
-                document.getElementById('roomCodeInput').value = joinCode;
-                connectToRoom();
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+            if(ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'CHAT_MESSAGE', message: msg, name: currentUserName }));
+                appendChatMessage(currentUserName, msg);
             }
-        };
-
-        function generateCalendarInvite() {
-            const now = new Date();
-            const start = now.toISOString().replace(/-|:|\.\d+/g, '');
-            const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:${start}\nSUMMARY:Watch Party (${currentRoomCode})\nEND:VEVENT\nEND:VCALENDAR`;
-            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = `watch_party_${currentRoomCode}.ics`;
-            link.click();
+            input.value = '';
+        }
+        function appendChatMessage(sender, message) {
+            const container = document.getElementById('chatMessagesContainer');
+            if(container.querySelector('div[style*="text-align: center"]')) container.innerHTML = '';
+            container.innerHTML += `<div style="word-break:break-all;"><b style="color:#ef4444;">${escapeHtml(sender)}:</b> ${escapeHtml(message)}</div>`;
+            container.scrollTop = container.scrollHeight;
         }
 
-        function startSleepTimer() {
-            const mins = parseInt(document.getElementById('sleepTimerInput').value);
-            if(isNaN(mins) || mins <= 0) return alert("Enter valid minutes");
-            clearTimeout(sleepTimeout);
-            sleepTimeout = setTimeout(() => {
-                if(isHosting && ws) ws.send(JSON.stringify({ type: 'SLEEP_TRIGGER' }));
-                triggerSleepMode();
-            }, mins * 60000);
-            alert(`Sleep timer set for ${mins} minutes.`);
+        function sendReaction(emoji) {
+            showFloatingReaction(emoji);
+            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'REACTION', emoji: emoji }));
+        }
+        function showFloatingReaction(emoji) {
+            const el = document.createElement('div');
+            el.className = 'floating-reaction';
+            el.textContent = emoji;
+            el.style.left = (Math.random() * (window.innerWidth - 60) + 20) + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2200);
         }
 
-        function triggerSleepMode() {
-            document.getElementById('sleepOverlay').classList.remove('hidden');
-            videoPlayer.pause();
-            videoPlayer.muted = true;
+        function toggleEmojiKeyboard() { document.getElementById('phoneEmojiKeyboardSection').classList.toggle('hidden'); }
+        function switchEmojiCategory(e, cat) {
+            activeEmojiCategory = cat;
+            document.querySelectorAll('.kb-tab-btn').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            renderEmojiGrid();
         }
-
-        function wakeUpRoom() {
-            document.getElementById('sleepOverlay').classList.add('hidden');
-            videoPlayer.muted = false;
-        }
-
-        function syncMasterVolume(level) {
-            if(!isHosting) return;
-            videoPlayer.volume = level;
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'SYNC_VOLUME', level: level }));
-        }
-
-        function playSound(soundId) {
-            document.getElementById(`sfx-${soundId}`).play().catch(e => {});
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'PLAY_SOUND', sound: soundId }));
-        }
-
-        function renderPeers(peers) {
-            const container = document.getElementById('peerListContainer');
-            container.innerHTML = '';
-            peers.forEach(peer => {
-                let badgeClass = peer.role === 'HOST' ? 'status-host' : 'status-afk';
-                if(peer.status === 'VIP') badgeClass = 'status-vip';
-                let hrDisplay = peer.hr ? ` ❤️ ${peer.hr}bpm` : '';
-                container.innerHTML += `
-                    <div style="padding: 10px; border-bottom: 1px solid var(--accent-border); display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <span>👤 ${peer.name} <span class="status-badge ${badgeClass}">${peer.status || 'Online'}</span>${hrDisplay}</span>
-                        <span style="font-size: 10px; font-weight: bold;">${peer.role}</span>
-                    </div>`;
+        function renderEmojiGrid() {
+            const grid = document.getElementById('kbEmojiGrid');
+            grid.innerHTML = '';
+            (emojiCategories[activeEmojiCategory] || []).forEach(emoji => {
+                const btn = document.createElement('button');
+                btn.className = 'emoji-key'; btn.textContent = emoji;
+                btn.onclick = () => sendReaction(emoji);
+                grid.appendChild(btn);
             });
         }
+
+        function toggleLiveChatWindow() {
+            document.getElementById('liveChatWindow').classList.toggle('hidden');
+        }
+        function showLiveChatFloatingUI(show) {
+            document.getElementById('liveChatFloatingContainer').classList.toggle('hidden', !show);
+        }
+
+        function initPermanentDeviceAccount() {
+            currentAccountId = 'SYNC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            currentUserName = localStorage.getItem('syncbeat_device_name') || 'User';
+            document.getElementById('userNameInput').value = currentUserName;
+            document.getElementById('deviceAccountDisplay').textContent = `ID: ${currentAccountId}`;
+        }
+        function autoSaveProfileName() {
+            currentUserName = document.getElementById('userNameInput').value.trim() || 'User';
+            localStorage.setItem('syncbeat_device_name', currentUserName);
+        }
+        function saveProfileChanges() { autoSaveProfileName(); showToast("Saved!"); }
+        function resetDeviceProfile() { localStorage.removeItem('syncbeat_device_name'); initPermanentDeviceAccount(); showToast("Reset!"); }
+        function showToast(msg) {
+            const t = document.getElementById('toastModal');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+        function getUserInputName() { autoSaveProfileName(); return currentUserName || "User"; }
+        function escapeHtml(str) { return str.replace(/[&<>"']/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' })[m]); }
     </script>
 </body>
 </html>
-
