@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.online_offline_movies.twa",
+        "sha256_cert_fingerprints": ["28:3C:25:13:85:14:0B:C8:46:58:79:62:26:88:96:34:BB:86:A1:44:7E:94:62:39:FA:AC:0E:12:DA:7F:A4:B0"]
+      }
+    }]
