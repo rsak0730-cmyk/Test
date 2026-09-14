@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Streamflix - Advanced Watch Party Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Streamflix - Watch Party</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
@@ -22,19 +22,26 @@
             --player-bg: #111; --text-muted: #aaaaaa;
             font-family: 'Courier New', Courier, monospace;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-main); color: var(--text-main); margin: 0; padding: 15px; padding-bottom: 95px !important; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; transition: all 0.3s ease; }
-        .container { width: 100%; max-width: 420px; }
-        .card { background: var(--card-bg); border: 1px solid var(--accent-border); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+        * { box-sizing: border-box; }
+        html, body {
+            width: 100%; min-height: 100vh; margin: 0; padding: 12px; padding-bottom: 95px !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main); color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center; overflow-x: hidden; transition: all 0.3s ease;
+        }
+        .container { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        .card { width: 100%; background: var(--card-bg); border: 1px solid var(--accent-border); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
         .card.black-player-box { background-color: var(--player-bg) !important; border: 1px solid #27272a !important; color: #ffffff !important; }
         .card-header-sm { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-        .code-box { background: var(--card-bg); border: 2px dashed var(--accent-border); border-radius: 14px; padding: 12px; text-align: center; font-size: 22px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 12px; }
-        .code-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .code-action-btn { background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); font-weight: 700; font-size: 11px; padding: 10px 4px; border-radius: 12px; text-align: center; cursor: pointer; }
-        .search-input, .code-input, select { width: 100%; background: transparent; border: 1px solid var(--accent-border); color: var(--text-main); padding: 12px 14px; border-radius: 12px; font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 8px; font-weight: 600; }
+        .code-box { background: var(--card-bg); border: 2px dashed var(--accent-border); border-radius: 14px; padding: 12px; text-align: center; font-size: 22px; font-weight: 900; color: var(--accent); letter-spacing: 2px; margin-bottom: 12px; width: 100%; }
+        .code-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; width: 100%; }
+        .code-action-btn { background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); font-weight: 700; font-size: 11px; padding: 10px 4px; border-radius: 12px; text-align: center; cursor: pointer; width: 100%; }
+        .search-input, .code-input, select { width: 100%; background: transparent; border: 1px solid var(--accent-border); color: var(--text-main); padding: 12px 14px; border-radius: 12px; font-size: 14px; outline: none; margin-bottom: 8px; font-weight: 600; }
         .btn-purple { background: var(--accent); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
         .iframe-wrapper { position: relative; width: 100%; height: 240px; border-radius: 12px; overflow: hidden; background: #000; margin-top: 8px; border: 1px solid #475569; }
+        #qrCodeContainer { width: 100%; display: flex; justify-content: center; }
         #qrCodeContainer img { margin: 0 auto; border-radius: 8px; padding: 5px; background: white; }
-        .soundboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+        .soundboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; width: 100%; }
         .sound-btn { background: var(--accent-light); border: 1px solid var(--accent-border); padding: 8px; border-radius: 10px; font-size: 16px; text-align: center; cursor: pointer; }
         .status-badge { font-size: 10px; padding: 3px 6px; border-radius: 4px; margin-left: 6px; font-weight: 800; }
         .status-host { background: #dcfce7; color: #16a34a; }
@@ -42,12 +49,14 @@
         .status-vip { background: #e879f9; color: #701a75; }
         .hidden { display: none !important; }
         #sleepOverlay { position: fixed; inset: 0; background: #000; z-index: 999999999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+        .header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        #mainLandingView, #hostSessionView { width: 100%; display: flex; flex-direction: column; align-items: center; }
     </style>
 </head>
 <body>
     <div id="sleepOverlay" class="hidden">
         <h1 style="color: #60a5fa;">🌙 Sleep Timer Active</h1>
-        <p>The room has been paused and muted due inactivity or sleep timer.</p>
+        <p>The room has been paused and muted due to inactivity or sleep timer.</p>
         <button class="btn-purple" style="width: 200px; margin-top: 20px;" onclick="wakeUpRoom()">Wake Up</button>
     </div>
 
@@ -71,9 +80,9 @@
 
         <div id="mainLandingView">
             <div class="header">
-                <div class="logo-area"><h1>Streamflix</h1></div>
+                <div class="logo-area"><h1 style="margin:0; font-size:22px; color:var(--accent);">Streamflix</h1></div>
             </div>
-            <div class="card" onclick="startHostingSession()"><div style="font-weight: 800; color: var(--accent);">🎬 Host Movie Room</div></div>
+            <div class="card" onclick="startHostingSession()" style="cursor:pointer;"><div style="font-weight: 800; color: var(--accent);">🎬 Host Movie Room</div></div>
             <div class="card">
                 <div class="card-header-sm"><span>JOIN WITH CODE</span></div>
                 <input type="text" id="roomCodeInput" class="code-input" placeholder="Room Code">
@@ -82,13 +91,16 @@
         </div>
 
         <div id="hostSessionView" class="hidden">
-            <div class="header"><button class="back-btn" onclick="exitRoom()">←</button><h2 style="font-size: 16px;">Room Session</h2></div>
+            <div class="header" style="justify-content: flex-start; gap: 12px;">
+                <button class="back-btn" onclick="exitRoom()" style="background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-main);">←</button>
+                <h2 style="font-size: 16px; margin:0;">Room Session</h2>
+            </div>
             
             <div class="card">
                 <div class="card-header-sm"><span>ROOM CODE & QR JOIN</span></div>
                 <div class="code-box"><span id="displayRoomCode">SYNC-0000</span></div>
-                <div id="qrCodeContainer" style="display: flex; justify-content: center; margin-bottom: 10px;"></div>
-                <div class="code-actions">
+                <div id="qrCodeContainer"></div>
+                <div class="code-actions" style="margin-top: 10px;">
                     <button class="code-action-btn" onclick="copyCode()">📋 Copy</button>
                     <button class="code-action-btn" onclick="generateCalendarInvite()">📅 ICS Invite</button>
                 </div>
@@ -132,7 +144,7 @@
 
             <div class="card">
                 <div class="card-header-sm"><span>IN THIS ROOM</span></div>
-                <div id="peerListContainer"></div>
+                <div id="peerListContainer" style="width: 100%;"></div>
             </div>
         </div>
     </div>
@@ -153,7 +165,6 @@
         let currentHeartRate = null;
         let sleepTimeout = null;
         let videoPlayer = document.getElementById('syncVideoPlayer');
-        let localStream = null;
         let peerConnections = {};
 
         document.getElementById('userNameInput').value = currentUserName;
@@ -180,7 +191,6 @@
             }
         }
 
-        // Web Bluetooth Mood Ring (Heart Rate)
         async function connectBiometrics() {
             try {
                 const device = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
@@ -199,7 +209,6 @@
             }
         }
 
-        // WebRTC P2P Streamer
         function initP2PStream() {
             if(!isHosting) return;
             document.getElementById('localMovieFile').click();
@@ -212,8 +221,7 @@
             videoPlayer.style.display = 'block';
             videoPlayer.src = URL.createObjectURL(file);
             videoPlayer.play();
-            localStream = videoPlayer.captureStream();
-            alert("Local P2P stream loaded. Connect peers to begin streaming.");
+            alert("Local P2P stream loaded.");
         }
 
         function connectWebSocket(onSuccess) { 
@@ -370,7 +378,7 @@
                 if(peer.status === 'VIP') badgeClass = 'status-vip';
                 let hrDisplay = peer.hr ? ` ❤️ ${peer.hr}bpm` : '';
                 container.innerHTML += `
-                    <div style="padding: 10px; border-bottom: 1px solid var(--accent-border); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="padding: 10px; border-bottom: 1px solid var(--accent-border); display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <span>👤 ${peer.name} <span class="status-badge ${badgeClass}">${peer.status || 'Online'}</span>${hrDisplay}</span>
                         <span style="font-size: 10px; font-weight: bold;">${peer.role}</span>
                     </div>`;
