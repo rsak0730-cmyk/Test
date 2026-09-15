@@ -129,7 +129,6 @@
         .btn-purple { background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 50%, var(--accent3) 100%); color: var(--btn-text); width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 6px 20px var(--accent-glow); margin-bottom: 8px; }
         .close-session-btn { background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%); color: white; width: 100%; padding: 14px; border-radius: 14px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.3); }
         
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
         .grid-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; text-align: center; cursor: pointer; }
         .grid-btn:hover { background: var(--accent-glow); }
         .grid-btn.active { background: var(--accent1); color: var(--btn-text); }
@@ -143,7 +142,6 @@
         .time-info { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 14px; }
         .player-controls-row { display: flex; justify-content: center; align-items: center; margin-bottom: 12px; }
         .play-pause-lg { background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 100%); color: var(--btn-text); width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid rgba(255, 255, 255, 0.6); box-shadow: 0 6px 20px var(--accent-glow); }
-        .play-pause-lg:disabled { background: rgba(255, 255, 255, 0.1); color: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.1); cursor: not-allowed; box-shadow: none; }
         
         /* YouTube Specifics */
         .youtube-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
@@ -153,7 +151,7 @@
         .youtube-card.fullscreen-mode #ytEmbedWrapper { position: absolute !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0 !important; margin: 0 !important; }
         .youtube-card.fullscreen-mode #ytEmbedWrapper iframe { width: 100% !important; height: 100% !important; }
         
-        /* FIX: EMOJI KEYBOARD FIXED (NO MORE CUTOFFS) */
+        /* Emoji Keyboard */
         .reaction-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); font-size: 22px; padding: 8px 12px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; line-height: 1.2; }
         .reaction-btn:hover { transform: scale(1.15) translateY(-2px); border-color: var(--accent1); }
         .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px 2px; border-bottom: 1px solid var(--border-color); margin-bottom: 12px; scrollbar-width: none; }
@@ -183,12 +181,17 @@
         .badge-host { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.4); }
         .badge-member { background: rgba(255, 255, 255, 0.1); color: var(--text-main); border: 1px solid var(--border-color); }
         .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid var(--border-color); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: var(--accent1); }
+        
+        /* Soundboard Modal */
+        #soundboardModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
+        .soundboard-modal-card { background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; border: 1px solid var(--border-color); display: flex; flex-direction: column; max-height: 85vh; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 15px; overflow-y: auto; }
+        .sound-grid::-webkit-scrollbar { width: 6px; }
+        .sound-grid::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
     </style>
 </head>
 <body>
-    <!-- INTERACTION & SLEEP OVERLAYS -->
     <div id="interactionOverlay" class="hidden">
-        <div class="animated-logo-icon" style="width: 60px; height: 60px; margin-bottom: 16px;"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
         <h2 style="font-size: 24px; margin-bottom: 8px; font-weight: 900; color: var(--accent1);">Room Connected!</h2>
         <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Tap below to enable synchronized media.</p>
         <button class="btn-purple" style="width: 240px;" onclick="unlockMediaContext()">✨ Sync Media</button>
@@ -200,20 +203,28 @@
         <button class="btn-purple" style="width: 200px;" onclick="wakeUpRoom()">Wake Up</button>
     </div>
 
+    <!-- Soundboard Modal -->
+    <div id="soundboardModalOverlay" class="hidden">
+        <div class="soundboard-modal-card">
+            <div style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: var(--accent1); font-weight: 800; font-size: 16px;">🔊 Master Soundboard (50+)</h3>
+                <button onclick="toggleSoundboardModal()" style="background: none; border: none; color: var(--text-main); font-size: 20px; font-weight: bold; padding: 0; cursor: pointer;">✕</button>
+            </div>
+            <div id="dynamicSoundGrid" class="sound-grid"></div>
+        </div>
+    </div>
+
     <div id="roomPopupContainer"></div>
 
     <div class="container">
-        <!-- ================= MAIN LANDING VIEW ================= -->
         <div id="mainLandingView">
             <div class="header">
                 <div class="logo-area">
                     <div class="animated-logo-icon"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
                     <h1>SyncBeat</h1>
                 </div>
-                <a href="https://www.instagram.com/edit.og_" target="_blank" class="ig-badge"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> edit.og_</a>
             </div>
 
-            <!-- Virtual Theme Switcher (12 Themes) -->
             <div class="card" style="padding: 10px 18px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 12px; font-weight: bold; color: var(--accent1);">🎨 Room Theme:</span>
@@ -234,13 +245,10 @@
                 </div>
             </div>
 
-            <!-- Custom Avatar & Status -->
             <div class="card">
                 <div class="card-header-sm"><span>Your Profile & Avatar</span></div>
                 <input type="text" id="userNameInput" class="code-input" placeholder="Your Display Name" oninput="saveName()">
-                <input type="text" id="userStatusInput" class="code-input" placeholder="Custom Status (e.g. VIP, Night Owl)">
-                
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Select Badge Avatar:</div>
+                <input type="text" id="userStatusInput" class="code-input" placeholder="Custom Status">
                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px;">
                     <button class="grid-btn avatar-btn active" onclick="selectAvatar('👤')">👤</button>
                     <button class="grid-btn avatar-btn" onclick="selectAvatar('🐺')">🐺</button>
@@ -264,7 +272,6 @@
             </div>
         </div>
 
-        <!-- ================= HOST SESSION VIEW ================= -->
         <div id="hostSessionView" class="hidden">
             <div class="header">
                 <button class="back-btn" onclick="leaveRoom()">←</button>
@@ -280,16 +287,12 @@
                     <span style="color: var(--success);">● Sparkle Sync</span>
                 </div>
                 <div class="code-box" id="displayRoomCode">SYNC-0000</div>
-                
                 <div class="code-actions">
                     <button class="code-action-btn" onclick="copyCode()">📋 Copy</button>
                     <button class="code-action-btn" onclick="toggleQR()">📱 QR Code</button>
                 </div>
-                
                 <button class="btn-purple" style="background: transparent; border: 1px solid #ff0055; color: #ff0055; font-size: 12px; padding: 10px;" id="btHeartBtn" onclick="connectHeartRate()">❤️ Connect Smart Wearable (HR)</button>
-                
                 <div id="qrBox" class="qr-container"><img id="qrImage" src="" alt="Room QR"></div>
-                
                 <button class="close-session-btn" style="margin-top: 10px;" onclick="leaveRoom()">Leave Room</button>
             </div>
 
@@ -342,8 +345,13 @@
                 </div>
             </div>
 
-            <!-- Emoji Keyboard Section -->
+            <!-- Reactions & Soundboard Button -->
             <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div class="card-header-sm" style="color:var(--danger); margin:0;"><span>Reactions & Soundboard</span></div>
+                    <button class="code-action-btn" style="padding: 6px 12px; font-size: 11px; background:var(--accent1); color:var(--btn-text); border:none;" onclick="toggleSoundboardModal()">🔊 Open 50+ Sounds</button>
+                </div>
+
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                     <div style="font-size: 12px; font-weight:700;">Quick Emoji Tap:</div>
                     <button class="code-action-btn" style="padding: 4px 10px; font-size: 10px;" onclick="toggleEmojiKeyboard()">⌨️ Expand Emojis</button>
@@ -424,6 +432,62 @@
         let sleepTimerId = null;
         let adaptiveSyncEnabled = true;
 
+        // --- 50+ EXTENDED SOUNDBOARD GENERATOR ---
+        const masterSounds = [
+            {id:'airhorn', icon:'🎺', name:'Airhorn', file:'mlg-airhorn.mp3'}, {id:'cricket', icon:'🦗', name:'Cricket', file:'crickets.mp3'},
+            {id:'wow', icon:'😲', name:'Wow', file:'anime-wow-sound-effect.mp3'}, {id:'boom', icon:'💥', name:'Vine Boom', file:'vine-boom.mp3'},
+            {id:'hitmarker', icon:'🎯', name:'Hitmarker', file:'hitmarker_2.mp3'}, {id:'cheer', icon:'🙌', name:'Cheer', file:'crowd-cheering.mp3'},
+            {id:'bruh', icon:'🤦', name:'Bruh', file:'movie_1.mp3'}, {id:'error', icon:'❌', name:'Error', file:'error.mp3'},
+            {id:'tada', icon:'🎉', name:'Tada', file:'tada.mp3'}, {id:'drumroll', icon:'🥁', name:'Drumroll', file:'drum-roll-sound-effect.mp3'},
+            {id:'fart', icon:'💨', name:'Poot', file:'fart-with-reverb.mp3'}, {id:'quack', icon:'🦆', name:'Quack', file:'quack_5.mp3'},
+            {id:'sadviolin', icon:'🎻', name:'Sad Violin', file:'sad-violin.mp3'}, {id:'dundun', icon:'😱', name:'Dun Dun', file:'dun-dun-dun.mp3'},
+            {id:'punch', icon:'👊', name:'Punch', file:'punch.mp3'}, {id:'slap', icon:'👋', name:'Slap', file:'slap.mp3'},
+            {id:'yay', icon:'🎊', name:'Yay', file:'yay.mp3'}, {id:'nani', icon:'⁉️', name:'Nani', file:'nani_1.mp3'},
+            {id:'oof', icon:'💀', name:'Oof', file:'roblox-death-sound_1.mp3'}, {id:'cash', icon:'💰', name:'Cha-Ching', file:'cash-register-kaching-sound-effect-audio-cutter.mp3'},
+            {id:'aww', icon:'🥺', name:'Aww', file:'aww.mp3'}, {id:'boo', icon:'👎', name:'Boo', file:'boo.mp3'},
+            {id:'rimshot', icon:'🥁', name:'Rimshot', file:'rimshot.mp3'}, {id:'evil', icon:'😈', name:'Evil Laugh', file:'evil-laugh.mp3'},
+            {id:'gasp', icon:'😧', name:'Gasp', file:'gasp.mp3'}, {id:'victory', icon:'🏆', name:'Victory', file:'victory.mp3'},
+            {id:'fail', icon:'📉', name:'Fail', file:'fail-trombone-01.mp3'}, {id:'magic', icon:'✨', name:'Magic', file:'magic-chime-01.mp3'},
+            {id:'alert', icon:'🚨', name:'Alert', file:'red-alert.mp3'}, {id:'bell', icon:'🔔', name:'Bell', file:'bell-ring-01.mp3'},
+            {id:'heartbeat', icon:'💓', name:'Heartbeat', file:'heartbeat.mp3'}, {id:'suspense', icon:'👀', name:'Suspense', file:'suspense.mp3'},
+            {id:'swoosh', icon:'💨', name:'Swoosh', file:'swoosh.mp3'}, {id:'pop', icon:'🍾', name:'Pop', file:'pop.mp3'},
+            {id:'buzzer', icon:'🛑', name:'Buzzer', file:'buzzer.mp3'}, {id:'chime', icon:'🎐', name:'Chime', file:'chime.mp3'},
+            {id:'whoosh', icon:'🛸', name:'Whoosh', file:'whoosh.mp3'}, {id:'laugh', icon:'🤣', name:'Laugh Track', file:'laugh-track.mp3'},
+            {id:'sigh', icon:'😮‍💨', name:'Sigh', file:'sigh.mp3'}, {id:'kiss', icon:'😘', name:'Kiss', file:'kiss.mp3'},
+            {id:'click', icon:'🖱️', name:'Click', file:'click.mp3'}, {id:'laser', icon:'🔫', name:'Laser', file:'laser.mp3'},
+            {id:'explosion', icon:'💣', name:'Explosion', file:'explosion.mp3'}, {id:'thunder', icon:'⚡', name:'Thunder', file:'thunder.mp3'},
+            {id:'rain', icon:'🌧️', name:'Rain', file:'rain.mp3'}, {id:'wind', icon:'🌬️', name:'Wind', file:'wind.mp3'},
+            {id:'fire', icon:'🔥', name:'Fire', file:'fire.mp3'}, {id:'water', icon:'💧', name:'Water Drop', file:'water-drop.mp3'},
+            {id:'bubble', icon:'🫧', name:'Bubble', file:'bubble.mp3'}, {id:'spring', icon:'🪀', name:'Boing', file:'boing.mp3'},
+            {id:'horn', icon:'🚗', name:'Honk', file:'honk.mp3'}
+        ];
+
+        function buildMasterSoundboard() {
+            const grid = document.getElementById('dynamicSoundGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            masterSounds.forEach(sound => {
+                if(!document.getElementById(`sfx_${sound.id}`)) {
+                    const audioEl = document.createElement('audio');
+                    audioEl.id = `sfx_${sound.id}`;
+                    audioEl.src = `https://www.myinstants.com/media/sounds/${sound.file}`;
+                    document.body.appendChild(audioEl);
+                }
+                const btn = document.createElement('button');
+                btn.className = 'grid-btn';
+                btn.style.background = 'rgba(0,0,0,0.5)';
+                btn.innerHTML = `${sound.icon} ${sound.name}`;
+                btn.onclick = () => sendSound(sound.id);
+                grid.appendChild(btn);
+            });
+        }
+
+        function toggleSoundboardModal() {
+            const modal = document.getElementById('soundboardModalOverlay');
+            modal.classList.toggle('hidden');
+        }
+
         // --- EXTENSIVE EMOJI LIST ---
         const emojiCategories = {
             android_smileys: ["😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠"],
@@ -439,13 +503,10 @@
             document.getElementById('userNameInput').value = currentUserName;
             renderEmojiGrid();
             detectTimezone();
+            buildMasterSoundboard();
         });
 
-        function saveName() {
-            const val = document.getElementById('userNameInput').value.trim();
-            if (val) { currentUserName = val; localStorage.setItem('syncbeat_username', currentUserName); }
-        }
-
+        // --- THEMES & PROFILE ---
         function changeTheme(themeName) { 
             if(themeName === 'golden') { document.documentElement.removeAttribute('data-theme'); } 
             else { document.documentElement.setAttribute('data-theme', themeName); }
@@ -455,6 +516,12 @@
             document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
+        function saveName() {
+            const val = document.getElementById('userNameInput').value.trim();
+            if (val) { currentUserName = val; localStorage.setItem('syncbeat_username', currentUserName); }
+        }
+
+        // --- SMART FEATURES ---
         function detectTimezone() {
             try { document.getElementById('timezoneDisplay').textContent = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`; } 
             catch (e) { document.getElementById('timezoneDisplay').textContent = "Timezone: Auto"; }
@@ -491,6 +558,14 @@
             if (!isHosting || !ytReady || !ytPlayer) return;
             ytPlayer.setVolume(level);
             if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'VOLUME', level: level }));
+        }
+        function sendSound(soundId) {
+            playSound(soundId);
+            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: soundId }));
+        }
+        function playSound(soundId) {
+            const audio = document.getElementById(`sfx_${soundId}`);
+            if (audio) { audio.currentTime = 0; audio.play().catch(e => console.log("Audio blocked.")); }
         }
         function startSleepTimer() {
             const mins = parseInt(document.getElementById('sleepTimerSelect').value);
@@ -688,6 +763,7 @@
             } else if (data.type === 'PEER_LIST') { renderPeers(data.peers || []); }
             else if (data.type === 'CHAT_MESSAGE' || data.type === 'CHAT') { renderChatMsg(data.name, data.message); }
             else if (data.type === 'ANIMATED_BLAST' || data.type === 'REACTION') { triggerAnimatedBlast(data.emoji, data.isLaugh); }
+            else if (data.type === 'SOUNDBOARD') { playSound(data.sound); }
             else if (data.type === 'MOOD_RING') {
                 const peerEl = document.getElementById(`peer_${data.accountId}`);
                 if (peerEl) { peerEl.classList.add('mood-ring-active'); setTimeout(() => peerEl.classList.remove('mood-ring-active'), 4000); }
