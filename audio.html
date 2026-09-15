@@ -48,8 +48,6 @@
         /* --- NEW ANIMATIONS & UI MODS --- */
         @keyframes heartbeatPulse { 0%, 100% { box-shadow: 0 0 5px rgb(var(--color-accent)); } 50% { box-shadow: 0 0 20px #ff0055, 0 0 35px #ff0055; background: rgba(255, 0, 85, 0.2); } }
         .mood-ring-active { animation: heartbeatPulse 1s infinite; border-radius: 8px; transition: all 0.3s; }
-        .avatar-btn { background: rgba(0,0,0,0.2); border: 1px solid rgb(var(--color-border)); border-radius: 8px; padding: 6px; font-size: 18px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .avatar-btn.active { background: rgb(var(--color-accent)/0.3); border-color: rgb(var(--color-accent)); }
         .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid rgb(var(--color-border)); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: rgb(var(--color-accent)); }
         
         .qr-container { display: none; text-align: center; margin-top: 10px; padding: 10px; background: #fff; border-radius: 12px; }
@@ -121,18 +119,14 @@
                     </select>
                 </div>
 
+                <!-- NEW CENTRALIZED PROFILE DISPLAY -->
                 <div class="space-y-2">
-                    <label class="block text-xs font-semibold text-themeMuted uppercase tracking-wider mb-1">Your Profile</label>
-                    <input type="text" id="userNameInput" placeholder="Enter display name" class="w-full bg-black/20 border border-themeBorder/60 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-themeAccent shadow-inner transition text-sm">
-                    <input type="text" id="userStatusInput" placeholder="Status (e.g. VIP, Listening)" class="w-full bg-black/20 border border-themeBorder/60 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-themeAccent shadow-inner transition text-sm">
-                    
-                    <div class="flex justify-between mt-2 gap-2">
-                        <div class="avatar-btn active flex-1" onclick="selectAvatar('👤')">👤</div>
-                        <div class="avatar-btn flex-1" onclick="selectAvatar('🐺')">🐺</div>
-                        <div class="avatar-btn flex-1" onclick="selectAvatar('🎧')">🎧</div>
-                        <div class="avatar-btn flex-1" onclick="selectAvatar('🔥')">🔥</div>
-                        <div class="avatar-btn flex-1" onclick="selectAvatar('🎵')">🎵</div>
+                    <label class="block text-xs font-semibold text-themeMuted uppercase tracking-wider mb-1">Your Identity</label>
+                    <div id="currentIdentityDisplay" class="w-full bg-black/20 border border-themeBorder/60 rounded-xl px-4 py-3 text-center text-sm shadow-inner transition">
+                        <!-- Injected via JS -->
+                        👤 <b class="text-themeAccent">Loading...</b> <span class="text-themeMuted text-xs">[Ready]</span>
                     </div>
+                    <p class="text-[10px] text-themeMuted text-center mt-1">Customize your profile in the <i class="fa-solid fa-gear"></i> <b>Settings</b> tab.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3 pt-2">
@@ -168,7 +162,6 @@
                     <p class="text-[10px] text-gray-500 mt-1 font-semibold">Scan to join the audio party</p>
                 </div>
 
-                <!-- FIXED: Search Input Flexbox Layout -->
                 <div id="hostControlsWrapper" class="relative w-full hidden z-20">
                     <div id="mediaInputContainer" class="card-3d bg-themeCard border border-themeBorder/50 rounded-xl p-3 md:p-4 flex flex-row items-center gap-2 relative z-30 transition-colors duration-700">
                         <input type="text" id="mediaUrlInput" onkeydown="handleSearchKey(event)" placeholder="Search song or URL..." class="flex-1 min-w-0 bg-black/20 border border-themeBorder/60 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-themeAccent shadow-inner transition">
@@ -307,8 +300,18 @@
         
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200'; 
         let ws = null; 
-        let accountId = localStorage.getItem('syncbeat_account_id'); 
-        if (!accountId) { accountId = 'user_' + Math.random().toString(36).substring(2, 9); localStorage.setItem('syncbeat_account_id', accountId); } 
+        
+        // --- UNIFIED IDENTITY VARIABLES ---
+        let currentUserName = localStorage.getItem('syncbeat_global_name') || localStorage.getItem('syncbeat_name') || 'User';
+        let currentStatus = localStorage.getItem('syncbeat_global_status') || 'Listening';
+        let currentAvatar = localStorage.getItem('syncbeat_global_avatar') || '👤';
+        
+        let accountId = localStorage.getItem('syncbeat_permanent_device_id'); 
+        if (!accountId) { 
+            accountId = 'DEV-' + Math.random().toString(36).substring(2, 9).toUpperCase(); 
+            localStorage.setItem('syncbeat_permanent_device_id', accountId); 
+        } 
+        
         const defaultWsUrl = 'wss://syncbeat-backend2.onrender.com'; 
         let wsUrl = localStorage.getItem('syncbeat_ws_url') || defaultWsUrl; 
         
@@ -323,13 +326,42 @@
         let currentLoadedId = null; 
         let isDraggingSlider = false; 
 
-        let currentAvatar = '👤';
         let adaptiveSyncEnabled = true;
         let sleepTimerId = null;
         let isAutoTheme = true;
 
-        const savedName = localStorage.getItem('syncbeat_name'); 
-        if (savedName) document.getElementById('userNameInput').value = savedName; 
+        document.addEventListener('DOMContentLoaded', () => {
+            updateIdentityUI();
+        });
+
+        // --- GLOBAL MESSAGE LISTENER FOR UNIFIED IDENTITY ---
+        window.addEventListener('message', (e) => {
+            // Profile Update Hook
+            if (e.data && e.data.action === 'PROFILE_UPDATED' && e.data.data) {
+                currentUserName = e.data.data.name;
+                currentStatus = e.data.data.status;
+                currentAvatar = e.data.data.avatar;
+                updateIdentityUI();
+            }
+
+            // Hardware Power-Saver Lifecycle Listener
+            if (e.data && e.data.sender === 'syncbeat_hub') {
+                if (e.data.action === 'TAB_BACKGROUND') {
+                    // Option to mute or pause audio if needed when tab is hidden
+                } 
+            }
+        });
+
+        function updateIdentityUI() {
+            const display = document.getElementById('currentIdentityDisplay');
+            if (display) {
+                display.innerHTML = `${currentAvatar} <b class="text-themeAccent">${escapeHtml(currentUserName)}</b> <span class="text-themeMuted text-xs">[${escapeHtml(currentStatus)}]</span>`;
+            }
+        }
+
+        function getFullProfile() {
+            return `${currentAvatar} ${currentUserName} [${currentStatus}]`;
+        }
 
         document.addEventListener('click', (event) => { 
             const wrapper = document.getElementById('hostControlsWrapper'); 
@@ -384,19 +416,6 @@
             } catch (e) { applyGoldenTheme(); } 
         } 
         document.getElementById('uiThumbnail').onload = () => { if (ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) { applyThumbnailTheme(); } };
-
-        function selectAvatar(avatar) {
-            currentAvatar = avatar;
-            document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) event.target.classList.add('active');
-        }
-
-        function getFullProfile() {
-            let name = document.getElementById('userNameInput').value.trim() || 'User_' + Math.floor(Math.random() * 1000);
-            localStorage.setItem('syncbeat_name', name);
-            let status = document.getElementById('userStatusInput').value.trim() || 'Listening';
-            return `${currentAvatar} ${name} [${status}]`;
-        }
 
         function toggleQR() {
             const qrBox = document.getElementById('qrBox');
