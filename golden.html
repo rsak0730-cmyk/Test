@@ -245,16 +245,15 @@
                 </div>
             </div>
 
+            <!-- NEW CENTRALIZED PROFILE DISPLAY -->
             <div class="card">
-                <div class="card-header-sm"><span>Your Profile & Avatar</span></div>
-                <input type="text" id="userNameInput" class="code-input" placeholder="Your Display Name" oninput="saveName()">
-                <input type="text" id="userStatusInput" class="code-input" placeholder="Custom Status">
-                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 8px;">
-                    <button class="grid-btn avatar-btn active" onclick="selectAvatar('👤')">👤</button>
-                    <button class="grid-btn avatar-btn" onclick="selectAvatar('🐺')">🐺</button>
-                    <button class="grid-btn avatar-btn" onclick="selectAvatar('🐉')">🐉</button>
-                    <button class="grid-btn avatar-btn" onclick="selectAvatar('👽')">👽</button>
-                    <button class="grid-btn avatar-btn" onclick="selectAvatar('🤖')">🤖</button>
+                <div class="card-header-sm"><span>👤 YOUR IDENTITY</span></div>
+                <div id="currentIdentityDisplay" style="background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; font-size: 14px; text-align: center; margin-bottom: 8px;">
+                    <!-- Injected via JS -->
+                    👤 <b style="color:var(--accent1);">Loading...</b> <span style="color:var(--text-muted); font-size:11px;">[Ready]</span>
+                </div>
+                <div style="font-size: 10px; color: var(--text-muted); text-align: center;">
+                    Customize your profile in the <i class="fa-solid fa-gear"></i> <b>Settings</b> tab.
                 </div>
             </div>
 
@@ -412,11 +411,14 @@
         let ws = null;
         let isHosting = false;
         let currentRoomCode = '';
-        let currentUserName = localStorage.getItem('syncbeat_username') || 'User';
-        let currentStatus = 'Member';
-        let currentAvatar = '👤';
-        let currentAccountId = localStorage.getItem('syncbeat_acc_id') || ('DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase());
-        localStorage.setItem('syncbeat_acc_id', currentAccountId);
+        
+        // --- UNIFIED IDENTITY VARIABLES ---
+        let currentUserName = localStorage.getItem('syncbeat_global_name') || localStorage.getItem('syncbeat_username') || 'User';
+        let currentStatus = localStorage.getItem('syncbeat_global_status') || 'Member';
+        let currentAvatar = localStorage.getItem('syncbeat_global_avatar') || '👤';
+        
+        let currentAccountId = localStorage.getItem('syncbeat_permanent_device_id') || ('DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase());
+        localStorage.setItem('syncbeat_permanent_device_id', currentAccountId);
         
         let ytPlayer = null;
         let ytReady = false;
@@ -431,6 +433,35 @@
         
         let sleepTimerId = null;
         let adaptiveSyncEnabled = true;
+
+        // --- GLOBAL MESSAGE LISTENER FOR UNIFIED IDENTITY ---
+        window.addEventListener('message', (e) => {
+            // Profile Update Hook
+            if (e.data && e.data.action === 'PROFILE_UPDATED' && e.data.data) {
+                currentUserName = e.data.data.name;
+                currentStatus = e.data.data.status;
+                currentAvatar = e.data.data.avatar;
+                updateIdentityUI();
+            }
+
+            // Hardware Power-Saver Lifecycle Listener
+            if (e.data && e.data.sender === 'syncbeat_hub') {
+                if (e.data.action === 'TAB_BACKGROUND') {
+                    if (typeof ytPlayer !== 'undefined' && ytPlayer && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
+                    document.body.style.animationPlayState = 'paused';
+                } 
+                else if (e.data.action === 'TAB_FOREGROUND') {
+                    document.body.style.animationPlayState = 'running';
+                }
+            }
+        });
+
+        function updateIdentityUI() {
+            const display = document.getElementById('currentIdentityDisplay');
+            if (display) {
+                display.innerHTML = `${currentAvatar} <b style="color:var(--accent1);">${escapeHtml(currentUserName)}</b> <span style="color:var(--text-muted); font-size:11px;">[${escapeHtml(currentStatus)}]</span>`;
+            }
+        }
 
         // --- 50+ EXTENDED SOUNDBOARD GENERATOR ---
         const masterSounds = [
@@ -500,25 +531,16 @@
         let activeEmojiCategory = 'android_smileys';
 
         window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('userNameInput').value = currentUserName;
             renderEmojiGrid();
             detectTimezone();
             buildMasterSoundboard();
+            updateIdentityUI();
         });
 
         // --- THEMES & PROFILE ---
         function changeTheme(themeName) { 
             if(themeName === 'golden') { document.documentElement.removeAttribute('data-theme'); } 
             else { document.documentElement.setAttribute('data-theme', themeName); }
-        }
-        function selectAvatar(avatar) {
-            currentAvatar = avatar;
-            document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-        function saveName() {
-            const val = document.getElementById('userNameInput').value.trim();
-            if (val) { currentUserName = val; localStorage.setItem('syncbeat_username', currentUserName); }
         }
 
         // --- SMART FEATURES ---
@@ -770,7 +792,6 @@
             }
         }
         function startHostingSession() {
-            saveName(); currentStatus = document.getElementById('userStatusInput').value.trim() || 'Host';
             const code = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase(); currentRoomCode = code;
             setupRoomUI('HOST', code); notifyParent('ROOM_OPENED', code);
             connectWebSocket(() => {
@@ -780,7 +801,6 @@
             });
         }
         function connectToRoom() {
-            saveName(); currentStatus = document.getElementById('userStatusInput').value.trim() || 'Member';
             const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
             if (code.length < 4) { showToast('Invalid code.'); return; }
             currentRoomCode = code; notifyParent('ROOM_OPENED', code);
@@ -844,6 +864,7 @@
                 if (peer.role === 'HOST') badgeHTML += '<span class="achievement-badge">Master Host 🏆</span>';
                 if (hour >= 2 && hour < 6) badgeHTML += '<span class="achievement-badge">Night Owl 🦉</span>';
                 const domId = peer.accountId || Math.random().toString(36).substring(2,7);
+
                 const row = document.createElement('div');
                 row.className = 'peer-item'; row.id = `peer_${domId}`;
                 row.innerHTML = `<div class="peer-info"><div class="peer-icon">${peer.name.split(' ')[0] || '👤'}</div><div><div class="peer-name">${escapeHtml(peer.name.substring(peer.name.indexOf(' ') + 1))}</div>${badgeHTML}</div></div><span class="sync-tag" style="${peer.role === 'HOST' ? 'background:rgba(16, 185, 129, 0.2); color:#34d399;' : 'background:rgba(255, 255, 255, 0.1); color:var(--text-main);'}">${escapeHtml(peer.role)}</span>`;
@@ -854,18 +875,7 @@
         function copyCode() { navigator.clipboard.writeText(currentRoomCode); showToast('✨ Room Code Copied!'); }
         function showToast(msg) { const now = Date.now(); if (msg === lastToastMsg && now - lastToastTime < 1500) return; lastToastMsg = msg; lastToastTime = now; const card = document.createElement('div'); card.className = 'room-popup-card'; card.textContent = msg; document.getElementById('roomPopupContainer').appendChild(card); setTimeout(() => card.remove(), 2500); }
         function escapeHtml(str) { return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]); }
-
-        // --- HARDWARE POWER-SAVER LIFECYCLE LISTENER ---
-        window.addEventListener('message', (e) => {
-            if (!e.data || e.data.sender !== 'syncbeat_hub') return;
-            if (e.data.action === 'TAB_BACKGROUND') {
-                if (typeof ytPlayer !== 'undefined' && ytPlayer && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
-                document.body.style.animationPlayState = 'paused';
-            } 
-            else if (e.data.action === 'TAB_FOREGROUND') {
-                document.body.style.animationPlayState = 'running';
-            }
-        });
     </script>
 </body>
 </html>
+
