@@ -7,52 +7,111 @@
     <style>
         /* --- VIRTUAL ROOM THEMES --- */
         :root {
-            --bg-page: #f8fafc; --text-main: #0f172a; --text-muted: #6b7280;
-            --primary: #ef4444; --primary-light: #fee2e2; --primary-border: #fca5a5;
-            --card-bg: #ffffff; --card-border: #fecaca; --input-bg: #f9fafb;
-            --success: #10b981; --success-light: #dcfce7;
-            --black-box: #000000; --black-box-border: #27272a; --black-box-text: #ffffff;
+            --bg-page: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #6b7280;
+            --primary: #ef4444;
+            --primary-light: #fee2e2;
+            --primary-border: #fca5a5;
+            --card-bg: #ffffff;
+            --card-border: #fecaca;
+            --input-bg: #f9fafb;
+            --success: #10b981;
+            --success-light: #dcfce7;
+            --black-box: #000000;
+            --black-box-border: #27272a;
+            --black-box-text: #ffffff;
         }
+
         [data-theme="cyberpunk"] {
-            --bg-page: #050510; --text-main: #00ffcc; --text-muted: #8888aa;
-            --primary: #ff00ff; --primary-light: rgba(255, 0, 255, 0.2); --primary-border: #ff00ff;
-            --card-bg: #110022; --card-border: rgba(0, 255, 204, 0.4); --input-bg: rgba(0, 0, 0, 0.6);
-            --success: #00ffcc; --success-light: rgba(0, 255, 204, 0.2);
-            --black-box: #0a0a0a; --black-box-border: #ff00ff; --black-box-text: #00ffcc;
+            --bg-page: #050510;
+            --text-main: #00ffcc;
+            --text-muted: #8888aa;
+            --primary: #ff00ff;
+            --primary-light: rgba(255, 0, 255, 0.2);
+            --primary-border: #ff00ff;
+            --card-bg: #110022;
+            --card-border: rgba(0, 255, 204, 0.4);
+            --input-bg: rgba(0, 0, 0, 0.6);
+            --success: #00ffcc;
+            --success-light: rgba(0, 255, 204, 0.2);
+            --black-box: #0a0a0a;
+            --black-box-border: #ff00ff;
+            --black-box-text: #00ffcc;
         }
+
         [data-theme="vhs"] {
-            --bg-page: #1a1a1a; --text-main: #33ff33; --text-muted: #aaaaaa;
-            --primary: #ff3333; --primary-light: rgba(255, 51, 51, 0.2); --primary-border: #ff3333;
-            --card-bg: #222222; --card-border: #555555; --input-bg: #111111;
-            --success: #33ff33; --success-light: rgba(51, 255, 51, 0.2);
-            --black-box: #000000; --black-box-border: #444444; --black-box-text: #ffffff;
+            --bg-page: #1a1a1a;
+            --text-main: #33ff33;
+            --text-muted: #aaaaaa;
+            --primary: #ff3333;
+            --primary-light: rgba(255, 51, 51, 0.2);
+            --primary-border: #ff3333;
+            --card-bg: #222222;
+            --card-border: #555555;
+            --input-bg: #111111;
+            --success: #33ff33;
+            --success-light: rgba(51, 255, 51, 0.2);
+            --black-box: #000000;
+            --black-box-border: #444444;
+            --black-box-text: #ffffff;
         }
+
         [data-theme="cinema"] {
-            --bg-page: #000000; --text-main: #ffffff; --text-muted: #999999;
-            --primary: #e50914; --primary-light: rgba(229, 9, 20, 0.2); --primary-border: #e50914;
-            --card-bg: #141414; --card-border: #333333; --input-bg: #222222;
-            --success: #10b981; --success-light: rgba(16, 185, 129, 0.2);
-            --black-box: #050505; --black-box-border: #1a1a1a; --black-box-text: #ffffff;
+            --bg-page: #000000;
+            --text-main: #ffffff;
+            --text-muted: #999999;
+            --primary: #e50914;
+            --primary-light: rgba(229, 9, 20, 0.2);
+            --primary-border: #e50914;
+            --card-bg: #141414;
+            --card-border: #333333;
+            --input-bg: #222222;
+            --success: #10b981;
+            --success-light: rgba(16, 185, 129, 0.2);
+            --black-box: #050505;
+            --black-box-border: #1a1a1a;
+            --black-box-text: #ffffff;
         }
+
         [data-theme="terminal"] {
-            --bg-page: #050505; --text-main: #00ff00; --text-muted: #008800;
-            --primary: #00ff00; --primary-light: rgba(0, 255, 0, 0.15); --primary-border: #00ff00;
-            --card-bg: #0a0a0a; --card-border: #00ff00; --input-bg: #000000;
-            --success: #00ff00; --success-light: rgba(0, 255, 0, 0.2);
-            --black-box: #000000; --black-box-border: #00ff00; --black-box-text: #00ff00;
+            --bg-page: #050505;
+            --text-main: #00ff00;
+            --text-muted: #008800;
+            --primary: #00ff00;
+            --primary-light: rgba(0, 255, 0, 0.15);
+            --primary-border: #00ff00;
+            --card-bg: #0a0a0a;
+            --card-border: #00ff00;
+            --input-bg: #000000;
+            --success: #00ff00;
+            --success-light: rgba(0, 255, 0, 0.2);
+            --black-box: #000000;
+            --black-box-border: #00ff00;
+            --black-box-text: #00ff00;
         }
+
         [data-theme="esports"] {
-            --bg-page: #0f111a; --text-main: #ffffff; --text-muted: #8a91a6;
-            --primary: #ff4655; --primary-light: rgba(255, 70, 85, 0.2); --primary-border: #ff4655;
-            --card-bg: #181a25; --card-border: #2b2e40; --input-bg: #0f111a;
-            --success: #00ffcc; --success-light: rgba(0, 255, 204, 0.2);
-            --black-box: #000000; --black-box-border: #ff4655; --black-box-text: #ffffff;
+            --bg-page: #0f111a;
+            --text-main: #ffffff;
+            --text-muted: #8a91a6;
+            --primary: #ff4655; 
+            --primary-light: rgba(255, 70, 85, 0.2);
+            --primary-border: #ff4655;
+            --card-bg: #181a25;
+            --card-border: #2b2e40;
+            --input-bg: #0f111a;
+            --success: #00ffcc;
+            --success-light: rgba(0, 255, 204, 0.2);
+            --black-box: #000000;
+            --black-box-border: #ff4655;
+            --black-box-text: #ffffff;
         }
 
         /* --- STYLES --- */
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: var(--bg-page); color: var(--text-main); margin: 0; padding: 15px; padding-bottom: 95px !important; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; transition: all 0.3s ease; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-page); color: var(--text-main); margin: 0; padding: 15px; padding-bottom: 95px !important; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; transition: all 0.3s ease; }
         .container { width: 100%; max-width: 420px; }
-        button, .btn-purple, .code-action-btn, .close-session-btn, .banner-card { position: relative; overflow: hidden; transition: transform 0.1s ease; cursor: pointer; outline: none; }
+        button, .btn-purple, .code-action-btn, .close-session-btn, .banner-card { position: relative; overflow: hidden; transition: transform 0.1s ease; cursor: pointer; }
         button:active, .btn-purple:active, .banner-card:active { transform: scale(0.96); }
         
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
@@ -62,12 +121,20 @@
         .back-btn { background: none; border: none; font-size: 22px; font-weight: bold; color: var(--text-main); cursor: pointer; }
         .subtitle { font-size: 12px; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px; }
         
+        .status-pills { display: flex; gap: 6px; }
+        .pill { background: var(--card-bg); border: 1px solid var(--primary-border); padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 4px; }
+        .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
         .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; }
-        .card.black-player-box { background-color: var(--black-box) !important; border: 1px solid var(--black-box-border) !important; color: var(--black-box-text) !important; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .card.black-player-box { background-color: var(--black-box) !important; border: 1px solid var(--black-box-border) !important; color: var(--black-box-text) !important; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
+        .card.black-player-box .card-header-sm { color: var(--primary-border) !important; }
+        .card.black-player-box .track-title { color: var(--black-box-text) !important; }
+        .card.black-player-box .track-artist { color: var(--text-muted) !important; }
+        
         .card-header-sm { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
         .dot { height: 8px; width: 8px; background-color: var(--success); border-radius: 50%; display: inline-block; margin-right: 5px; }
         
-        .banner-card { background: linear-gradient(135deg, var(--card-bg), var(--primary-light)); border: 1px solid var(--primary-border); display: flex; align-items: center; justify-content: space-between; }
+        .banner-card { background: linear-gradient(135deg, var(--card-bg), var(--primary-light)); border: 1px solid var(--primary-border); display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
         .banner-icon { background: var(--primary); color: white; width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .banner-content { flex: 1; margin-left: 15px; }
         .banner-title { font-weight: 700; font-size: 15px; color: var(--text-main); }
@@ -75,57 +142,84 @@
         .banner-arrow { background: var(--primary); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         
         .hosting-banner { background: linear-gradient(135deg, var(--card-bg), var(--primary-light)); border: 1px solid var(--primary-border); }
+        .hosting-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .hosting-active-tag { display: flex; align-items: center; font-size: 12px; font-weight: 800; color: var(--success); }
+        
         .code-box { background: var(--card-bg); border: 2px dashed var(--primary-border); border-radius: 14px; padding: 12px; text-align: center; font-size: 22px; font-weight: 900; color: var(--primary); letter-spacing: 2px; margin-bottom: 12px; }
+        .code-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .code-action-btn { background: var(--primary-light); border: 1px solid var(--primary-border); color: var(--primary); font-weight: 700; font-size: 11px; padding: 10px 4px; border-radius: 12px; text-align: center; cursor: pointer; }
+        
         .close-session-btn { background: #1e293b; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
         
         .player-info { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
-        .album-art { width: 60px; height: 85px; background: #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .track-title { font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; line-height: 1.2; }
+        .album-art { width: 60px; height: 85px; background: #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #666; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .track-title { font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; word-break: break-word; line-height: 1.2; }
+        .track-artist { font-size: 12px; color: var(--text-muted); font-weight: 600; }
         
-        .countdown-btn-lg { background: linear-gradient(135deg, var(--success), #059669); color: white; width: 100%; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 800; border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); text-transform: uppercase; }
-        .search-input, .code-input { width: 100%; background: var(--input-bg); border: 1px solid var(--card-border); padding: 12px 14px; border-radius: 12px; font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 8px; font-weight: 600; color: var(--text-main); }
+        .countdown-btn-lg { background: linear-gradient(135deg, var(--success), #059669); color: white; width: 100%; padding: 14px; border-radius: 14px; font-size: 15px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .search-input, .code-input { width: 100%; background: var(--input-bg); border: 1px solid var(--card-border); padding: 12px 14px; border-radius: 12px; font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 8px; font-weight: 600; color: var(--text-main); transition: all 0.3s ease; }
         .search-input:focus, .code-input:focus { border-color: var(--primary); }
         
         .movie-search-results { max-height: 250px; overflow-y: auto; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 4px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .movie-result-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-bottom: 1px solid var(--primary-light); cursor: pointer; border-radius: 8px; }
+        .movie-result-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-bottom: 1px solid var(--primary-light); cursor: pointer; transition: background 0.2s; border-radius: 8px; }
+        .movie-result-item:hover { background: var(--primary-light); }
+        .movie-result-poster { width: 40px; height: 60px; object-fit: cover; border-radius: 6px; background: #e5e7eb; flex-shrink: 0; }
+        .movie-result-info { flex: 1; overflow: hidden; }
+        .movie-result-title { font-size: 13px; font-weight: 800; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .movie-result-year { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         
-        .emoji-keyboard-container { background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 12px; margin-top: 10px; }
-        .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px 2px; border-bottom: 1px solid var(--card-border); margin-bottom: 10px; }
-        .kb-tab-btn { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+        .emoji-keyboard-container { background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 12px; margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px 2px; border-bottom: 1px solid var(--card-border); margin-bottom: 10px; scroll-behavior: smooth; }
+        .kb-tab-btn { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; color: var(--text-muted); }
         .kb-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         .emoji-grid-box { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-height: 210px; overflow-y: auto; padding: 8px 4px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--card-border); }
-        .emoji-key { background: none; border: none; font-size: 26px; cursor: pointer; padding: 8px; border-radius: 8px; display: flex; justify-content: center; }
+        .emoji-key { background: none; border: none; font-size: 26px; cursor: pointer; padding: 8px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center; }
+        .emoji-key:hover { background: var(--primary-light); transform: scale(1.18); }
         
         /* Modals & Overlays */
         #roomPopupContainer { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 999999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; width: 90%; max-width: 380px; }
-        .room-popup-card { background: rgba(153, 27, 27, 0.95); backdrop-filter: blur(8px); color: white; padding: 12px 18px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); width: 100%; pointer-events: auto; }
+        .room-popup-card { background: rgba(153, 27, 27, 0.95); backdrop-filter: blur(8px); color: white; padding: 12px 18px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); width: 100%; box-sizing: border-box; pointer-events: auto; }
+        .popup-sender { font-size: 11px; font-weight: 700; color: #fca5a5; margin-bottom: 2px; }
+        .popup-content { font-size: 13px; font-weight: 800; word-break: break-all; }
         
         .floating-reaction { position: fixed; bottom: 100px; font-size: 38px; animation: floatUp 2.2s ease-out forwards; z-index: 3000; pointer-events: none; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-360px); opacity: 0; } }
         
         .peer-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--primary-light); }
+        .peer-item:last-child { border-bottom: none; }
+        .peer-info { display: flex; align-items: center; gap: 10px; }
         .peer-icon { width: 32px; height: 32px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .peer-name { font-size: 13px; font-weight: 700; color: var(--text-main); }
         .sync-tag { background: var(--success-light); color: var(--success); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; }
         
         .btn-purple { background: var(--primary); color: white; border: none; width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
-        #toastModal { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #111827; color: white; padding: 12px 24px; border-radius: 20px; font-size: 13px; font-weight: 700; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .profile-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+        
+        #toastModal { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #111827; color: white; padding: 12px 24px; border-radius: 20px; font-size: 13px; font-weight: 700; z-index: 10000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         #toastModal.show { opacity: 1; }
         
         .iframe-wrapper { position: relative; width: 100%; height: 240px; border-radius: 12px; overflow: hidden; background: #000; margin-top: 8px; border: 1px solid var(--card-border); }
         .host-tabs { display: flex; gap: 6px; margin-bottom: 12px; background: var(--input-bg); padding: 4px; border-radius: 12px; }
-        .host-tab { flex: 1; padding: 10px 6px; font-size: 12px; font-weight: 800; color: var(--text-muted); background: transparent; border: none; border-radius: 8px; }
-        .host-tab.active { background: var(--primary); color: white; }
+        .host-tab { flex: 1; padding: 10px 6px; font-size: 12px; font-weight: 800; color: var(--text-muted); background: transparent; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; }
+        .host-tab.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
+        
+        .server-btn { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-muted); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .server-btn.active { background: #1e293b; color: white; border-color: #1e293b; }
+        
+        .file-select-banner { background: var(--primary-light); border: 2px dashed var(--primary-border); border-radius: 14px; padding: 14px; text-align: center; cursor: pointer; margin-bottom: 8px; }
         
         .progress-track { background: #334155; height: 8px; border-radius: 4px; cursor: pointer; margin-bottom: 6px; position: relative; touch-action: none; margin-top: 10px; }
         .progress-fill { background: var(--primary); width: 0%; height: 100%; border-radius: 4px; pointer-events: none; position: relative; }
         .progress-thumb { position: absolute; right: -6px; top: -4px; width: 16px; height: 16px; background: var(--primary); border: 2px solid #ffffff; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.25); pointer-events: none; }
-        .play-pause-lg { background: var(--primary); color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: none; margin: 0 auto; }
+        .time-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; }
+        .play-pause-lg { background: var(--primary); color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: none; cursor: pointer; margin: 0 auto; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4); }
 
         /* Floating Live Chat */
         #liveChatFloatingContainer { position: fixed; bottom: 95px; right: 16px; z-index: 9999; }
         .floating-chat-window { width: 310px; max-width: calc(100vw - 32px); background: var(--card-bg); border: 1px solid var(--primary-border); border-radius: 16px; overflow: hidden; margin-bottom: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
         .floating-chat-header { background: var(--primary-light); padding: 10px 14px; font-weight: 800; font-size: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--primary-border); }
+        .floating-minimize-btn { background: none; border: none; font-size: 16px; font-weight: bold; color: var(--primary); cursor: pointer; padding: 0 4px; }
         .live-chat-launcher { background: var(--primary); color: white; padding: 10px 18px; border-radius: 30px; font-weight: 800; font-size: 12px; border: none; box-shadow: 0 4px 15px rgba(239,68,68,0.4); cursor: pointer; }
 
         /* --- NEW STYLES: Features 2, 6, 10 --- */
@@ -136,17 +230,9 @@
         .avatar-btn { background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 6px; font-size: 18px; text-align: center; cursor: pointer; }
         .avatar-btn.active { background: var(--primary-light); border-color: var(--primary); }
         
-        .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid var(--primary-border); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: var(--primary); display: inline-block; margin-top: 4px; }
+        .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid var(--primary-border); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: var(--primary); }
         .qr-container { display: none; text-align: center; margin-top: 10px; padding: 10px; background: #fff; border-radius: 12px; }
         .qr-container img { width: 140px; height: 140px; margin: 0 auto; }
-        
-        /* 50+ Extended Soundboard Modal */
-        #soundboardModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .soundboard-modal-card { background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; border: 1px solid var(--primary-border); display: flex; flex-direction: column; max-height: 85vh; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 15px; overflow-y: auto; }
-        .sound-grid::-webkit-scrollbar { width: 6px; }
-        .sound-grid::-webkit-scrollbar-thumb { background: var(--primary-border); border-radius: 4px; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -158,19 +244,6 @@
         <button class="btn-purple" style="width: 240px; font-size: 16px; padding: 16px; border-radius: 30px;" onclick="unlockMediaContext()">🟢 Connect Media</button>
     </div>
     
-    <!-- 50+ Extended Soundboard Modal -->
-    <div id="soundboardModalOverlay" class="hidden">
-        <div class="soundboard-modal-card">
-            <div style="padding: 15px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin: 0; color: var(--primary); font-weight: 800; font-size: 16px;">🔊 Master Soundboard (50+)</h3>
-                <button onclick="toggleSoundboardModal()" style="background: none; border: none; color: var(--text-main); font-size: 20px; font-weight: bold; padding: 0;">✕</button>
-            </div>
-            <div id="dynamicSoundGrid" class="sound-grid">
-                <!-- JavaScript will dynamically generate 55 Sound Buttons here to save tokens and DOM space -->
-            </div>
-        </div>
-    </div>
-
     <div id="roomPopupContainer"></div>
 
     <div class="container">
@@ -181,8 +254,9 @@
                     <h1>Streamflix</h1>
                     <span class="room-badge" id="loggedAccountBadge">ID: Loading...</span>
                 </div>
+                <!-- VIRTUAL THEME SELECTOR -->
                 <select id="themeSelector" onchange="changeTheme(this.value)" style="background: var(--input-bg); color: var(--primary); border: 1px solid var(--card-border); padding: 5px; border-radius: 8px; font-size: 11px; font-weight: bold; outline: none;">
-                    <option value="default">Default Theme</option>
+                    <option value="default">Default Streamflix</option>
                     <option value="cyberpunk">Cyberpunk Neon</option>
                     <option value="vhs">Retro VHS</option>
                     <option value="cinema">Cinema Dark</option>
@@ -198,6 +272,7 @@
                 <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-bottom: 8px;" id="deviceAccountDisplay">Permanent ID: Generating...</div>
                 
                 <input type="text" id="userNameInput" class="code-input" placeholder="Enter Your Name" style="padding: 10px 14px; font-size: 13px; text-align: left;" oninput="autoSaveProfileName()">
+                <!-- CUSTOM STATUS -->
                 <input type="text" id="userStatusInput" class="code-input" placeholder="Custom Status (e.g., VIP, Chilling)" style="padding: 10px 14px; font-size: 13px; text-align: left;">
                 
                 <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Select Avatar:</div>
@@ -242,6 +317,7 @@
                 <div class="banner-arrow">→</div>
             </div>
 
+            <!-- AUTOMATED SCHEDULING -->
             <button class="btn-purple" style="background: transparent; border: 1px dashed var(--primary); color: var(--primary);" onclick="generateInvite()">📅 Schedule Watch Party</button>
 
             <div class="card" id="connectMemberCard">
@@ -259,6 +335,7 @@
                 <button class="back-btn" onclick="goBackToHome()">←</button>
                 <div style="text-align: right;">
                     <div style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="sessionHeaderTitle">Room Session</div>
+                    <!-- GLOBAL TIMEZONE COORDINATOR -->
                     <div style="font-size: 10px; color: var(--text-muted);" id="timezoneDisplay">Detecting Timezone...</div>
                 </div>
             </div>
@@ -272,11 +349,14 @@
                 
                 <div class="code-actions">
                     <button class="code-action-btn" onclick="copyCode()">📋 Copy</button>
+                    <!-- CROSS-PLATFORM QR CODE -->
                     <button class="code-action-btn" onclick="toggleQR()">📱 QR Code</button>
                 </div>
 
+                <!-- WATCH PARTY MOOD RING -->
                 <button class="btn-purple" style="background: transparent; border: 1px solid #ff0055; color: #ff0055; font-size: 12px; padding: 10px;" id="btHeartBtn" onclick="connectHeartRate()">❤️ Connect Wearable (HR Monitor)</button>
 
+                <!-- QR Code Box -->
                 <div id="qrBox" class="qr-container"><img id="qrImage" src="" alt="Room QR"></div>
 
                 <button class="close-session-btn" style="margin-top: 10px;" id="closeSessionBtn" onclick="closeRoomAndReturnHome()">⚡ LEAVE ROOM</button>
@@ -294,6 +374,7 @@
                     </div>
                 </div>
 
+                <!-- Volume & Adaptive Controls -->
                 <div id="advancedControlsPanel" style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; border-top: 1px solid var(--black-box-border); padding-top: 10px;">
                     <div style="flex: 1;">
                         <div style="font-size: 10px; color: var(--primary);">ROOM VOLUME (Host)</div>
@@ -357,6 +438,7 @@
                         <div style="font-size: 24px; margin-bottom: 4px;">📁</div>
                         <div style="font-size: 13px; font-weight: 800; color: var(--primary);">Select Downloaded Movie File</div>
                     </div>
+                    <!-- OFFLINE P2P TRIGGER -->
                     <button class="code-action-btn" style="width: 100%; margin-bottom: 8px;" id="p2pStreamBtn" onclick="startP2PStream()">📡 Start P2P WebRTC Broadcast (Host)</button>
                     
                     <div id="localVideoWrapper" class="iframe-wrapper">
@@ -367,10 +449,17 @@
                 <button id="exitFullScreenBtn" class="hidden" style="position: fixed; top: 20px; left: 20px; z-index: 100000000; background: rgba(0,0,0,0.85); color: white; border: 1px solid rgba(255,255,255,0.6); padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; pointer-events: auto;" onclick="toggleFullScreenMode()">← Back to Room</button>
             </div>
 
+            <!-- Interactive Soundboard & Original Emoji Keyboard -->
             <div class="card" style="margin-top: 14px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <div class="card-header-sm" style="margin:0;"><span>Reactions & Soundboard</span></div>
-                    <button class="code-action-btn" style="padding: 6px 12px; font-size: 11px; background:var(--primary); color:white; border:none;" onclick="toggleSoundboardModal()">🔊 Open 50+ Sounds</button>
+                <div class="card-header-sm" style="color:var(--primary);"><span>Reactions & Soundboard</span></div>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                    <button class="code-action-btn" onclick="sendSound('airhorn')">🎺 Airhorn</button>
+                    <button class="code-action-btn" onclick="sendSound('cricket')">🦗 Cricket</button>
+                    <button class="code-action-btn" onclick="sendSound('wow')">😲 Wow</button>
+                    <button class="code-action-btn" onclick="sendSound('boom')">💥 Vine Boom</button>
+                    <button class="code-action-btn" onclick="sendSound('hitmarker')">🎯 Hitmarker</button>
+                    <button class="code-action-btn" onclick="sendSound('cheer')">🙌 Cheer</button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -397,9 +486,12 @@
                 </div>
             </div>
 
+            <!-- Peer List (Includes Avatar & Badges) -->
             <div class="card">
                 <div class="card-header-sm" style="color:var(--primary);"><span>IN THIS ROOM (<span id="peerCount">1</span>)</span></div>
-                <div id="peerListContainer"></div>
+                <div id="peerListContainer">
+                    <!-- Dynamic Peers Injected Here -->
+                </div>
             </div>
         </div>
     </div>
@@ -417,7 +509,7 @@
                 </div>
                 <div style="display: flex; gap: 6px;">
                     <input type="text" id="chatInput" class="search-input" style="margin-bottom:0;" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatMessage()">
-                    <button class="btn-purple" style="width:auto; padding: 10px 14px; margin:0;" onclick="sendChatMessage()">Send</button>
+                    <button class="action-btn-custom" style="padding: 10px 14px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight: bold; cursor: pointer;" onclick="sendChatMessage()">Send</button>
                 </div>
             </div>
         </div>
@@ -425,6 +517,15 @@
     </div>
 
     <div id="toastModal">Notification</div>
+
+    <!-- AUDIO FILES FOR SOUNDBOARD -->
+    <audio id="sfx_airhorn" src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"></audio>
+    <audio id="sfx_cricket" src="https://www.myinstants.com/media/sounds/crickets.mp3"></audio>
+    <audio id="sfx_wow" src="https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"></audio>
+    <audio id="sfx_boom" src="https://www.myinstants.com/media/sounds/vine-boom.mp3"></audio>
+    <audio id="sfx_hitmarker" src="https://www.myinstants.com/media/sounds/hitmarker_2.mp3"></audio>
+    <audio id="sfx_cheer" src="https://www.myinstants.com/media/sounds/crowd-cheering.mp3"></audio>
+
     <script>
         // --- NOTIFICATION UTILITY ---
         function notifyParent(action, code='') { window.parent.postMessage({ sender: 'syncbeat', tab: 0, action, code }, '*'); }
@@ -436,7 +537,7 @@
         let isHosting = false; 
         let currentRoomCode = ""; 
         let currentUserName = localStorage.getItem('syncbeat_device_name') || 'User'; 
-        let currentStatus = 'Ready';
+        let currentStatus = 'Member';
         let currentAvatar = '👤';
         let currentAccountId = ""; 
         
@@ -454,68 +555,7 @@
         let progressInterval = null; 
         let isScrubbing = false;
         let adaptiveSyncEnabled = true;
-        let sleepTimerId = null;
 
-        // --- 50+ EXTENDED SOUNDBOARD GENERATOR ---
-        const masterSounds = [
-            {id:'airhorn', icon:'🎺', name:'Airhorn', file:'mlg-airhorn.mp3'}, {id:'cricket', icon:'🦗', name:'Cricket', file:'crickets.mp3'},
-            {id:'wow', icon:'😲', name:'Wow', file:'anime-wow-sound-effect.mp3'}, {id:'boom', icon:'💥', name:'Vine Boom', file:'vine-boom.mp3'},
-            {id:'hitmarker', icon:'🎯', name:'Hitmarker', file:'hitmarker_2.mp3'}, {id:'cheer', icon:'🙌', name:'Cheer', file:'crowd-cheering.mp3'},
-            {id:'bruh', icon:'🤦', name:'Bruh', file:'movie_1.mp3'}, {id:'error', icon:'❌', name:'Error', file:'error.mp3'},
-            {id:'tada', icon:'🎉', name:'Tada', file:'tada.mp3'}, {id:'drumroll', icon:'🥁', name:'Drumroll', file:'drum-roll-sound-effect.mp3'},
-            {id:'fart', icon:'💨', name:'Poot', file:'fart-with-reverb.mp3'}, {id:'quack', icon:'🦆', name:'Quack', file:'quack_5.mp3'},
-            {id:'sadviolin', icon:'🎻', name:'Sad Violin', file:'sad-violin.mp3'}, {id:'dundun', icon:'😱', name:'Dun Dun', file:'dun-dun-dun.mp3'},
-            {id:'punch', icon:'👊', name:'Punch', file:'punch.mp3'}, {id:'slap', icon:'👋', name:'Slap', file:'slap.mp3'},
-            {id:'yay', icon:'🎊', name:'Yay', file:'yay.mp3'}, {id:'nani', icon:'⁉️', name:'Nani', file:'nani_1.mp3'},
-            {id:'oof', icon:'💀', name:'Oof', file:'roblox-death-sound_1.mp3'}, {id:'cash', icon:'💰', name:'Cha-Ching', file:'cash-register-kaching-sound-effect-audio-cutter.mp3'},
-            {id:'aww', icon:'🥺', name:'Aww', file:'aww.mp3'}, {id:'boo', icon:'👎', name:'Boo', file:'boo.mp3'},
-            {id:'rimshot', icon:'🥁', name:'Rimshot', file:'rimshot.mp3'}, {id:'evil', icon:'😈', name:'Evil Laugh', file:'evil-laugh.mp3'},
-            {id:'gasp', icon:'😧', name:'Gasp', file:'gasp.mp3'}, {id:'victory', icon:'🏆', name:'Victory', file:'victory.mp3'},
-            {id:'fail', icon:'📉', name:'Fail', file:'fail-trombone-01.mp3'}, {id:'magic', icon:'✨', name:'Magic', file:'magic-chime-01.mp3'},
-            {id:'alert', icon:'🚨', name:'Alert', file:'red-alert.mp3'}, {id:'bell', icon:'🔔', name:'Bell', file:'bell-ring-01.mp3'},
-            {id:'heartbeat', icon:'💓', name:'Heartbeat', file:'heartbeat.mp3'}, {id:'suspense', icon:'👀', name:'Suspense', file:'suspense.mp3'},
-            {id:'swoosh', icon:'💨', name:'Swoosh', file:'swoosh.mp3'}, {id:'pop', icon:'🍾', name:'Pop', file:'pop.mp3'},
-            {id:'buzzer', icon:'🛑', name:'Buzzer', file:'buzzer.mp3'}, {id:'chime', icon:'🎐', name:'Chime', file:'chime.mp3'},
-            {id:'whoosh', icon:'🛸', name:'Whoosh', file:'whoosh.mp3'}, {id:'laugh', icon:'🤣', name:'Laugh Track', file:'laugh-track.mp3'},
-            {id:'sigh', icon:'😮‍💨', name:'Sigh', file:'sigh.mp3'}, {id:'kiss', icon:'😘', name:'Kiss', file:'kiss.mp3'},
-            {id:'click', icon:'🖱️', name:'Click', file:'click.mp3'}, {id:'laser', icon:'🔫', name:'Laser', file:'laser.mp3'},
-            {id:'explosion', icon:'💣', name:'Explosion', file:'explosion.mp3'}, {id:'thunder', icon:'⚡', name:'Thunder', file:'thunder.mp3'},
-            {id:'rain', icon:'🌧️', name:'Rain', file:'rain.mp3'}, {id:'wind', icon:'🌬️', name:'Wind', file:'wind.mp3'},
-            {id:'fire', icon:'🔥', name:'Fire', file:'fire.mp3'}, {id:'water', icon:'💧', name:'Water Drop', file:'water-drop.mp3'},
-            {id:'bubble', icon:'🫧', name:'Bubble', file:'bubble.mp3'}, {id:'spring', icon:'🪀', name:'Boing', file:'boing.mp3'},
-            {id:'horn', icon:'🚗', name:'Honk', file:'honk.mp3'}
-        ];
-
-        function buildMasterSoundboard() {
-            const grid = document.getElementById('dynamicSoundGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            
-            masterSounds.forEach(sound => {
-                // Generate the hidden <audio> tags programmatically
-                if(!document.getElementById(`sfx_${sound.id}`)) {
-                    const audioEl = document.createElement('audio');
-                    audioEl.id = `sfx_${sound.id}`;
-                    audioEl.src = `https://www.myinstants.com/media/sounds/${sound.file}`;
-                    document.body.appendChild(audioEl);
-                }
-                
-                // Generate the buttons
-                const btn = document.createElement('button');
-                btn.className = 'grid-btn';
-                btn.style.background = 'var(--input-bg)';
-                btn.innerHTML = `${sound.icon} ${sound.name}`;
-                btn.onclick = () => sendSound(sound.id);
-                grid.appendChild(btn);
-            });
-        }
-
-        function toggleSoundboardModal() {
-            const modal = document.getElementById('soundboardModalOverlay');
-            modal.classList.toggle('hidden');
-        }
-
-        // --- EXTENSIVE EMOJI LIST ---
         const emojiCategories = { 
             'smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','💀','👻','🤖'], 
             'gestures': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','💪'], 
@@ -530,17 +570,19 @@
             checkBackgroundRoomState(); 
             renderEmojiGrid(); 
             detectTimezone();
-            buildMasterSoundboard();
             document.getElementById('userNameInput').value = currentUserName;
         });
 
-        // --- NEW FEATURES INCORPORATED ---
-        function changeTheme(themeName) { document.documentElement.setAttribute('data-theme', themeName); }
+        // --- VIRTUAL ROOM THEMES ---
+        function changeTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+        }
 
+        // --- CUSTOM AVATAR & STATUS ---
         function selectAvatar(avatar) {
             currentAvatar = avatar;
             document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) event.target.classList.add('active');
+            event.target.classList.add('active');
         }
 
         function saveProfileChanges() {
@@ -551,47 +593,75 @@
 
         function autoSaveProfileName() { 
             const nameInput = document.getElementById('userNameInput').value.trim(); 
-            if (nameInput) { currentUserName = nameInput; localStorage.setItem('syncbeat_device_name', currentUserName); } 
+            if (nameInput) { 
+                currentUserName = nameInput; 
+                localStorage.setItem('syncbeat_device_name', currentUserName); 
+            } 
         }
 
+        // --- GLOBAL TIMEZONE COORDINATOR ---
         function detectTimezone() {
-            try { document.getElementById('timezoneDisplay').textContent = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`; } 
-            catch (e) { document.getElementById('timezoneDisplay').textContent = "Timezone: Auto-Detected"; }
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.getElementById('timezoneDisplay').textContent = `Timezone: ${tz}`;
+            } catch (e) {
+                document.getElementById('timezoneDisplay').textContent = "Timezone: Auto-Detected";
+            }
         }
 
+        // --- AUTOMATED ROOM SCHEDULING ---
         function generateInvite() {
             const code = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase();
             const text = `Join my Streamflix Watch Party! Room Code: ${code}. Get your popcorn ready! 🍿`;
-            if (navigator.share) navigator.share({ title: 'Streamflix Watch Party', text: text }).catch(e => console.log(e));
-            else alert(`Invite generated!\n\nRoom Code: ${code}\n\nCopy this and send it to your friends.`);
+            if (navigator.share) {
+                navigator.share({ title: 'Streamflix Watch Party', text: text }).catch(e => console.log(e));
+            } else {
+                alert(`Invite generated!\n\nRoom Code: ${code}\n\nCopy this and send it to your friends.`);
+            }
         }
 
+        // --- QR CODE QUICK JOIN ---
         function toggleQR() {
             const qrBox = document.getElementById('qrBox');
-            if (qrBox.style.display === 'block') { qrBox.style.display = 'none'; } 
-            else { qrBox.style.display = 'block'; document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${currentRoomCode}`; }
+            if (qrBox.style.display === 'block') {
+                qrBox.style.display = 'none';
+            } else {
+                qrBox.style.display = 'block';
+                document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${currentRoomCode}`;
+            }
         }
 
+        // --- WATCH PARTY MOOD RING (HEARTRATE BLUETOOTH) ---
         async function connectHeartRate() {
             try {
                 const device = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
                 const server = await device.gatt.connect();
                 const btn = document.getElementById('btHeartBtn');
                 btn.textContent = '❤️ Wearable Connected';
-                btn.style.background = '#ff0055'; btn.style.color = '#fff';
+                btn.style.background = '#ff0055';
+                btn.style.color = '#fff';
                 
-                if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify({ type: 'MOOD_RING', active: true, accountId: currentAccountId })); }
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'MOOD_RING', active: true, accountId: currentAccountId }));
+                }
                 showToast("Heart rate monitor synced! Your avatar will pulse during intense scenes.");
-            } catch (err) { alert("Bluetooth connection cancelled or unsupported on this browser."); }
+            } catch (err) {
+                console.log(err);
+                alert("Bluetooth connection cancelled or unsupported on this browser.");
+            }
         }
 
+        // --- OFFLINE P2P STREAMER (STUB) ---
         function loadLocalP2P(input) {
             const file = input.files[0];
             if (!file) return;
             alert(`P2P Broadcast primed for: ${file.name}.\n\n(Requires backend WebRTC upgrade to open DataChannels).`);
         }
-        function startP2PStream() { showToast("WebRTC P2P signaling requires server.js backend upgrade."); }
+        function startP2PStream() {
+            showToast("WebRTC P2P signaling requires server.js backend upgrade.");
+        }
 
+        // --- ADAPTIVE SYNC TOGGLE ---
         function toggleAdaptive() {
             adaptiveSyncEnabled = !adaptiveSyncEnabled;
             const btn = document.getElementById('adaptiveBtn');
@@ -599,55 +669,83 @@
             btn.style.background = adaptiveSyncEnabled ? 'var(--success)' : '#ef4444';
         }
 
+        // --- REAL-TIME VOLUME CONTROL ---
         function syncVolume(level) {
             if (!isHosting) return;
-            if (activeSyncMode === 'local' && streamflixPlayer) streamflixPlayer.volume = level / 100;
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'VOLUME', level: level }));
+            if (activeSyncMode === 'local' && streamflixPlayer) {
+                streamflixPlayer.volume = level / 100;
+            }
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'VOLUME', level: level }));
+            }
         }
 
+        // --- SOUNDBOARD EFFECTS ---
         function sendSound(soundId) {
             playSound(soundId);
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: soundId }));
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: soundId }));
+            }
         }
 
         function playSound(soundId) {
             const audio = document.getElementById(`sfx_${soundId}`);
-            if (audio) { audio.currentTime = 0; audio.play().catch(e => console.log("Audio blocked by browser.")); }
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio blocked by browser."));
+            }
         }
 
         // --- ORIGINAL STREAMFLIX FUNCTIONS ---
         function forceClearRoomState() { 
-            localStorage.removeItem('syncbeat_active_room'); checkBackgroundRoomState(); 
+            localStorage.removeItem('syncbeat_active_room'); 
+            checkBackgroundRoomState(); 
             if(ws) { ws.close(); ws = null; } 
-            showLiveChatFloatingUI(false); showToast("Room state successfully reset!"); 
-            goBackToHome(); notifyParent('ROOM_CLOSED'); 
+            showLiveChatFloatingUI(false); 
+            showToast("Room state successfully reset!"); 
+            goBackToHome(); 
+            notifyParent('ROOM_CLOSED'); 
         }
         
         function switchHostMode(mode) { 
             activeSyncMode = mode; 
-            const tabOnline = document.getElementById('tabOnline'); const tabLocal = document.getElementById('tabLocal'); 
-            const onlineUI = document.getElementById('onlineModeUI'); const localUI = document.getElementById('localModeUI'); 
-            const headerTitle = document.getElementById('modeHeaderTitle'); const hostSyncBtn = document.getElementById('hostSyncControls'); 
+            const tabOnline = document.getElementById('tabOnline'); 
+            const tabLocal = document.getElementById('tabLocal'); 
+            const onlineUI = document.getElementById('onlineModeUI'); 
+            const localUI = document.getElementById('localModeUI'); 
+            const headerTitle = document.getElementById('modeHeaderTitle'); 
+            const hostSyncBtn = document.getElementById('hostSyncControls'); 
             const localSyncControls = document.getElementById('localSyncControls'); 
             
             if (mode === 'online') { 
-                tabOnline.classList.add('active'); tabLocal.classList.remove('active'); 
-                onlineUI.classList.remove('hidden'); localUI.classList.add('hidden'); 
+                tabOnline.classList.add('active'); 
+                tabLocal.classList.remove('active'); 
+                onlineUI.classList.remove('hidden'); 
+                localUI.classList.add('hidden'); 
                 headerTitle.textContent = "🔍 TMDb Global Movie Search"; 
-                hostSyncBtn.classList.remove('hidden'); localSyncControls.classList.add('hidden'); stopLocalPlayer(); 
+                hostSyncBtn.classList.remove('hidden'); 
+                localSyncControls.classList.add('hidden'); 
+                stopLocalPlayer(); 
             } else { 
-                tabLocal.classList.add('active'); tabOnline.classList.remove('active'); 
-                localUI.classList.remove('hidden'); onlineUI.classList.add('hidden'); 
+                tabLocal.classList.add('active'); 
+                tabOnline.classList.remove('active'); 
+                localUI.classList.remove('hidden'); 
+                onlineUI.classList.add('hidden'); 
                 headerTitle.textContent = "📁 Select Local Device File"; 
-                hostSyncBtn.classList.add('hidden'); localSyncControls.classList.remove('hidden'); 
-                const iframe = document.getElementById('movieIframe'); if (iframe) iframe.src = ""; 
+                hostSyncBtn.classList.add('hidden'); 
+                localSyncControls.classList.remove('hidden'); 
+                const iframe = document.getElementById('movieIframe'); 
+                if (iframe) iframe.src = ""; 
             } 
             if (!isHosting) document.getElementById('hostModeTabs').classList.add('hidden'); 
         }
         
         function unlockMediaContext() { 
             document.getElementById('interactionOverlay').classList.add('hidden'); 
-            if (activeSyncMode === 'local' && streamflixPlayer) { streamflixPlayer.muted = false; streamflixPlayer.play().catch(e => console.warn(e)); } 
+            if (activeSyncMode === 'local' && streamflixPlayer) { 
+                streamflixPlayer.muted = false; 
+                streamflixPlayer.play().catch(e => console.warn(e)); 
+            } 
             showToast("Connected to Room Media!"); 
         }
         
@@ -658,20 +756,30 @@
             searchTimeout = setTimeout(async () => { 
                 try { 
                     const url = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query.trim())}`; 
-                    const res = await fetch(url); if (!res.ok) throw new Error("TMDb API failed"); 
-                    const data = await res.json(); const results = data.results || []; resultsBox.innerHTML = ''; 
+                    const res = await fetch(url); 
+                    if (!res.ok) throw new Error("TMDb API failed"); 
+                    const data = await res.json(); 
+                    const results = data.results || []; 
+                    resultsBox.innerHTML = ''; 
                     
-                    if (results.length === 0) { resultsBox.innerHTML = '<div style="padding:8px; font-size:12px; color:#6b7280; text-align:center;">No titles found.</div>'; } 
-                    else { 
+                    if (results.length === 0) { 
+                        resultsBox.innerHTML = '<div style="padding:8px; font-size:12px; color:#6b7280; text-align:center;">No titles found.</div>'; 
+                    } else { 
                         results.forEach(movie => { 
-                            const title = movie.title || movie.name || "Unknown Title"; const year = movie.release_date ? `(${movie.release_date.split('-')[0]})` : ""; 
+                            const title = movie.title || movie.name || "Unknown Title"; 
+                            const year = movie.release_date ? `(${movie.release_date.split('-')[0]})` : ""; 
                             const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='60'><rect width='40' height='60' fill='%23e2e8f0'/></svg>"; 
-                            const itemDiv = document.createElement('div'); itemDiv.className = 'movie-result-item'; 
+                            
+                            const itemDiv = document.createElement('div'); 
+                            itemDiv.className = 'movie-result-item'; 
                             itemDiv.innerHTML = `<img src="${posterUrl}" class="movie-result-poster" alt="poster"><div class="movie-result-info"><div class="movie-result-title">${escapeHtml(title)}</div><div class="movie-result-year">Movie ${escapeHtml(year)}</div></div><button class="code-action-btn" style="padding:6px 10px; font-size:10px; background:var(--primary); color:white; border:none;">Embed</button>`; 
+                            
                             itemDiv.onclick = async () => { 
-                                resultsBox.style.display = 'none'; document.getElementById('movieSearchInput').value = ""; 
+                                resultsBox.style.display = 'none'; 
+                                document.getElementById('movieSearchInput').value = ""; 
                                 const externalUrl = `https://api.themoviedb.org/3/movie/${movie.id}/external_ids?api_key=${TMDB_API_KEY}`; 
-                                const extRes = await fetch(externalUrl); const extData = await extRes.json(); 
+                                const extRes = await fetch(externalUrl); 
+                                const extData = await extRes.json(); 
                                 const imdbId = extData.imdb_id || `tmdb-${movie.id}`; 
                                 loadImdbMovie(imdbId, title, posterUrl, movie.release_date ? movie.release_date.split('-')[0] : "N/A"); 
                             }; 
@@ -679,20 +787,30 @@
                         }); 
                     } 
                     resultsBox.style.display = 'block'; 
-                } catch (e) { resultsBox.innerHTML = '<div style="padding:8px; font-size:11px; color:#ef4444;">Search connection failed.</div>'; resultsBox.style.display = 'block'; } 
+                } catch (e) { 
+                    resultsBox.innerHTML = '<div style="padding:8px; font-size:11px; color:#ef4444;">Search connection failed.</div>'; 
+                    resultsBox.style.display = 'block'; 
+                } 
             }, 300); 
         }
         
         function loadImdbMovie(imdbId, title, posterUrl, year) { 
-            if (!isHosting) return; switchHostMode('online'); 
-            currentOnlineImdbId = imdbId; currentOnlineTitle = title; currentOnlinePoster = posterUrl; currentOnlineYear = year; 
-            document.getElementById('serverSelector').classList.remove('hidden'); switchOnlineServer(1); 
+            if (!isHosting) return; 
+            switchHostMode('online'); 
+            currentOnlineImdbId = imdbId; 
+            currentOnlineTitle = title; 
+            currentOnlinePoster = posterUrl; 
+            currentOnlineYear = year; 
+            document.getElementById('serverSelector').classList.remove('hidden'); 
+            switchOnlineServer(1); 
         }
         
         function switchOnlineServer(serverNum) { 
-            if (!isHosting || !currentOnlineImdbId) return; activeOnlineServer = serverNum; 
+            if (!isHosting || !currentOnlineImdbId) return; 
+            activeOnlineServer = serverNum; 
             document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('active')); 
-            document.getElementById('srvBtn' + serverNum).classList.add('active'); applyOnlineServer(serverNum); 
+            document.getElementById('srvBtn' + serverNum).classList.add('active'); 
+            applyOnlineServer(serverNum); 
         }
         
         function applyOnlineServer(serverNum) { 
@@ -701,30 +819,46 @@
             else if (serverNum === 2) embedUrl = `https://multiembed.mov/?video_id=${currentOnlineImdbId}&tmdb=0`; 
             else if (serverNum === 3) embedUrl = `https://player.smashy.stream/movie/${currentOnlineImdbId}`; 
             else if (serverNum === 4) embedUrl = `https://www.2embed.cc/embed/${currentOnlineImdbId}`; 
+            
             updatePlayerUI(currentOnlineTitle, currentOnlineYear, currentOnlinePoster, embedUrl); 
-            if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'online', imdbId: currentOnlineImdbId, title: currentOnlineTitle, posterUrl: currentOnlinePoster, year: currentOnlineYear, embedUrl: embedUrl })); } 
+            
+            if (ws && ws.readyState === WebSocket.OPEN) { 
+                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'online', imdbId: currentOnlineImdbId, title: currentOnlineTitle, posterUrl: currentOnlinePoster, year: currentOnlineYear, embedUrl: embedUrl })); 
+            } 
             showToast(`Loaded Server ${serverNum}! Use Countdown to sync play.`); 
         }
         
         function updatePlayerUI(title, year, posterUrl, embedUrl) { 
-            document.getElementById('sessionTitle').textContent = title; document.getElementById('sessionArtist').textContent = `Released: ${year}`; 
-            document.getElementById('sessionPoster').src = posterUrl; document.getElementById('movieIframe').src = embedUrl; notifyParent('MEDIA_PLAYING'); 
+            document.getElementById('sessionTitle').textContent = title; 
+            document.getElementById('sessionArtist').textContent = `Released: ${year}`; 
+            document.getElementById('sessionPoster').src = posterUrl; 
+            document.getElementById('movieIframe').src = embedUrl; 
+            notifyParent('MEDIA_PLAYING'); 
         }
         
         function triggerPlayCountdown() { 
-            if (!isHosting) return; if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'PLAY_COUNTDOWN', hostName: currentUserName })); 
+            if (!isHosting) return; 
+            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'PLAY_COUNTDOWN', hostName: currentUserName })); 
             showCountdownOverlay(); 
         }
         
         function showCountdownOverlay() { 
             const overlay = document.createElement('div'); 
             overlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.92); color:white; z-index:9999999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;"; 
-            document.body.appendChild(overlay); let count = 3; 
+            document.body.appendChild(overlay); 
+            let count = 3; 
             overlay.innerHTML = `<div style="font-size:18px; color:var(--primary-border); margin-bottom:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px;">Get Ready to Click Play</div><div id="cdNum" style="font-size:160px; color:var(--primary); font-weight:900; line-height:1;">${count}</div><div style="font-size:14px; color:#9ca3af; margin-top:30px;">Host initiated sync</div>`; 
+            
             const intv = setInterval(() => { 
                 count--; 
-                if (count > 0) { document.getElementById('cdNum').textContent = count; } 
-                else { clearInterval(intv); document.getElementById('cdNum').textContent = "GO!"; document.getElementById('cdNum').style.color = "var(--success)"; setTimeout(() => overlay.remove(), 1200); } 
+                if (count > 0) { 
+                    document.getElementById('cdNum').textContent = count; 
+                } else { 
+                    clearInterval(intv); 
+                    document.getElementById('cdNum').textContent = "GO!"; 
+                    document.getElementById('cdNum').style.color = "var(--success)"; 
+                    setTimeout(() => overlay.remove(), 1200); 
+                } 
             }, 1000); 
         }
         
@@ -732,37 +866,51 @@
             if (!streamflixPlayer) { 
                 streamflixPlayer = document.getElementById('localVideoPlayer'); 
                 streamflixPlayer.addEventListener('play', () => { 
-                    isSessionPlaying = true; document.getElementById('sessionPlayBtn').textContent = "⏸"; startProgressTracker(); notifyParent('MEDIA_PLAYING'); 
+                    isSessionPlaying = true; 
+                    document.getElementById('sessionPlayBtn').textContent = "⏸"; 
+                    startProgressTracker(); 
+                    notifyParent('MEDIA_PLAYING'); 
                     if (isHosting && ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'CONTROL', action: 'play', time: streamflixPlayer.currentTime })); 
                 }); 
                 streamflixPlayer.addEventListener('pause', () => { 
-                    isSessionPlaying = false; document.getElementById('sessionPlayBtn').textContent = "▶"; notifyParent('MEDIA_PAUSED'); 
+                    isSessionPlaying = false; 
+                    document.getElementById('sessionPlayBtn').textContent = "▶"; 
+                    notifyParent('MEDIA_PAUSED'); 
                     if (isHosting && ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'CONTROL', action: 'pause', time: streamflixPlayer.currentTime })); 
                 }); 
             } 
         }
         
         function handleLocalFileSelected(input) { 
-            const file = input.files[0]; if (!file) return; switchHostMode('local'); 
-            const fileUrl = URL.createObjectURL(file); initStreamflixPlayerListeners(); 
-            streamflixPlayer.src = fileUrl; streamflixPlayer.load(); 
+            const file = input.files[0]; 
+            if (!file) return; 
+            switchHostMode('local'); 
+            const fileUrl = URL.createObjectURL(file); 
+            initStreamflixPlayerListeners(); 
+            streamflixPlayer.src = fileUrl; 
+            streamflixPlayer.load(); 
             document.getElementById('sessionTitle').textContent = file.name; 
             document.getElementById('sessionArtist').textContent = `Local File (${(file.size / (1024*1024)).toFixed(1)} MB)`; 
             document.getElementById('sessionPoster').src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='85'><rect width='60' height='85' fill='%23ef4444'/></svg>"; 
-            if (isHosting && ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', fileName: file.name })); } 
+            
+            if (isHosting && ws && ws.readyState === WebSocket.OPEN) { 
+                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', fileName: file.name })); 
+            } 
             showToast(`Loaded: ${file.name}`); 
         }
         
         function stopLocalPlayer() { 
             if (streamflixPlayer) { streamflixPlayer.pause(); streamflixPlayer.removeAttribute('src'); streamflixPlayer.load(); } 
-            clearInterval(progressInterval); notifyParent('MEDIA_PAUSED'); 
+            clearInterval(progressInterval); 
+            notifyParent('MEDIA_PAUSED'); 
         }
         
         function startProgressTracker() { 
             clearInterval(progressInterval); 
             progressInterval = setInterval(() => { 
                 if (isScrubbing || !streamflixPlayer) return; 
-                const current = streamflixPlayer.currentTime || 0; const total = streamflixPlayer.duration || 0; 
+                const current = streamflixPlayer.currentTime || 0; 
+                const total = streamflixPlayer.duration || 0; 
                 if (!isNaN(total) && total > 0) { 
                     document.getElementById('sessionFill').style.width = ((current / total) * 100) + '%'; 
                     document.getElementById('sessionCurrentTime').textContent = formatTime(current); 
@@ -771,12 +919,18 @@
             }, 500); 
         }
         
-        function formatTime(seconds) { const mins = Math.floor(seconds / 60); const secs = Math.floor(seconds % 60); return `${mins}:${secs < 10 ? '0' : ''}${secs}`; }
+        function formatTime(seconds) { 
+            const mins = Math.floor(seconds / 60); 
+            const secs = Math.floor(seconds % 60); 
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`; 
+        }
         
         function startScrubbing(event) { 
             if (!isHosting || activeSyncMode !== 'local') return; 
-            isScrubbing = true; updateSliderPosition(event); 
-            const onTouch = (e) => updateSliderPosition(e.touches ? e.touches[0] : e); const onMouse = (e) => updateSliderPosition(e); 
+            isScrubbing = true; 
+            updateSliderPosition(event); 
+            const onTouch = (e) => updateSliderPosition(e.touches ? e.touches[0] : e); 
+            const onMouse = (e) => updateSliderPosition(e); 
             const onEnd = (e) => { 
                 isScrubbing = false; 
                 window.removeEventListener('mousemove', onMouse); window.removeEventListener('mouseup', onEnd); window.removeEventListener('touchmove', onTouch); window.removeEventListener('touchend', onEnd); 
@@ -787,16 +941,19 @@
         
         function updateSliderPosition(e) { 
             if (!isHosting) return; 
-            const track = document.getElementById('progressTrackScrubber'); const rect = track.getBoundingClientRect(); 
+            const track = document.getElementById('progressTrackScrubber'); 
+            const rect = track.getBoundingClientRect(); 
             const percentage = Math.max(0, Math.min(1, (e.clientX || (e.touches ? e.touches[0].clientX : 0) - rect.left) / rect.width)); 
             document.getElementById('sessionFill').style.width = (percentage * 100) + '%'; 
         }
         
         function finalizeSeek(clientX) { 
             if (!isHosting || !streamflixPlayer || isNaN(streamflixPlayer.duration)) return; 
-            const track = document.getElementById('progressTrackScrubber'); const rect = track.getBoundingClientRect(); 
+            const track = document.getElementById('progressTrackScrubber'); 
+            const rect = track.getBoundingClientRect(); 
             const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)); 
-            const newTime = percentage * streamflixPlayer.duration; streamflixPlayer.currentTime = newTime; 
+            const newTime = percentage * streamflixPlayer.duration; 
+            streamflixPlayer.currentTime = newTime; 
             if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'CONTROL', action: 'seek', time: newTime })); 
         }
         
@@ -809,11 +966,13 @@
         
         function toggleFullScreenMode() { 
             isStreamflixFullScreen = !isStreamflixFullScreen; 
-            const sessionView = document.getElementById('hostSessionView'); const hostUrlControls = document.getElementById('hostUrlControls'); 
+            const sessionView = document.getElementById('hostSessionView'); 
+            const hostUrlControls = document.getElementById('hostUrlControls'); 
             const wrapper = activeSyncMode === 'online' ? document.getElementById('iframeWrapper') : document.getElementById('localVideoWrapper'); 
             const exitBtn = document.getElementById('exitFullScreenBtn'); 
             
             for (let child of sessionView.children) { if (child !== hostUrlControls) child.classList.toggle('hidden', isStreamflixFullScreen); } 
+            
             document.getElementById('controllerCardHeader').classList.toggle('hidden', isStreamflixFullScreen); 
             if(activeSyncMode === 'online') { 
                 document.getElementById('movieSearchInput').classList.toggle('hidden', isStreamflixFullScreen); 
@@ -827,11 +986,13 @@
             
             if (isStreamflixFullScreen) { 
                 hostUrlControls.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999999; background:#000; margin:0; padding:0; border:none; box-shadow:none;"; 
-                wrapper.style.cssText = "width:100vw; height:100vh; border-radius:0; margin:0;"; exitBtn.classList.remove('hidden'); 
+                wrapper.style.cssText = "width:100vw; height:100vh; border-radius:0; margin:0;"; 
+                exitBtn.classList.remove('hidden'); 
                 notifyParent(activeSyncMode === 'online' ? 'MEDIA_PLAYING' : (isSessionPlaying ? 'MEDIA_PLAYING' : 'MEDIA_PAUSED')); 
             } else { 
                 hostUrlControls.style.cssText = ""; 
-                wrapper.style.cssText = "position:relative; width:100%; height:240px; border-radius:12px; margin-top:8px; border:1px solid var(--card-border);"; exitBtn.classList.add('hidden'); 
+                wrapper.style.cssText = "position:relative; width:100%; height:240px; border-radius:12px; margin-top:8px; border:1px solid var(--card-border);"; 
+                exitBtn.classList.add('hidden'); 
                 notifyParent(activeSyncMode === 'online' ? 'MEDIA_PLAYING' : (isSessionPlaying ? 'MEDIA_PLAYING' : 'MEDIA_PAUSED')); 
             } 
         }
@@ -840,121 +1001,215 @@
         function handleIncomingControl(data) { 
             if (data.type === 'LOAD_VIDEO') { 
                 if (data.mode === 'online') {
-                    switchHostMode('online'); updatePlayerUI(data.title, data.year, data.posterUrl, data.embedUrl); showToast("Host selected an online movie!"); 
+                    switchHostMode('online'); 
+                    updatePlayerUI(data.title, data.year, data.posterUrl, data.embedUrl); 
+                    showToast("Host selected an online movie!"); 
                 } else if (data.mode === 'local') {
-                    switchHostMode('local'); showRoomPopup("Host", `Started watching: ${data.fileName}`); showToast(`Host loaded: ${data.fileName}. Pick your local copy!`); 
-                    document.getElementById('sessionTitle').textContent = data.fileName; document.getElementById('sessionArtist').textContent = "Pick your local file to sync"; 
-                    document.getElementById('interactionOverlay').classList.remove('hidden'); initStreamflixPlayerListeners();
+                    switchHostMode('local'); 
+                    showRoomPopup("Host", `Started watching: ${data.fileName}`); 
+                    showToast(`Host loaded: ${data.fileName}. Pick your local copy!`); 
+                    document.getElementById('sessionTitle').textContent = data.fileName; 
+                    document.getElementById('sessionArtist').textContent = "Pick your local file to sync"; 
+                    document.getElementById('interactionOverlay').classList.remove('hidden'); 
+                    initStreamflixPlayerListeners();
                 }
             } else if (data.type === 'CONTROL') { 
                 if (streamflixPlayer) { 
                     const targetTime = (typeof data.time === 'number' ? data.time : streamflixPlayer.currentTime) + 0.15; 
                     const drift = Math.abs(streamflixPlayer.currentTime - data.time);
+                    
                     if (data.action === 'play' || data.action === 'seek') { 
-                        if (adaptiveSyncEnabled && data.action === 'play' && drift < 0.8) { /* Let it drift naturally */ } 
-                        else { if (typeof data.time === 'number') streamflixPlayer.currentTime = targetTime + 0.2; }
+                        if (adaptiveSyncEnabled && data.action === 'play' && drift < 0.8) {
+                            // Let it drift naturally
+                        } else {
+                            if (typeof data.time === 'number') streamflixPlayer.currentTime = targetTime + 0.2; 
+                        }
                         streamflixPlayer.play().catch(e => console.warn(e)); 
                     } 
-                    if (data.action === 'pause') { if (typeof data.time === 'number') streamflixPlayer.currentTime = data.time; streamflixPlayer.pause(); } 
+                    if (data.action === 'pause') { 
+                        if (typeof data.time === 'number') streamflixPlayer.currentTime = data.time; 
+                        streamflixPlayer.pause(); 
+                    } 
                 } 
             } else if (data.type === 'VOLUME') {
-                if (!isHosting && activeSyncMode === 'local' && streamflixPlayer) { streamflixPlayer.volume = data.level / 100; }
-            } else if (data.type === 'SOUNDBOARD') { playSound(data.sound); } 
-            else if (data.type === 'MOOD_RING') {
+                if (!isHosting && activeSyncMode === 'local' && streamflixPlayer) {
+                    streamflixPlayer.volume = data.level / 100;
+                }
+            } else if (data.type === 'SOUNDBOARD') {
+                playSound(data.sound);
+            } else if (data.type === 'MOOD_RING') {
                 const peerEl = document.getElementById(`peer_${data.accountId}`);
-                if (peerEl) { peerEl.classList.add('mood-ring-active'); setTimeout(() => peerEl.classList.remove('mood-ring-active'), 4000); }
-            } else if (data.type === 'PLAY_COUNTDOWN') { showCountdownOverlay(); } 
-            else if (data.type === 'CHAT_MESSAGE') { appendChatMessage(data.name || 'User', data.message); showRoomPopup(data.name || 'User', data.message); } 
-            else if (data.type === 'REACTION') { showFloatingReaction(data.emoji); } 
-            else if (data.type === 'ROOM_NOT_FOUND') { showToast("No room found with this code"); currentRoomCode = ""; if (ws) { ws.close(); ws = null; } showLiveChatFloatingUI(false); notifyParent('ROOM_CLOSED'); } 
-            else if (data.type === 'ROOM_CLOSED') { exitHostSession(true); clearChatBox(); showLiveChatFloatingUI(false); showToast("Host closed room."); notifyParent('ROOM_CLOSED'); } 
+                if (peerEl) {
+                    peerEl.classList.add('mood-ring-active');
+                    setTimeout(() => peerEl.classList.remove('mood-ring-active'), 4000);
+                }
+            } else if (data.type === 'PLAY_COUNTDOWN') { 
+                showCountdownOverlay(); 
+            } else if (data.type === 'CHAT_MESSAGE') { 
+                appendChatMessage(data.name || 'User', data.message); 
+                showRoomPopup(data.name || 'User', data.message); 
+            } else if (data.type === 'REACTION') { 
+                showFloatingReaction(data.emoji); 
+            } else if (data.type === 'ROOM_NOT_FOUND') { 
+                showToast("No room found with this code"); 
+                currentRoomCode = ""; 
+                if (ws) { ws.close(); ws = null; } 
+                showLiveChatFloatingUI(false);
+                notifyParent('ROOM_CLOSED'); 
+            } else if (data.type === 'ROOM_CLOSED') { 
+                exitHostSession(true); clearChatBox(); showLiveChatFloatingUI(false); showToast("Host closed room."); notifyParent('ROOM_CLOSED'); 
+            } 
         }
         
         function applyRoleUI() { 
             const isHost = isHosting; 
-            document.getElementById('movieSearchInput').classList.toggle('hidden', !isHost); document.getElementById('hostModeTabs').classList.toggle('hidden', !isHost); document.getElementById('sessionPlayBtn').disabled = !isHost; 
+            document.getElementById('movieSearchInput').classList.toggle('hidden', !isHost); 
+            document.getElementById('hostModeTabs').classList.toggle('hidden', !isHost); 
+            document.getElementById('sessionPlayBtn').disabled = !isHost; 
             if (!isHost) { 
-                document.getElementById('hostSyncControls').classList.add('hidden'); document.getElementById('serverSelector').classList.add('hidden'); 
-                document.getElementById('advancedControlsPanel').classList.add('hidden'); document.getElementById('p2pStreamBtn').classList.add('hidden');
-            } else { document.getElementById('advancedControlsPanel').classList.remove('hidden'); }
+                document.getElementById('hostSyncControls').classList.add('hidden'); 
+                document.getElementById('serverSelector').classList.add('hidden'); 
+                document.getElementById('advancedControlsPanel').classList.add('hidden');
+                document.getElementById('p2pStreamBtn').classList.add('hidden');
+            } else {
+                document.getElementById('advancedControlsPanel').classList.remove('hidden');
+            }
         }
         
+        // --- ACHIEVEMENT BADGES ---
         let previousPeerCount = 0;
         function handlePeerListUpdate(newPeers) { 
             const container = document.getElementById('peerListContainer'); 
             if (container) { 
-                container.innerHTML = ''; const hour = new Date().getHours();
+                container.innerHTML = ''; 
+                const hour = new Date().getHours();
+                
                 newPeers.forEach(peer => { 
                     let badgeHTML = '';
                     if (peer.role === 'HOST') badgeHTML += '<span class="achievement-badge">Master Host 🏆</span>';
                     if (hour >= 2 && hour < 6) badgeHTML += '<span class="achievement-badge">Night Owl 🦉</span>';
+
                     const domId = peer.accountId || Math.random().toString(36).substring(2,7);
-                    const div = document.createElement('div'); div.className = 'peer-item'; div.id = `peer_${domId}`;
+
+                    const div = document.createElement('div'); 
+                    div.className = 'peer-item'; 
+                    div.id = `peer_${domId}`;
                     div.innerHTML = `<div class="peer-info"><div class="peer-icon">${peer.name.split(' ')[0] || '👤'}</div><div><div class="peer-name">${escapeHtml(peer.name.substring(peer.name.indexOf(' ') + 1))}</div>${badgeHTML}</div></div><span class="sync-tag" style="${peer.role === 'HOST' ? 'background:var(--success-light); color:var(--success);' : 'background:var(--primary-light); color:var(--primary);'}">${escapeHtml(peer.role || 'MEMBER')}</span>`; 
                     container.appendChild(div); 
                 }); 
             } 
+            
             if (isHosting && newPeers.length > previousPeerCount) {
-                if (activeSyncMode === 'online' && currentOnlineImdbId) { ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'online', imdbId: currentOnlineImdbId, title: currentOnlineTitle, posterUrl: currentOnlinePoster, year: currentOnlineYear, embedUrl: document.getElementById('movieIframe').src })); } 
-                else if (activeSyncMode === 'local' && streamflixPlayer && streamflixPlayer.src) { ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', fileName: document.getElementById('sessionTitle').textContent })); }
+                if (activeSyncMode === 'online' && currentOnlineImdbId) {
+                    ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'online', imdbId: currentOnlineImdbId, title: currentOnlineTitle, posterUrl: currentOnlinePoster, year: currentOnlineYear, embedUrl: document.getElementById('movieIframe').src }));
+                } else if (activeSyncMode === 'local' && streamflixPlayer && streamflixPlayer.src) {
+                    ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', fileName: document.getElementById('sessionTitle').textContent }));
+                }
             }
             previousPeerCount = newPeers.length;
         }
         
         function connectWebSocket(onSuccess) { 
             if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) { if (ws.readyState === WebSocket.OPEN && onSuccess) onSuccess(); return; } 
-            ws = new WebSocket(BACKEND_WS); ws.onopen = () => { if (onSuccess) onSuccess(); }; 
+            ws = new WebSocket(BACKEND_WS); 
+            ws.onopen = () => { if (onSuccess) onSuccess(); }; 
             ws.onmessage = (event) => { 
                 const data = JSON.parse(event.data); 
-                if (data.type === 'ROOM_HOSTED_SUCCESS') { showToast("Room ready!"); showLiveChatFloatingUI(true); notifyParent('ROOM_OPENED', currentRoomCode); } 
-                else if (data.type === 'ROOM_JOIN_SUCCESS') { 
-                    isHosting = false; currentRoomCode = data.code; localStorage.setItem('syncbeat_active_room', currentRoomCode); checkBackgroundRoomState(); 
-                    document.getElementById('displayRoomCode').textContent = data.code; document.getElementById('sessionHeaderTitle').textContent = "Member Session"; 
-                    applyRoleUI(); document.getElementById('mainLandingView').classList.add('hidden'); document.getElementById('hostSessionView').classList.remove('hidden'); 
-                    showLiveChatFloatingUI(true); switchHostMode('online'); notifyParent('ROOM_OPENED', currentRoomCode); 
-                } 
-                else if (data.type === 'PEER_LIST') { handlePeerListUpdate(data.peers || []); } 
-                else if (data.type === 'NOTIFICATION') { showToast(data.message); } 
-                else handleIncomingControl(data); 
+                if (data.type === 'ROOM_HOSTED_SUCCESS') { 
+                    showToast("Room ready!"); 
+                    showLiveChatFloatingUI(true); 
+                    notifyParent('ROOM_OPENED', currentRoomCode); 
+                } else if (data.type === 'ROOM_JOIN_SUCCESS') { 
+                    isHosting = false; 
+                    currentRoomCode = data.code; 
+                    localStorage.setItem('syncbeat_active_room', currentRoomCode); 
+                    checkBackgroundRoomState(); 
+                    document.getElementById('displayRoomCode').textContent = data.code; 
+                    document.getElementById('sessionHeaderTitle').textContent = "Member Session"; 
+                    applyRoleUI(); 
+                    document.getElementById('mainLandingView').classList.add('hidden'); 
+                    document.getElementById('hostSessionView').classList.remove('hidden'); 
+                    showLiveChatFloatingUI(true); 
+                    switchHostMode('online'); 
+                    notifyParent('ROOM_OPENED', currentRoomCode); 
+                } else if (data.type === 'PEER_LIST') { 
+                    handlePeerListUpdate(data.peers || []); 
+                } else if (data.type === 'NOTIFICATION') { 
+                    showToast(data.message); 
+                } else handleIncomingControl(data); 
             }; 
             ws.onclose = () => { if (currentRoomCode && localStorage.getItem('syncbeat_active_room')) { setTimeout(() => connectWebSocket(), 3000); } }; 
         }
         
         function startHostingSession() { 
             if (localStorage.getItem('syncbeat_active_room')) { showToast("Active room already running."); return; } 
-            autoSaveProfileName(); currentRoomCode = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase(); showToast("Creating room..."); 
+            autoSaveProfileName();
+            currentRoomCode = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase(); 
+            showToast("Creating room..."); 
+            
             connectWebSocket(() => { 
-                isHosting = true; const fullProfileData = `${currentAvatar} ${currentUserName} [${currentStatus}]`;
+                isHosting = true; 
+                const fullProfileData = `${currentAvatar} ${currentUserName} [${currentStatus}]`;
                 ws.send(JSON.stringify({ type: 'HOST_ROOM', code: currentRoomCode, name: fullProfileData, accountId: currentAccountId })); 
                 ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: currentRoomCode, name: fullProfileData, accountId: currentAccountId })); 
-                localStorage.setItem('syncbeat_active_room', currentRoomCode); checkBackgroundRoomState(); 
-                document.getElementById('displayRoomCode').textContent = currentRoomCode; document.getElementById('sessionHeaderTitle').textContent = "Host Session"; 
-                applyRoleUI(); switchHostMode('online'); document.getElementById('mainLandingView').classList.add('hidden'); document.getElementById('hostSessionView').classList.remove('hidden'); 
-                showLiveChatFloatingUI(true); notifyParent('ROOM_OPENED', currentRoomCode); 
+                localStorage.setItem('syncbeat_active_room', currentRoomCode); 
+                checkBackgroundRoomState(); 
+                document.getElementById('displayRoomCode').textContent = currentRoomCode; 
+                document.getElementById('sessionHeaderTitle').textContent = "Host Session"; 
+                applyRoleUI(); 
+                switchHostMode('online'); 
+                document.getElementById('mainLandingView').classList.add('hidden'); 
+                document.getElementById('hostSessionView').classList.remove('hidden'); 
+                showLiveChatFloatingUI(true); 
+                notifyParent('ROOM_OPENED', currentRoomCode); 
             }); 
         }
         
-        function returnToHostingSession() { document.getElementById('mainLandingView').classList.add('hidden'); document.getElementById('hostSessionView').classList.remove('hidden'); showLiveChatFloatingUI(true); }
+        function returnToHostingSession() { 
+            document.getElementById('mainLandingView').classList.add('hidden'); 
+            document.getElementById('hostSessionView').classList.remove('hidden'); 
+            showLiveChatFloatingUI(true); 
+        }
         
         function connectToRoom() { 
             if (localStorage.getItem('syncbeat_active_room')) { showToast("Active room already running."); return; } 
-            autoSaveProfileName(); const code = document.getElementById('roomCodeInput').value.trim().toUpperCase(); 
+            autoSaveProfileName();
+            const code = document.getElementById('roomCodeInput').value.trim().toUpperCase(); 
             if (code.length < 4) { showToast("Enter valid code."); return; } 
-            currentRoomCode = code; showToast("Connecting..."); 
-            connectWebSocket(() => { const fullProfileData = `${currentAvatar} ${currentUserName} [${currentStatus}]`; ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: fullProfileData, accountId: currentAccountId })) }); 
+            currentRoomCode = code; 
+            showToast("Connecting..."); 
+            connectWebSocket(() => {
+                const fullProfileData = `${currentAvatar} ${currentUserName} [${currentStatus}]`;
+                ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: fullProfileData, accountId: currentAccountId }))
+            }); 
         }
         
         function copyCode() { navigator.clipboard.writeText(currentRoomCode); showToast("Copied!"); } 
-        function closeRoomAndReturnHome() { if (isHosting && ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ROOM_CLOSED' })); exitHostSession(true); clearChatBox(); showLiveChatFloatingUI(false); showToast("Left room."); notifyParent('ROOM_CLOSED'); }
+        
+        function closeRoomAndReturnHome() { 
+            if (isHosting && ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ROOM_CLOSED' })); 
+            exitHostSession(true); clearChatBox(); showLiveChatFloatingUI(false); showToast("Left room."); notifyParent('ROOM_CLOSED'); 
+        }
+        
         function goBackToHome() { document.getElementById('hostSessionView').classList.add('hidden'); document.getElementById('mainLandingView').classList.remove('hidden'); checkBackgroundRoomState(); }
+        
         function exitHostSession(isPermanentClose = false) { 
-            stopLocalPlayer(); document.getElementById('sessionTitle').textContent = "No Movie Selected"; document.getElementById('sessionArtist').textContent = "Waiting for Host..."; 
+            stopLocalPlayer(); 
+            document.getElementById('sessionTitle').textContent = "No Movie Selected"; 
+            document.getElementById('sessionArtist').textContent = "Waiting for Host..."; 
             document.getElementById('sessionPoster').src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='85'><rect width='60' height='85' fill='%23333'/></svg>"; 
-            document.getElementById('movieIframe').src = ""; currentRoomCode = ""; isHosting = false; 
+            document.getElementById('movieIframe').src = ""; 
+            currentRoomCode = ""; 
+            isHosting = false; 
             if (isPermanentClose) localStorage.removeItem('syncbeat_active_room'); 
             if (ws) { ws.close(); ws = null; } 
-            showLiveChatFloatingUI(false); document.getElementById('hostSessionView').classList.add('hidden'); document.getElementById('mainLandingView').classList.remove('hidden'); 
-            checkBackgroundRoomState(); document.getElementById('interactionOverlay').classList.add('hidden'); document.getElementById('qrBox').style.display = 'none'; notifyParent('ROOM_CLOSED'); 
+            showLiveChatFloatingUI(false); 
+            document.getElementById('hostSessionView').classList.add('hidden'); 
+            document.getElementById('mainLandingView').classList.remove('hidden'); 
+            checkBackgroundRoomState(); 
+            document.getElementById('interactionOverlay').classList.add('hidden');
+            document.getElementById('qrBox').style.display = 'none'; 
+            notifyParent('ROOM_CLOSED'); 
         }
         
         function sendChatMessage() { const input = document.getElementById('chatInput'); const msg = input.value.trim(); if (!msg) return; if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify({ type: 'CHAT_MESSAGE', message: msg, name: currentUserName })); appendChatMessage(currentUserName, msg); showRoomPopup(currentUserName, msg); } input.value = ''; }
@@ -977,19 +1232,6 @@
         function resetDeviceProfile() { if (confirm("Reset permanent Device ID?")) { localStorage.removeItem('syncbeat_permanent_device_id'); localStorage.removeItem('syncbeat_device_name'); initPermanentDeviceAccount(); showToast("Profile reset!"); } }
         function showToast(msg) { const toast = document.getElementById('toastModal'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
         function checkBackgroundRoomState() { const activeRoom = localStorage.getItem('syncbeat_active_room'); document.getElementById('returnHostingBanner').classList.toggle('hidden', !activeRoom); }
-
-        // --- HARDWARE POWER-SAVER LIFECYCLE LISTENER ---
-        window.addEventListener('message', (e) => {
-            if (!e.data || e.data.sender !== 'syncbeat_hub') return;
-            if (e.data.action === 'TAB_BACKGROUND') {
-                if (typeof ytPlayer !== 'undefined' && ytPlayer && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
-                if (typeof streamflixPlayer !== 'undefined' && streamflixPlayer && typeof streamflixPlayer.pause === 'function') streamflixPlayer.pause();
-                document.body.style.animationPlayState = 'paused';
-            } 
-            else if (e.data.action === 'TAB_FOREGROUND') {
-                document.body.style.animationPlayState = 'running';
-            }
-        });
     </script>
 </body>
 </html>
