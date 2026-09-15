@@ -121,10 +121,6 @@
         .back-btn { background: none; border: none; font-size: 22px; font-weight: bold; color: var(--text-main); cursor: pointer; }
         .subtitle { font-size: 12px; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px; }
         
-        .status-pills { display: flex; gap: 6px; }
-        .pill { background: var(--card-bg); border: 1px solid var(--primary-border); padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 4px; }
-        .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
         .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; }
         .card.black-player-box { background-color: var(--black-box) !important; border: 1px solid var(--black-box-border) !important; color: var(--black-box-text) !important; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
         .card.black-player-box .card-header-sm { color: var(--primary-border) !important; }
@@ -194,7 +190,6 @@
         .sync-tag { background: var(--success-light); color: var(--success); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; }
         
         .btn-purple { background: var(--primary); color: white; border: none; width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; }
-        .profile-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
         
         #toastModal { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #111827; color: white; padding: 12px 24px; border-radius: 20px; font-size: 13px; font-weight: 700; z-index: 10000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         #toastModal.show { opacity: 1; }
@@ -222,13 +217,8 @@
         .floating-minimize-btn { background: none; border: none; font-size: 16px; font-weight: bold; color: var(--primary); cursor: pointer; padding: 0 4px; }
         .live-chat-launcher { background: var(--primary); color: white; padding: 10px 18px; border-radius: 30px; font-weight: 800; font-size: 12px; border: none; box-shadow: 0 4px 15px rgba(239,68,68,0.4); cursor: pointer; }
 
-        /* --- NEW STYLES: Features 2, 6, 10 --- */
         @keyframes heartbeat { 0%, 100% { box-shadow: 0 0 5px var(--primary); } 50% { box-shadow: 0 0 20px #ff0055, 0 0 30px #ff0055; } }
         .mood-ring-active { animation: heartbeat 1s infinite; border-radius: 50%; }
-        
-        .avatar-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
-        .avatar-btn { background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 6px; font-size: 18px; text-align: center; cursor: pointer; }
-        .avatar-btn.active { background: var(--primary-light); border-color: var(--primary); }
         
         .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid var(--primary-border); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: var(--primary); }
         .qr-container { display: none; text-align: center; margin-top: 10px; padding: 10px; background: #fff; border-radius: 12px; }
@@ -267,26 +257,15 @@
             
             <div class="subtitle">Stream Commercial Movies or Local Files Together</div>
             
+            <!-- NEW CENTRALIZED PROFILE DISPLAY -->
             <div class="card">
-                <div class="card-header-sm"><span>👤 YOUR PROFILE & AVATAR</span></div>
-                <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-bottom: 8px;" id="deviceAccountDisplay">Permanent ID: Generating...</div>
-                
-                <input type="text" id="userNameInput" class="code-input" placeholder="Enter Your Name" style="padding: 10px 14px; font-size: 13px; text-align: left;" oninput="autoSaveProfileName()">
-                <!-- CUSTOM STATUS -->
-                <input type="text" id="userStatusInput" class="code-input" placeholder="Custom Status (e.g., VIP, Chilling)" style="padding: 10px 14px; font-size: 13px; text-align: left;">
-                
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Select Avatar:</div>
-                <div class="avatar-grid">
-                    <div class="avatar-btn active" onclick="selectAvatar('👤')">👤</div>
-                    <div class="avatar-btn" onclick="selectAvatar('🦊')">🦊</div>
-                    <div class="avatar-btn" onclick="selectAvatar('👽')">👽</div>
-                    <div class="avatar-btn" onclick="selectAvatar('🤖')">🤖</div>
-                    <div class="avatar-btn" onclick="selectAvatar('👻')">👻</div>
+                <div class="card-header-sm"><span>👤 YOUR IDENTITY</span></div>
+                <div id="currentIdentityDisplay" style="background: var(--input-bg); border: 1px solid var(--card-border); padding: 12px; border-radius: 12px; font-size: 14px; text-align: center; margin-bottom: 8px;">
+                    <!-- Injected via JS -->
+                    👤 <b>Loading...</b> <span style="color:var(--text-muted); font-size:11px;">[Ready]</span>
                 </div>
-
-                <div class="profile-btn-row">
-                    <button class="code-action-btn" onclick="saveProfileChanges()">💾 Save Profile</button>
-                    <button class="code-action-btn" style="background: var(--input-bg); color: var(--text-muted); border-color: var(--card-border);" onclick="resetDeviceProfile()">🔄 Reset ID</button>
+                <div style="font-size: 10px; color: var(--text-muted); text-align: center;">
+                    Customize your profile in the <i class="fa-solid fa-gear"></i> <b>Settings</b> tab.
                 </div>
             </div>
 
@@ -320,7 +299,7 @@
             <!-- AUTOMATED SCHEDULING -->
             <button class="btn-purple" style="background: transparent; border: 1px dashed var(--primary); color: var(--primary);" onclick="generateInvite()">📅 Schedule Watch Party</button>
 
-            <div class="card" id="connectMemberCard">
+            <div class="card" id="connectMemberCard" style="margin-top: 14px;">
                 <div class="card-header-sm"><span>CONNECT TO HOST</span></div>
                 <div style="margin: 10px 0;">
                     <input type="text" id="roomCodeInput" class="code-input" placeholder="Room Code (e.g. SYNC-4B9X)" maxlength="10">
@@ -536,9 +515,11 @@
         let ws = null; 
         let isHosting = false; 
         let currentRoomCode = ""; 
-        let currentUserName = localStorage.getItem('syncbeat_device_name') || 'User'; 
-        let currentStatus = 'Member';
-        let currentAvatar = '👤';
+        
+        // --- UNIFIED IDENTITY VARIABLES ---
+        let currentUserName = localStorage.getItem('syncbeat_global_name') || localStorage.getItem('syncbeat_device_name') || 'User'; 
+        let currentStatus = localStorage.getItem('syncbeat_global_status') || 'Ready';
+        let currentAvatar = localStorage.getItem('syncbeat_global_avatar') || '👤';
         let currentAccountId = ""; 
         
         let isStreamflixFullScreen = false; 
@@ -570,33 +551,39 @@
             checkBackgroundRoomState(); 
             renderEmojiGrid(); 
             detectTimezone();
-            document.getElementById('userNameInput').value = currentUserName;
+            updateIdentityUI();
         });
+
+        // --- GLOBAL MESSAGE LISTENER FOR UNIFIED IDENTITY ---
+        window.addEventListener('message', (e) => {
+            // Profile Update Hook
+            if (e.data && e.data.action === 'PROFILE_UPDATED' && e.data.data) {
+                currentUserName = e.data.data.name;
+                currentStatus = e.data.data.status;
+                currentAvatar = e.data.data.avatar;
+                updateIdentityUI();
+            }
+
+            // Background Hardware Power-Saver
+            if (e.data && e.data.sender === 'syncbeat_hub') {
+                if (e.data.action === 'TAB_BACKGROUND') {
+                    if (streamflixPlayer && !streamflixPlayer.paused) {
+                        // handled automatically by some browsers, but you could hook pause here if needed
+                    }
+                }
+            }
+        });
+
+        function updateIdentityUI() {
+            const display = document.getElementById('currentIdentityDisplay');
+            if (display) {
+                display.innerHTML = `${currentAvatar} <b>${escapeHtml(currentUserName)}</b> <span style="color:var(--text-muted); font-size:11px;">[${escapeHtml(currentStatus)}]</span>`;
+            }
+        }
 
         // --- VIRTUAL ROOM THEMES ---
         function changeTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
-        }
-
-        // --- CUSTOM AVATAR & STATUS ---
-        function selectAvatar(avatar) {
-            currentAvatar = avatar;
-            document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function saveProfileChanges() {
-            autoSaveProfileName();
-            currentStatus = document.getElementById('userStatusInput').value.trim() || 'Ready';
-            showToast("Profile & Avatar Saved!");
-        }
-
-        function autoSaveProfileName() { 
-            const nameInput = document.getElementById('userNameInput').value.trim(); 
-            if (nameInput) { 
-                currentUserName = nameInput; 
-                localStorage.setItem('syncbeat_device_name', currentUserName); 
-            } 
         }
 
         // --- GLOBAL TIMEZONE COORDINATOR ---
@@ -1143,7 +1130,7 @@
         
         function startHostingSession() { 
             if (localStorage.getItem('syncbeat_active_room')) { showToast("Active room already running."); return; } 
-            autoSaveProfileName();
+            
             currentRoomCode = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase(); 
             showToast("Creating room..."); 
             
@@ -1173,7 +1160,7 @@
         
         function connectToRoom() { 
             if (localStorage.getItem('syncbeat_active_room')) { showToast("Active room already running."); return; } 
-            autoSaveProfileName();
+            
             const code = document.getElementById('roomCodeInput').value.trim().toUpperCase(); 
             if (code.length < 4) { showToast("Enter valid code."); return; } 
             currentRoomCode = code; 
@@ -1228,8 +1215,7 @@
         function toggleLiveChatWindow() { const windowEl = document.getElementById('liveChatWindow'); const launcherBtn = document.getElementById('liveChatLauncherBtn'); const isHidden = windowEl.classList.contains('hidden'); windowEl.classList.toggle('hidden', !isHidden); launcherBtn.classList.toggle('hidden', isHidden); }
         function showLiveChatFloatingUI(show) { const container = document.getElementById('liveChatFloatingContainer'); if (container) { container.classList.toggle('hidden', !show); if (!show) { document.getElementById('liveChatWindow').classList.add('hidden'); document.getElementById('liveChatLauncherBtn').classList.remove('hidden'); } } }
         
-        function initPermanentDeviceAccount() { let permanentId = localStorage.getItem('syncbeat_permanent_device_id'); if (!permanentId) { permanentId = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase(); localStorage.setItem('syncbeat_permanent_device_id', permanentId); } currentAccountId = permanentId + '_' + Math.random().toString(36).substring(2, 6); document.getElementById('loggedAccountBadge').textContent = `ID: ${currentAccountId}`; document.getElementById('deviceAccountDisplay').textContent = `Permanent Device ID: ${currentAccountId}`; }
-        function resetDeviceProfile() { if (confirm("Reset permanent Device ID?")) { localStorage.removeItem('syncbeat_permanent_device_id'); localStorage.removeItem('syncbeat_device_name'); initPermanentDeviceAccount(); showToast("Profile reset!"); } }
+        function initPermanentDeviceAccount() { let permanentId = localStorage.getItem('syncbeat_permanent_device_id'); if (!permanentId) { permanentId = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase(); localStorage.setItem('syncbeat_permanent_device_id', permanentId); } currentAccountId = permanentId + '_' + Math.random().toString(36).substring(2, 6); document.getElementById('loggedAccountBadge').textContent = `ID: ${currentAccountId}`; }
         function showToast(msg) { const toast = document.getElementById('toastModal'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
         function checkBackgroundRoomState() { const activeRoom = localStorage.getItem('syncbeat_active_room'); document.getElementById('returnHostingBanner').classList.toggle('hidden', !activeRoom); }
     </script>
