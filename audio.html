@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SyncBeat - Real-Time Audio Synchronization</title>
+    <title>SyncBeat - Real-Time Multi-Device Synchronization</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { themeBg: 'rgb(var(--color-bg-base) / <alpha-value>)', themeCard: 'rgb(var(--color-bg-card) / <alpha-value>)', themeAccent: 'rgb(var(--color-accent) / <alpha-value>)', themeText: 'rgb(var(--color-text-main) / <alpha-value>)', themeMuted: 'rgb(var(--color-text-muted) / <alpha-value>)', themeBorder: 'rgb(var(--color-border) / <alpha-value>)', themeBtnText: 'rgb(var(--color-btn-text) / <alpha-value>)' }, animation: { 'float': 'float 4s ease-in-out infinite' }, keyframes: { float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' }, } } } } }
@@ -18,7 +18,6 @@
             transition: --color-accent 1s, --color-bg-base 1s, --color-bg-card 1s; 
         }
 
-        /* Virtual Themes */
         [data-theme="cyberpunk"] { --color-accent: 0 255 204; --color-bg-base: 10 10 26; --color-bg-card: 20 10 40; --color-text-main: 224 224 255; --color-text-muted: 136 136 170; --color-border: 0 255 204; --color-shadow: 0 255 204; --color-btn-text: 0 0 0; }
         [data-theme="vhs"] { --color-accent: 255 51 51; --color-bg-base: 26 26 26; --color-bg-card: 34 34 34; --color-text-main: 51 255 51; --color-text-muted: 170 170 170; --color-border: 255 51 51; --color-shadow: 255 51 51; --color-btn-text: 255 255 255; }
         [data-theme="cinema"] { --color-accent: 229 9 20; --color-bg-base: 17 17 17; --color-bg-card: 20 20 20; --color-text-main: 255 255 255; --color-text-muted: 170 170 170; --color-border: 229 9 20; --color-shadow: 229 9 20; --color-btn-text: 255 255 255; }
@@ -26,22 +25,24 @@
         [data-theme="esports"] { --color-accent: 255 70 85; --color-bg-base: 15 17 26; --color-bg-card: 24 26 37; --color-text-main: 255 255 255; --color-text-muted: 138 145 166; --color-border: 255 70 85; --color-shadow: 255 70 85; --color-btn-text: 255 255 255; }
         [data-theme="synthwave"] { --color-accent: 255 0 127; --color-bg-base: 43 0 62; --color-bg-card: 64 0 96; --color-text-main: 0 229 255; --color-text-muted: 170 170 255; --color-border: 255 0 127; --color-shadow: 255 0 127; --color-btn-text: 255 255 255; }
         [data-theme="midnight"] { --color-accent: 59 130 246; --color-bg-base: 10 15 36; --color-bg-card: 15 25 50; --color-text-main: 226 232 240; --color-text-muted: 148 163 184; --color-border: 59 130 246; --color-shadow: 59 130 246; --color-btn-text: 255 255 255; }
+        [data-theme="ocean"] { --color-accent: 0 210 255; --color-bg-base: 0 26 51; --color-bg-card: 0 48 96; --color-text-main: 255 255 255; --color-text-muted: 179 229 252; --color-border: 0 210 255; --color-shadow: 0 210 255; --color-btn-text: 0 0 0; }
+        [data-theme="forest"] { --color-accent: 74 222 128; --color-bg-base: 13 26 13; --color-bg-card: 25 55 25; --color-text-main: 236 253 245; --color-text-muted: 167 243 208; --color-border: 74 222 128; --color-shadow: 74 222 128; --color-btn-text: 0 0 0; }
+        [data-theme="sunset"] { --color-accent: 249 115 22; --color-bg-base: 59 9 24; --color-bg-card: 80 10 32; --color-text-main: 255 255 255; --color-text-muted: 253 186 116; --color-border: 249 115 22; --color-shadow: 249 115 22; --color-btn-text: 255 255 255; }
+        [data-theme="arcade"] { --color-accent: 255 230 0; --color-bg-base: 30 0 51; --color-bg-card: 50 0 80; --color-text-main: 255 255 255; --color-text-muted: 204 204 204; --color-border: 255 230 0; --color-shadow: 255 230 0; --color-btn-text: 0 0 0; }
 
-        /* --- CORE STYLES --- */
+        /* --- ORIGINAL STYLES --- */
         body { transition: background-color 0.8s ease, color 0.8s ease; overscroll-behavior-y: none; -webkit-user-select: none; user-select: none; padding-bottom: 95px !important; }
-        input, select { -webkit-user-select: auto; user-select: auto; outline: none; }
+        input, select { -webkit-user-select: auto; user-select: auto; }
         .shadow-glow { box-shadow: 0 0 15px rgb(var(--color-shadow) / 0.5); transition: box-shadow 0.8s ease; } .shadow-heavy { box-shadow: 0 20px 50px rgb(var(--color-shadow) / 0.15); transition: box-shadow 0.8s ease; } .shadow-btn { box-shadow: 0 0 30px rgb(var(--color-shadow) / 0.5); transition: box-shadow 0.8s ease; }
-        .btn-3d { position: relative; transform-style: preserve-3d; box-shadow: 0 6px 0 0 rgb(var(--color-border)), 0 10px 15px -3px rgba(0, 0, 0, 0.5); transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        .btn-3d { position: relative; transform-style: preserve-3d; box-shadow: 0 6px 0 0 rgb(var(--color-border)), 0 10px 15px -3px rgba(0, 0, 0, 0.5); transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1); touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none; -webkit-touch-callout: none; }
         .btn-3d::after { content: ''; position: absolute; inset: -15px; background: transparent; }
         .btn-3d:active { transform: translateY(4px) scale(0.98); box-shadow: 0 2px 0 0 rgb(var(--color-border)), 0 4px 6px -2px rgba(0, 0, 0, 0.5); }
         .card-3d { transform-style: preserve-3d; transition: transform 0.4s ease, box-shadow 0.4s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05); }
-        
         .sparkle-bg { background-image: radial-gradient(rgb(var(--color-accent) / 0.15) 1px, transparent 1px); background-size: 20px 20px; animation: bg-pan 10s linear infinite; }
         @keyframes bg-pan { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } }
         @keyframes eq-1 { 0%, 100% { height: 6px; } 50% { height: 18px; } } @keyframes eq-2 { 0%, 100% { height: 18px; } 50% { height: 8px; } } @keyframes eq-3 { 0%, 100% { height: 10px; } 50% { height: 20px; } }
         @keyframes shimmer { 0% { transform: translateX(-150%) skewX(-20deg); } 50%, 100% { transform: translateX(150%) skewX(-20deg); } }
         .anim-bar-1 { animation: eq-1 1.1s ease-in-out infinite; } .anim-bar-2 { animation: eq-2 1.3s ease-in-out infinite; } .anim-bar-3 { animation: eq-3 1.0s ease-in-out infinite; }
-        
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: rgb(var(--color-accent)); cursor: pointer; box-shadow: 0 4px 10px rgb(var(--color-shadow) / 0.8), inset 0 -3px 0 rgb(var(--color-border) / 0.8); transition: all 0.2s; }
 
         /* --- NEW ANIMATIONS & UI MODS --- */
@@ -49,36 +50,21 @@
         .mood-ring-active { animation: heartbeatPulse 1s infinite; border-radius: 8px; transition: all 0.3s; }
         .avatar-btn { background: rgba(0,0,0,0.2); border: 1px solid rgb(var(--color-border)); border-radius: 8px; padding: 6px; font-size: 18px; text-align: center; cursor: pointer; transition: all 0.2s; }
         .avatar-btn.active { background: rgb(var(--color-accent)/0.3); border-color: rgb(var(--color-accent)); }
-        
-        .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid rgb(var(--color-border)); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: rgb(var(--color-accent)); display: inline-block; margin-top: 4px;}
+        .achievement-badge { background: rgba(255,255,255,0.1); border: 1px solid rgb(var(--color-border)); padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: rgb(var(--color-accent)); }
         
         .qr-container { display: none; text-align: center; margin-top: 10px; padding: 10px; background: #fff; border-radius: 12px; }
         .qr-container img { width: 120px; height: 120px; margin: 0 auto; }
         
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgb(var(--color-border)); border-radius: 4px; }
+        #sleepOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 100000; padding: 20px; text-align: center; }
     </style>
 </head>
 <body class="bg-themeBg text-themeText min-h-screen flex flex-col font-sans select-none overflow-x-hidden sparkle-bg">
 
     <!-- Smart Sleep Timer Overlay -->
-    <div id="sleepOverlay" class="hidden flex-col justify-center items-center fixed inset-0 bg-black/95 backdrop-blur-md z-[100000] p-5 text-center">
+    <div id="sleepOverlay" class="hidden flex-col justify-center items-center">
         <h2 class="text-2xl font-bold text-themeAccent mb-2">💤 Room is Asleep</h2>
         <p class="text-themeMuted mb-6 text-sm">Audio muted and synchronization paused.</p>
         <button onclick="wakeUpRoom()" class="btn-3d bg-themeAccent text-themeBtnText font-bold py-3 px-8 rounded-xl">Wake Up</button>
-    </div>
-
-    <!-- 50+ Extended Soundboard Modal -->
-    <div id="soundboardModalOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999999] hidden flex-col items-center justify-center p-4">
-        <div class="card-3d bg-themeCard w-full max-w-md rounded-2xl border border-themeBorder flex flex-col max-h-[85vh] shadow-heavy">
-            <div class="p-4 border-b border-themeBorder/50 flex justify-between items-center">
-                <h3 class="m-0 font-bold text-lg text-themeAccent">🔊 Master Soundboard (50+)</h3>
-                <button onclick="toggleSoundboardModal()" class="text-themeText text-xl font-bold p-0 outline-none hover:text-themeAccent transition">✕</button>
-            </div>
-            <div id="dynamicSoundGrid" class="grid grid-cols-3 gap-2 p-4 overflow-y-auto custom-scrollbar">
-                <!-- JavaScript will dynamically generate 55 Sound Buttons here -->
-            </div>
-        </div>
     </div>
 
     <!-- Header -->
@@ -128,6 +114,10 @@
                         <option value="esports">Esports HUD</option>
                         <option value="synthwave">Synthwave 80s</option>
                         <option value="midnight">Midnight Blue</option>
+                        <option value="ocean">Deep Ocean</option>
+                        <option value="forest">Neon Forest</option>
+                        <option value="sunset">Retro Sunset</option>
+                        <option value="arcade">Retro Arcade</option>
                     </select>
                 </div>
 
@@ -178,12 +168,14 @@
                     <p class="text-[10px] text-gray-500 mt-1 font-semibold">Scan to join the audio party</p>
                 </div>
 
-                <!-- Fixed Search Input -->
+                <!-- FIXED: Search Input Flexbox Layout -->
                 <div id="hostControlsWrapper" class="relative w-full hidden z-20">
                     <div id="mediaInputContainer" class="card-3d bg-themeCard border border-themeBorder/50 rounded-xl p-3 md:p-4 flex flex-row items-center gap-2 relative z-30 transition-colors duration-700">
                         <input type="text" id="mediaUrlInput" onkeydown="handleSearchKey(event)" placeholder="Search song or URL..." class="flex-1 min-w-0 bg-black/20 border border-themeBorder/60 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-themeAccent shadow-inner transition">
+                        
                         <button onclick="document.getElementById('p2pFile').click()" class="btn-3d flex-shrink-0 bg-black/40 border border-themeBorder/50 text-themeText text-sm font-bold px-3 py-2.5 rounded-lg transition"><i class="fa-solid fa-folder-open"></i></button>
                         <input type="file" id="p2pFile" accept="audio/*,video/*" class="hidden" onchange="startP2PStream(this)">
+                        
                         <button id="searchBtn" onclick="searchMedia()" class="btn-3d flex-shrink-0 bg-themeAccent text-themeBtnText text-sm font-bold px-4 py-2.5 rounded-lg text-center transition-colors duration-700">Search</button>
                     </div>
                     <div id="searchResults" class="hidden absolute top-[100%] left-0 right-0 mt-3 bg-themeCard border border-themeBorder/80 rounded-xl max-h-[65vh] overflow-y-auto shadow-2xl flex-col z-40 divide-y divide-themeBorder/30"></div>
@@ -219,6 +211,7 @@
                         </div>
                         
                         <div id="hostPlaybackControls" class="hidden w-full flex-col items-center mt-2 space-y-4">
+                            <!-- Advanced Controls Row -->
                             <div class="flex items-center justify-between w-full max-w-[280px] bg-black/20 rounded-lg p-2 border border-themeBorder/30">
                                 <div class="flex flex-col items-start w-1/2 pr-2 border-r border-themeBorder/30">
                                     <span class="text-[9px] text-themeAccent uppercase font-bold mb-1">Adaptive Sync</span>
@@ -235,6 +228,7 @@
                                 </div>
                             </div>
 
+                            <!-- Master Remote -->
                             <div class="bg-themeCard border-2 border-themeBorder/60 p-5 rounded-[2.5rem] shadow-[0_15px_35px_rgba(0,0,0,0.6),inset_0_4px_10px_rgba(255,255,255,0.05)] w-full max-w-[280px] flex flex-col items-center space-y-5 relative card-3d transition-colors duration-700">
                                 <div class="absolute top-3 w-16 h-1.5 bg-black/60 rounded-full overflow-hidden shadow-inner"><div id="remoteLed" class="w-full h-full bg-themeAccent opacity-0 transition-opacity duration-200 shadow-glow"></div></div>
                                 
@@ -268,35 +262,19 @@
                 </div>
             </div>
 
-            <!-- Sidebar: Participants & Reactions -->
+            <!-- Sidebar -->
             <div class="w-full lg:w-80 flex flex-col space-y-4">
-                
-                <!-- NEW: Soundboard & Emoji Card integrated smoothly for Tailwind -->
-                <div class="card-3d bg-themeCard border border-themeBorder/50 rounded-xl p-4 flex flex-col transition-colors duration-700">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xs font-semibold uppercase tracking-wider text-themeMuted m-0">Reactions</h3>
-                        <button onclick="toggleSoundboardModal()" class="btn-3d text-[10px] bg-themeAccent text-themeBtnText px-2 py-1 rounded font-bold">🔊 50+ Sounds</button>
-                    </div>
-                    <div class="flex justify-between items-center space-x-2">
-                        <button onclick="sendReaction('😂')" class="btn-3d bg-black/20 border border-themeBorder/40 rounded-lg p-2 text-xl flex-1 hover:border-themeAccent transition">😂</button>
-                        <button onclick="sendReaction('🔥')" class="btn-3d bg-black/20 border border-themeBorder/40 rounded-lg p-2 text-xl flex-1 hover:border-themeAccent transition">🔥</button>
-                        <button onclick="sendReaction('😱')" class="btn-3d bg-black/20 border border-themeBorder/40 rounded-lg p-2 text-xl flex-1 hover:border-themeAccent transition">😱</button>
-                        <button onclick="sendReaction('🤯')" class="btn-3d bg-black/20 border border-themeBorder/40 rounded-lg p-2 text-xl flex-1 hover:border-themeAccent transition">🤯</button>
-                        <button onclick="sendReaction('💖')" class="btn-3d bg-black/20 border border-themeBorder/40 rounded-lg p-2 text-xl flex-1 hover:border-themeAccent transition">💖</button>
-                    </div>
-                </div>
-
-                <div class="card-3d bg-themeCard border border-themeBorder/50 rounded-xl p-4 flex flex-col flex-1 min-h-[16rem] transition-colors duration-700">
+                <div class="card-3d bg-themeCard border border-themeBorder/50 rounded-xl p-4 flex flex-col flex-1 min-h-[20rem] transition-colors duration-700">
                     <h3 class="text-xs font-semibold uppercase tracking-wider text-themeMuted mb-3 flex items-center justify-between transition-colors duration-700">
                         <span>Participants</span><span id="peerCount" class="bg-black/30 text-themeAccent px-2 py-0.5 rounded-full text-xs shadow-inner border border-themeBorder/40">0</span>
                     </h3>
-                    <div id="peerList" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar"></div>
+                    <div id="peerList" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modals -->
+    <!-- Join Room Modal -->
     <div id="joinModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="card-3d bg-themeCard border border-themeBorder rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-heavy transition-colors duration-700">
             <h3 class="text-lg font-bold text-themeAccent">Join Audio Room</h3>
@@ -309,6 +287,7 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="card-3d bg-themeCard border border-themeBorder rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-heavy transition-colors duration-700">
             <h3 class="text-lg font-bold text-themeAccent">Advanced Settings</h3>
@@ -326,7 +305,6 @@
     <script>
         function notifyParent(action, code='') { window.parent.postMessage({ sender: 'syncbeat', tab: 2, action, code }, '*'); }
         
-        // --- CORE VARIABLES ---
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200'; 
         let ws = null; 
         let accountId = localStorage.getItem('syncbeat_account_id'); 
@@ -359,85 +337,6 @@
             if (wrapper && !wrapper.contains(event.target)) results.classList.add('hidden'); 
         }); 
 
-        // --- 50+ EXTENDED SOUNDBOARD GENERATOR ---
-        const masterSounds = [
-            {id:'airhorn', icon:'🎺', name:'Airhorn', file:'mlg-airhorn.mp3'}, {id:'cricket', icon:'🦗', name:'Cricket', file:'crickets.mp3'},
-            {id:'wow', icon:'😲', name:'Wow', file:'anime-wow-sound-effect.mp3'}, {id:'boom', icon:'💥', name:'Vine Boom', file:'vine-boom.mp3'},
-            {id:'hitmarker', icon:'🎯', name:'Hitmarker', file:'hitmarker_2.mp3'}, {id:'cheer', icon:'🙌', name:'Cheer', file:'crowd-cheering.mp3'},
-            {id:'bruh', icon:'🤦', name:'Bruh', file:'movie_1.mp3'}, {id:'error', icon:'❌', name:'Error', file:'error.mp3'},
-            {id:'tada', icon:'🎉', name:'Tada', file:'tada.mp3'}, {id:'drumroll', icon:'🥁', name:'Drumroll', file:'drum-roll-sound-effect.mp3'},
-            {id:'fart', icon:'💨', name:'Poot', file:'fart-with-reverb.mp3'}, {id:'quack', icon:'🦆', name:'Quack', file:'quack_5.mp3'},
-            {id:'sadviolin', icon:'🎻', name:'Sad Violin', file:'sad-violin.mp3'}, {id:'dundun', icon:'😱', name:'Dun Dun', file:'dun-dun-dun.mp3'},
-            {id:'punch', icon:'👊', name:'Punch', file:'punch.mp3'}, {id:'slap', icon:'👋', name:'Slap', file:'slap.mp3'},
-            {id:'yay', icon:'🎊', name:'Yay', file:'yay.mp3'}, {id:'nani', icon:'⁉️', name:'Nani', file:'nani_1.mp3'},
-            {id:'oof', icon:'💀', name:'Oof', file:'roblox-death-sound_1.mp3'}, {id:'cash', icon:'💰', name:'Cha-Ching', file:'cash-register-kaching-sound-effect-audio-cutter.mp3'},
-            {id:'aww', icon:'🥺', name:'Aww', file:'aww.mp3'}, {id:'boo', icon:'👎', name:'Boo', file:'boo.mp3'},
-            {id:'rimshot', icon:'🥁', name:'Rimshot', file:'rimshot.mp3'}, {id:'evil', icon:'😈', name:'Evil Laugh', file:'evil-laugh.mp3'},
-            {id:'gasp', icon:'😧', name:'Gasp', file:'gasp.mp3'}, {id:'victory', icon:'🏆', name:'Victory', file:'victory.mp3'},
-            {id:'fail', icon:'📉', name:'Fail', file:'fail-trombone-01.mp3'}, {id:'magic', icon:'✨', name:'Magic', file:'magic-chime-01.mp3'},
-            {id:'alert', icon:'🚨', name:'Alert', file:'red-alert.mp3'}, {id:'bell', icon:'🔔', name:'Bell', file:'bell-ring-01.mp3'},
-            {id:'heartbeat', icon:'💓', name:'Heartbeat', file:'heartbeat.mp3'}, {id:'suspense', icon:'👀', name:'Suspense', file:'suspense.mp3'},
-            {id:'swoosh', icon:'💨', name:'Swoosh', file:'swoosh.mp3'}, {id:'pop', icon:'🍾', name:'Pop', file:'pop.mp3'},
-            {id:'buzzer', icon:'🛑', name:'Buzzer', file:'buzzer.mp3'}, {id:'chime', icon:'🎐', name:'Chime', file:'chime.mp3'},
-            {id:'whoosh', icon:'🛸', name:'Whoosh', file:'whoosh.mp3'}, {id:'laugh', icon:'🤣', name:'Laugh Track', file:'laugh-track.mp3'},
-            {id:'sigh', icon:'😮‍💨', name:'Sigh', file:'sigh.mp3'}, {id:'kiss', icon:'😘', name:'Kiss', file:'kiss.mp3'},
-            {id:'click', icon:'🖱️', name:'Click', file:'click.mp3'}, {id:'laser', icon:'🔫', name:'Laser', file:'laser.mp3'},
-            {id:'explosion', icon:'💣', name:'Explosion', file:'explosion.mp3'}, {id:'thunder', icon:'⚡', name:'Thunder', file:'thunder.mp3'},
-            {id:'rain', icon:'🌧️', name:'Rain', file:'rain.mp3'}, {id:'wind', icon:'🌬️', name:'Wind', file:'wind.mp3'},
-            {id:'fire', icon:'🔥', name:'Fire', file:'fire.mp3'}, {id:'water', icon:'💧', name:'Water Drop', file:'water-drop.mp3'},
-            {id:'bubble', icon:'🫧', name:'Bubble', file:'bubble.mp3'}, {id:'spring', icon:'🪀', name:'Boing', file:'boing.mp3'},
-            {id:'horn', icon:'🚗', name:'Honk', file:'honk.mp3'}
-        ];
-
-        function buildMasterSoundboard() {
-            const grid = document.getElementById('dynamicSoundGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            
-            masterSounds.forEach(sound => {
-                if(!document.getElementById(`sfx_${sound.id}`)) {
-                    const audioEl = document.createElement('audio');
-                    audioEl.id = `sfx_${sound.id}`;
-                    audioEl.src = `https://www.myinstants.com/media/sounds/${sound.file}`;
-                    document.body.appendChild(audioEl);
-                }
-                const btn = document.createElement('button');
-                btn.className = 'btn-3d bg-black/40 border border-themeBorder/50 text-themeText text-[10px] font-bold py-2 rounded-lg transition hover:border-themeAccent';
-                btn.innerHTML = `${sound.icon} ${sound.name}`;
-                btn.onclick = () => sendSound(sound.id);
-                grid.appendChild(btn);
-            });
-        }
-
-        function toggleSoundboardModal() {
-            const modal = document.getElementById('soundboardModalOverlay');
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            } else {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
-
-        // --- EXTENSIVE EMOJI LIST ---
-        const emojiCategories = {
-            android_smileys: ["😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠"],
-            android_gestures: ["👋","🤚","🖐️","✋","🖖","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦵","🦿","👣","👂","🦻","👃","🧠","🦷","🦴","👀","👁️","👅","👄","💋"],
-            android_animals: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🐛","🦋","🐌","🐞","🐜","🦟","🦗","🕷️","🦂","🐢","🐍","🦎","🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🐘"],
-            android_food: ["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍅","🍆","🥑","🥦","🥬","🥒","🌶️","🌽","🥕","🧄","🧅","🥔","🥐","🍞","🧀","🍳","🥓","🥩","🍗","🍖","🍔","🍟","🍕","🥪","🌮","🍿"],
-            ios_hearts: ["💖","💗","💓","💞","💕","💘","💔","❤️‍🔥","❤️‍🩹","❤️","🧡","💛","💚","💙","💜","🤎","🖤","🤍","💯","💢","💥","💫","💦","💨","💬","👁️‍🗨️","🗨️","🗯️","💭","👑"],
-            ios_symbols: ["⭐","🌟","✨","⚡","🔥","☄️","💥","☀️","🌤️","⛅","🌥️","☁️","🌦️","🌧️","⛈️","🌩️","🌨️","❄️","🌪️","🌫️","🌬️","🌀","🌈","🌂","☂️","☔","⚡","❄️","☃️","⛄"]
-        };
-        let activeEmojiCategory = 'android_smileys';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('userNameInput').value = currentUserName;
-            renderEmojiGrid();
-            buildMasterSoundboard();
-        });
-
-        // --- THEME ENGINE ---
         function handleManualThemeSelect(val) {
             if (val === 'auto') {
                 isAutoTheme = true;
@@ -486,7 +385,6 @@
         } 
         document.getElementById('uiThumbnail').onload = () => { if (ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) { applyThumbnailTheme(); } };
 
-        // --- NEW FEATURES & UTILS ---
         function selectAvatar(avatar) {
             currentAvatar = avatar;
             document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
@@ -531,16 +429,6 @@
             if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'VOLUME', level: level }));
         }
 
-        function sendSound(soundId) {
-            playSound(soundId);
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: soundId }));
-        }
-
-        function playSound(soundId) {
-            const audio = document.getElementById(`sfx_${soundId}`);
-            if (audio) { audio.currentTime = 0; audio.play().catch(e => console.log("Audio blocked by browser.")); }
-        }
-
         function startSleepTimer() {
             const mins = parseInt(document.getElementById('sleepTimerSelect').value);
             clearTimeout(sleepTimerId);
@@ -572,7 +460,6 @@
             alert(`P2P Broadcast primed for: ${file.name}.\n(Requires WebRTC upgrade in backend to open DataChannels).`);
         }
 
-        // --- WEBSOCKET ENGINE ---
         function connectWebSocket() { 
             const statusDot = document.getElementById('statusDot'); const statusText = document.getElementById('statusText'); 
             statusDot.className = "w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse shadow-[0_0_8px_#facc15]"; statusText.textContent = "Connecting..."; 
@@ -603,7 +490,6 @@
                 case 'PEER_LIST': updatePeerList(msg.peers); break; 
                 case 'PLAY_YOUTUBE': case 'LOAD_VIDEO': if (!isHost) loadAndPlayYouTube(msg.ytId || msg.videoId, msg.time || 0, msg); break; 
                 case 'VOLUME': if (!isHost && ytPlayer && typeof ytPlayer.setVolume === 'function') ytPlayer.setVolume(msg.level); break;
-                case 'SOUNDBOARD': playSound(msg.sound); break;
                 case 'MOOD_RING': 
                     const peerEl = document.getElementById(`peer_${msg.accountId}`);
                     if (peerEl) { peerEl.classList.add('mood-ring-active'); setTimeout(() => peerEl.classList.remove('mood-ring-active'), 4000); }
@@ -631,7 +517,6 @@
             } 
         }
 
-        // --- ROOM MANAGEMENT ---
         function createRoom() { 
             const profileData = getFullProfile(); 
             const code = Math.random().toString(36).substring(2, 8).toUpperCase(); 
@@ -799,7 +684,7 @@
                 const domId = peer.accountId || Math.random().toString(36).substring(2,7);
 
                 const item = document.createElement('div'); item.id = `peer_${domId}`; item.className = "flex items-center justify-between bg-black/20 border border-themeBorder/40 px-3 py-2 rounded-lg text-xs shadow-inner transition-colors duration-700"; 
-                item.innerHTML = `<div class="flex flex-col"><span class="font-medium text-themeText">${escapeHtml(peer.name)}</span><div class="mt-1 flex flex-wrap gap-1">${badgeHTML}</div></div><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold ${peer.role === 'HOST' ? 'bg-themeAccent/20 text-themeAccent border border-themeAccent/50' : 'bg-black/40 text-themeMuted'}">${peer.role}</span>`; 
+                item.innerHTML = `<div class="flex flex-col"><span class="font-medium text-themeText">${escapeHtml(peer.name)}</span><div class="mt-1 flex">${badgeHTML}</div></div><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold ${peer.role === 'HOST' ? 'bg-themeAccent/20 text-themeAccent border border-themeAccent/50' : 'bg-black/40 text-themeMuted'}">${peer.role}</span>`; 
                 listContainer.appendChild(item); 
             }); 
         } 
@@ -808,18 +693,7 @@
         function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); } 
         function saveSettings() { const input = document.getElementById('wsUrlInput'); const val = input.value.trim(); if (val) { wsUrl = val; localStorage.setItem('syncbeat_ws_url', wsUrl); connectWebSocket(); } closeSettingsModal(); } 
         function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
-
-        // --- HARDWARE POWER-SAVER LIFECYCLE LISTENER ---
-        window.addEventListener('message', (e) => {
-            if (!e.data || e.data.sender !== 'syncbeat_hub') return;
-            if (e.data.action === 'TAB_BACKGROUND') {
-                if (typeof ytPlayer !== 'undefined' && ytPlayer && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
-                document.body.style.animationPlayState = 'paused';
-            } 
-            else if (e.data.action === 'TAB_FOREGROUND') {
-                document.body.style.animationPlayState = 'running';
-            }
-        });
     </script>
 </body>
 </html>
+
