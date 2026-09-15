@@ -1,9 +1,13 @@
-const CACHE_NAME = 'syncbeat-v1';
+const CACHE_NAME = 'syncbeat-v2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdn.jsdelivr.net/npm/jsQR@1.4.0/dist/jsQR.min.js'
+  './icon-192.png',
+  './icon-512.png',
+  'https://cdn.tailwindcss.com',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+  'https://www.youtube.com/iframe_api'
 ];
 
 self.addEventListener('install', (e) => {
