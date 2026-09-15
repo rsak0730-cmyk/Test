@@ -13,12 +13,11 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
-        /* FIX FOR HALF-SCREEN STUCK: Using Dynamic Viewport Units and strict positioning */
         html, body {
             position: fixed;
             inset: 0;
-            width: 100vw;
-            height: 100dvh; /* Adapts dynamically to mobile URL bars */
+            width: 100%;
+            height: 100dvh;
             overflow: hidden;
             overscroll-behavior: none;
             background: #000;
@@ -27,16 +26,25 @@
         
         #slider { 
             display: flex; 
-            width: 300vw; 
+            width: 300%; 
             height: 100dvh; 
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+            transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); 
             will-change: transform; 
         }
         
         .frame-wrapper { 
-            width: 100vw; 
+            width: 33.333333%; 
             height: 100dvh; 
             position: relative; 
+            flex-shrink: 0;
+            /* Hardware acceleration */
+            transform: translateZ(0);
+        }
+
+        /* Inactive Tab Culling: Tells the GPU not to rasterize hidden tabs */
+        .frame-wrapper.inactive {
+            visibility: hidden !important;
+            pointer-events: none !important;
         }
         
         iframe { 
@@ -47,7 +55,6 @@
             display: block;
         }
 
-        /* Smaller, App-Matched iOS Tab Bar */
         .tab-bar {
             position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(0);
             width: 90%; max-width: 340px; height: 60px;
@@ -58,7 +65,6 @@
             z-index: 10000; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
         }
 
-        /* Auto-Hide when media plays */
         .tab-bar.hide { transform: translateX(-50%) translateY(120px); opacity: 0; pointer-events: none; }
 
         .indicator {
@@ -79,9 +85,8 @@
         
         .tab-btn .lock { position: absolute; top: 6px; right: 18px; font-size: 9px; color: #ef4444; opacity: 0; transition: 0.3s ease; }
         .tab-bar.locked .tab-btn:not(.active) .lock { opacity: 1; }
-        .tab-bar.locked { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2); }
+        .tab-bar.locked { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
 
-        /* Lock Toast */
         #toast {
             position: fixed; top: max(25px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%) translateY(-120px);
             background: rgba(20, 8, 8, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(239, 68, 68, 0.6);
@@ -91,9 +96,8 @@
         }
         #toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* Animated Splash Overlay */
         #videoSplashOverlay {
-            position: fixed; inset: 0; width: 100vw; height: 100dvh; background-color: #000000;
+            position: fixed; inset: 0; width: 100%; height: 100dvh; background-color: #000000;
             z-index: 99999999; display: flex; align-items: center; justify-content: center;
             overflow: hidden; transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s ease;
         }
@@ -109,27 +113,26 @@
     </style>
 </head>
 <body>
-
-    <!-- Fullscreen Animated Video Splash Screen -->
     <div id="videoSplashOverlay">
         <video id="splashVideo" autoplay muted playsinline preload="auto">
             <source src="intro.mp4" type="video/mp4">
-            Your browser does not support video playback.
         </video>
         <button id="skipSplashBtn" onclick="dismissSplashScreen()">Skip</button>
     </div>
 
     <div id="toast"><i class="fa-solid fa-lock" style="color: #ef4444;"></i> <span id="toastMsg"></span></div>
 
-    <!-- 
-      CRITICAL UPDATE: 
-      Added 'bluetooth', 'camera', and 'microphone' to the 'allow' attributes. 
-      Without these, Web Bluetooth (Mood Ring), QR Scanning, and WebRTC (P2P Streaming) will fail inside the iframes. 
-    -->
+    <!-- Lazy Loaded Tabs: Only tab 0 loads initially; tabs 1 & 2 start with data-src -->
     <div id="slider">
-        <div class="frame-wrapper"><iframe src="./movies.html" allow="autoplay; fullscreen; bluetooth; camera; microphone; display-capture"></iframe></div>
-        <div class="frame-wrapper"><iframe src="./golden.html" allow="autoplay; fullscreen; bluetooth; camera; microphone; display-capture"></iframe></div>
-        <div class="frame-wrapper"><iframe src="./audio.html" allow="autoplay; fullscreen; bluetooth; camera; microphone; display-capture"></iframe></div>
+        <div class="frame-wrapper" id="wrapper-0">
+            <iframe id="frame-0" src="./movies.html" allow="autoplay; fullscreen; bluetooth; camera; microphone; display-capture"></iframe>
+        </div>
+        <div class="frame-wrapper inactive" id="wrapper-1">
+            <iframe id="frame-1" data-src="./golden.html" allow="autoplay; fullscreen; bluetooth; camera; microphone; display-capture"></iframe>
+        </div>
+        <div class="frame-wrapper inactive" id="wrapper-2">
+            <iframe id="frame-2" data-src="./audio.html" allow="autoplay; fullscreen; bluetooth; camera; microphone; display-capture"></iframe>
+        </div>
     </div>
 
     <nav class="tab-bar" id="tabBar">
@@ -146,7 +149,6 @@
     </nav>
 
     <script>
-        // --- Splash Screen Controller ---
         const splashOverlay = document.getElementById('videoSplashOverlay');
         const splashVid = document.getElementById('splashVideo');
 
@@ -174,7 +176,6 @@
             }
         }
 
-        // --- Core Tab & Lock Logic ---
         let currentTab = 0;
         let activeRoomTab = null;
         let activeRoomCode = null;
@@ -184,10 +185,10 @@
         const tabBar = document.getElementById('tabBar');
         const toast = document.getElementById('toast');
         const tabBtns = document.querySelectorAll('.tab-btn');
+        const wrappers = [document.getElementById('wrapper-0'), document.getElementById('wrapper-1'), document.getElementById('wrapper-2')];
+        const frames = [document.getElementById('frame-0'), document.getElementById('frame-1'), document.getElementById('frame-2')];
 
         let hasEnteredFullscreen = false;
-        
-        // Handles initial interaction to prepare browser for fullscreen capabilities
         document.body.addEventListener('click', () => {
             if (!hasEnteredFullscreen) {
                 try {
@@ -199,11 +200,6 @@
                 } catch(e) {}
                 hasEnteredFullscreen = true;
             }
-        });
-
-        // Dynamic resize listener to ensure sliding viewport stays perfectly snapped on mobile orientation change
-        window.addEventListener('resize', () => {
-            slider.style.transform = `translateX(-${currentTab * 100}vw)`;
         });
 
         window.addEventListener('message', (e) => {
@@ -244,8 +240,27 @@
                 return;
             }
 
+            // 1. Tell the previous tab to enter background sleep mode
+            if (frames[currentTab] && frames[currentTab].contentWindow) {
+                try {
+                    frames[currentTab].contentWindow.postMessage({ sender: 'syncbeat_hub', action: 'TAB_BACKGROUND' }, '*');
+                } catch(e) {}
+            }
+
+            // 2. Lazy load the new tab if not loaded yet
+            const targetFrame = frames[index];
+            if (!targetFrame.src && targetFrame.getAttribute('data-src')) {
+                targetFrame.src = targetFrame.getAttribute('data-src');
+            }
+
+            // 3. Update visibility and culled states
+            wrappers.forEach((wrap, i) => {
+                wrap.classList.toggle('inactive', i !== index);
+            });
+
+            // 4. Slide to the tab
             currentTab = index;
-            slider.style.transform = `translateX(-${index * 100}vw)`;
+            slider.style.transform = `translateX(-${index * 33.333333}%)`;
             const pos = ['6px', 'calc(33.333% + 1px)', 'calc(66.666% - 4px)'];
             indicator.style.left = pos[index];
             indicator.style.background = color + '40';
@@ -254,6 +269,13 @@
                 btn.classList.toggle('active', i === index);
                 btn.style.color = i === index ? '#fff' : 'rgba(255,255,255,0.4)';
             });
+
+            // 5. Wake up the new tab
+            if (targetFrame.contentWindow) {
+                try {
+                    targetFrame.contentWindow.postMessage({ sender: 'syncbeat_hub', action: 'TAB_FOREGROUND' }, '*');
+                } catch(e) {}
+            }
         }
     </script>
 </body>
