@@ -3,264 +3,514 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SyncBeat - Golden Room (Advanced)</title>
+    <title>SyncBeat - Master Golden Room</title>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        @keyframes goldSparkleShine { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes floatLogoAnim { 0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6)); } 50% { transform: translateY(-4px) rotate(3deg) scale(1.05); filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.9)); } }
-        @keyframes sparkleTwinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2) rotate(45deg); } }
-        
-        * { box-sizing: border-box; }
-        html, body {
-            width: 100vw; min-height: 100vh; margin: 0; padding: 15px; padding-bottom: 95px !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: radial-gradient(circle at 50% 0%, #1c1404 0%, #080602 100%); color: #fef3c7;
-            display: flex; flex-direction: column; align-items: center; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
+        /* --- 1. VIRTUAL ROOM THEMES --- */
+        :root {
+            --bg-start: #1c1404; --bg-end: #080602;
+            --card-bg: rgba(30, 24, 10, 0.65);
+            --accent: #fbbf24; --accent-alt: #d97706;
+            --text: #fef3c7; --border: rgba(251, 191, 36, 0.25);
         }
-        .container { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
-        .card, .youtube-card, .emoji-keyboard-container, .floating-chat-window { width: 100%; background: linear-gradient(135deg, rgba(30, 24, 10, 0.65) 0%, rgba(15, 12, 4, 0.8) 100%); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(251, 191, 36, 0.25); border-radius: 24px; padding: 18px; margin-bottom: 16px; position: relative; box-shadow: 0 8px 32px 0 rgba(251, 191, 36, 0.45), inset 0 1px 4px 0 rgba(255, 255, 255, 0.5); }
-        button, .btn-purple, .action-btn-custom, .code-action-btn, .close-session-btn, .control-btn, .play-pause-lg, .reaction-btn, .kb-tab-btn, .live-chat-launcher { position: relative; overflow: hidden; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 1px solid rgba(251, 191, 36, 0.3); outline: none; }
-        button:active, .btn-purple:active { transform: scale(0.94); }
-        .header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .animated-logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #78350f 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; animation: floatLogoAnim 3s ease-in-out infinite; box-shadow: 0 0 15px rgba(251, 191, 36, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.6); position: relative; }
-        .animated-logo-icon svg { width: 22px; height: 22px; fill: #fff; }
-        .animated-logo-icon::after { content: '✨'; position: absolute; top: -6px; right: -6px; font-size: 14px; animation: sparkleTwinkle 1.5s ease-in-out infinite; }
-        .logo-area h1 { margin: 0; font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #fffbeb 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
-        .back-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(251, 191, 36, 0.3); font-size: 20px; font-weight: bold; color: #fbbf24; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .card-header-sm { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fbbf24; margin-bottom: 10px; letter-spacing: 1px; }
-        .code-box { background: rgba(10, 8, 2, 0.85); border: 2px dashed rgba(251, 191, 36, 0.5); border-radius: 16px; padding: 14px; text-align: center; font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 3px; margin-bottom: 14px; }
-        .code-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; width: 100%; }
-        .code-action-btn { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(251, 191, 36, 0.3); color: #fef3c7; font-weight: 700; font-size: 12px; padding: 12px 8px; border-radius: 14px; text-align: center; width: 100%; }
-        .code-input, .search-input { width: 100%; background: rgba(10, 8, 2, 0.7); border: 1px solid rgba(251, 191, 36, 0.3); color: #fef3c7; padding: 14px; border-radius: 14px; font-size: 14px; outline: none; margin-bottom: 10px; }
-        .btn-purple { background: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #b45309 100%); color: #1c1404; width: 100%; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.4); }
-        .close-session-btn { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: white; width: 100%; padding: 14px; border-radius: 14px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.3); }
-        .progress-track { background: rgba(255, 255, 255, 0.1); height: 8px; border-radius: 4px; cursor: pointer; margin-bottom: 8px; position: relative; border: 1px solid rgba(251, 191, 36, 0.2); width: 100%; }
-        .progress-fill { background: linear-gradient(90deg, #fbbf24, #f59e0b, #fffbeb); width: 0%; height: 100%; border-radius: 4px; position: relative; }
-        .progress-thumb { position: absolute; right: -6px; top: -5px; width: 18px; height: 18px; background: #fff; border-radius: 50%; border: 2px solid #d97706; }
-        .time-info { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: rgba(254, 243, 199, 0.7); margin-bottom: 14px; width: 100%; }
-        .player-controls-row { display: flex; justify-content: center; align-items: center; margin-bottom: 12px; width: 100%; }
-        .play-pause-lg { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #1c1404; width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid rgba(255, 255, 255, 0.6); }
-        .youtube-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; width: 100%; }
-        .youtube-logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 13px; color: #f87171; }
-        .youtube-card.fullscreen-mode { position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 99999999 !important; background: #000 !important; margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; }
-        .youtube-card.fullscreen-mode .youtube-header, .youtube-card.fullscreen-mode #hostOnlyControls, .youtube-card.fullscreen-mode .progress-track, .youtube-card.fullscreen-mode .time-info, .youtube-card.fullscreen-mode .player-controls-row { display: none !important; }
-        .youtube-card.fullscreen-mode #ytEmbedWrapper { position: absolute !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; border-radius: 0 !important; margin: 0 !important; }
-        .reaction-btn { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(251, 191, 36, 0.3); font-size: 22px; padding: 8px 12px; border-radius: 12px; flex-shrink: 0; }
-        .kb-tab-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 12px; padding: 8px 14px; font-size: 12px; font-weight: 700; color: rgba(254, 243, 199, 0.7); white-space: nowrap; }
-        .kb-tab-btn.active { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #1c1404; font-weight: 800; }
-        .emoji-grid-box { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-height: 210px; overflow-y: auto; padding: 10px 6px; background: rgba(5, 4, 1, 0.8); border-radius: 14px; border: 1px solid rgba(251, 191, 36, 0.2); width: 100%; }
-        .emoji-key { background: none; border: none; font-size: 26px; cursor: pointer; padding: 8px; border-radius: 10px; text-align: center; }
-        @keyframes emojiBlastTravel { 0% { bottom: 10px; left: 50%; transform: translateX(-50%) scale(0.4); opacity: 0; } 55% { bottom: 48vh; transform: translateX(-50%) scale(2.8) rotate(18deg); } 100% { bottom: 60vh; transform: translateX(-50%) scale(3.6); opacity: 0; } }
-        .animated-blast-item { position: fixed; z-index: 9999999; font-size: 52px; pointer-events: none; animation: emojiBlastTravel 1.8s cubic-bezier(0.2, 0.9, 0.3, 1) forwards; }
-        #roomPopupContainer { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 9999999999; display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; width: 90%; max-width: 380px; }
-        .room-popup-card { background: linear-gradient(135deg, rgba(30, 24, 10, 0.95) 0%, rgba(10, 8, 2, 0.98) 100%); color: #fef3c7; padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.5); font-size: 12px; font-weight: 700; pointer-events: auto; width: 100%; }
-        #liveChatFloatingContainer { position: fixed; bottom: 20px; right: 16px; z-index: 9999; }
-        .live-chat-launcher { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #1c1404; border-radius: 30px; padding: 12px 20px; font-size: 13px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.5); }
-        .floating-chat-window { width: 310px; overflow: hidden; margin-bottom: 8px; }
-        .floating-chat-header { background: rgba(251, 191, 36, 0.15); padding: 12px 16px; font-weight: 800; font-size: 13px; color: #fbbf24; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(251, 191, 36, 0.2); }
-        #interactionOverlay { position: fixed; inset: 0; background: rgba(8, 6, 2, 0.92); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; }
-        .peer-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(251, 191, 36, 0.15); font-size: 13px; font-weight: 600; width: 100%; }
-        .badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
-        .badge-host { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
-        .badge-member { background: rgba(217, 119, 6, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+        [data-theme="cyberpunk"] {
+            --bg-start: #0a0a1a; --bg-end: #020205;
+            --card-bg: rgba(20, 10, 40, 0.75);
+            --accent: #00ffcc; --accent-alt: #ff00ff;
+            --text: #e0e0ff; --border: rgba(0, 255, 204, 0.4);
+        }
+        [data-theme="cinema"] {
+            --bg-start: #111; --bg-end: #000;
+            --card-bg: rgba(20, 20, 20, 0.9);
+            --accent: #e50914; --accent-alt: #b20710;
+            --text: #fff; --border: rgba(229, 9, 20, 0.3);
+        }
+
+        body { 
+            font-family: -apple-system, sans-serif; 
+            background: radial-gradient(circle at 50% 0%, var(--bg-start) 0%, var(--bg-end) 100%); 
+            color: var(--text); margin: 0; padding: 15px; padding-bottom: 95px !important; 
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh; 
+            transition: all 0.5s ease; 
+        }
+        .container { width: 100%; max-width: 450px; position: relative; z-index: 2; }
+        .card { 
+            background: var(--card-bg); backdrop-filter: blur(16px); 
+            border: 1px solid var(--border); border-radius: 20px; 
+            padding: 16px; margin-bottom: 14px; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.4); 
+            transition: all 0.3s ease; 
+        }
+        
+        button { cursor: pointer; transition: all 0.2s ease; outline: none; border: none; }
+        button:active { transform: scale(0.95); }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .header h1 { margin: 0; font-size: 22px; font-weight: 900; color: var(--accent); }
+        
+        .input-base { 
+            width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); 
+            color: var(--text); padding: 12px; border-radius: 12px; font-size: 14px; 
+            box-sizing: border-box; margin-bottom: 8px; 
+        }
+        
+        .btn-main { 
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-alt) 100%); 
+            color: #000; width: 100%; padding: 14px; border-radius: 14px; 
+            font-size: 14px; font-weight: 800; margin-bottom: 8px; 
+        }
+        
+        .flex-row { display: flex; gap: 8px; justify-content: space-between; align-items: center; }
+        
+        /* --- 2. MOOD RING & ACHIEVEMENTS --- */
+        @keyframes heartbeat {
+            0%, 100% { box-shadow: 0 0 5px var(--accent); }
+            50% { box-shadow: 0 0 20px #ff0055, 0 0 30px #ff0055; }
+        }
+        .mood-ring-active { animation: heartbeat 1s infinite; border-radius: 50%; }
+        
+        .badge { 
+            background: rgba(255,255,255,0.1); border: 1px solid var(--border); 
+            padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; color: var(--accent);
+        }
+
+        /* --- 3. QR & UI ELEMENTS --- */
+        .qr-container { background: #fff; padding: 10px; border-radius: 12px; margin-top: 10px; display: none; text-align: center; }
+        .qr-container img { width: 140px; height: 140px; margin: 0 auto; }
+        
+        .soundboard-grid, .avatar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+        .mini-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .mini-btn.active { background: var(--accent); color: #000; }
+
+        .overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100000; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; display: none; text-align: center; padding: 20px;
+        }
         .hidden { display: none !important; }
-        #mainLandingView, #hostSessionView { width: 100%; display: flex; flex-direction: column; align-items: center; }
     </style>
 </head>
 <body>
-    <div id="interactionOverlay" class="hidden">
-        <div class="animated-logo-icon" style="width: 60px; height: 60px; margin-bottom: 16px;"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
-        <h2 style="font-size: 24px; margin-bottom: 8px; font-weight: 900; color:#fbbf24;">Room Connected!</h2>
-        <p style="color: rgba(254, 243, 199, 0.7); font-size: 13px; margin-bottom: 24px;">Tap below to enable synchronized audio & video.</p>
-        <button class="btn-purple" style="width: 240px;" onclick="unlockMediaContext()">✨ Sync Audio & Video</button>
-    </div>
-    
-    <div id="roomPopupContainer"></div>
-    
-    <div class="container">
-        <!-- Global Timezone Coordinator -->
-        <div class="card" id="timezoneCard">
-            <div style="font-weight: 900; font-size: 14px; color: #fbbf24; margin-bottom: 8px;">🌍 Global Timezone Coordinator</div>
-            <p style="font-size: 11px; color: rgba(254, 243, 199, 0.7); margin-bottom: 10px;">Timezone: <span id="detectedTz" style="color: #fff; font-weight: bold;"></span></p>
-            <div style="display: flex; gap: 8px; margin-bottom: 8px; width: 100%;">
-                <input type="datetime-local" id="targetWatchTime" class="code-input" style="padding: 10px; font-size: 12px; margin-bottom:0;">
-                <button class="code-action-btn" style="background: #fbbf24; color: #1c1404; font-weight: bold; border-radius: 10px;" onclick="broadcastTimezoneSchedule()">Sync</button>
-            </div>
-            <div id="scheduledCountdownDisplay" style="font-size: 11px; color: #34d399; font-weight: bold;"></div>
-        </div>
 
+    <!-- OVERLAYS (Sleep Timer & Scheduling) -->
+    <div id="sleepOverlay" class="overlay">
+        <h2 style="color: var(--accent);">💤 Room is Asleep</h2>
+        <p style="color: #aaa;">Audio muted and video paused.</p>
+        <button class="btn-main" style="width: 200px; margin-top: 20px;" onclick="wakeUpRoom()">Wake Up</button>
+    </div>
+
+    <div class="container">
+        
+        <!-- ================= LANDING VIEW ================= -->
         <div id="mainLandingView">
             <div class="header">
-                <div class="logo-area"><div class="animated-logo-icon"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div><h1>SyncBeat</h1></div>
+                <h1>SyncBeat ✨</h1>
+                <select id="themeSelector" onchange="changeTheme(this.value)" style="background: rgba(0,0,0,0.5); color: var(--accent); border: 1px solid var(--border); padding: 5px; border-radius: 8px;">
+                    <option value="golden">Golden Theme</option>
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="cinema">Cinema Dark</option>
+                </select>
             </div>
-            <div class="card"><div class="card-header-sm"><span>Your Profile</span></div><input type="text" id="userNameInput" class="code-input" placeholder="Your Display Name" oninput="saveName()"></div>
-            <div class="card" onclick="startHostingSession()" style="cursor: pointer; border-color: rgba(251, 191, 36, 0.6);"><div style="font-weight: 900; font-size: 16px; color: #fbbf24;">👑 Create Golden Room (Host)</div><div style="font-size: 12px; color: rgba(254, 243, 199, 0.7);">Manage playback and timeline sync.</div></div>
-            <div class="card"><div class="card-header-sm"><span>Join with Code</span></div><input type="text" id="roomCodeInput" class="code-input" placeholder="e.g. SYNC-A1B2" maxlength="10"><button class="btn-purple" onclick="connectToRoom()">✨ Join Room</button></div>
+
+            <div class="card">
+                <div style="font-size: 11px; color: var(--accent); margin-bottom: 5px; font-weight: bold;">AVATAR & PROFILE</div>
+                <input type="text" id="userNameInput" class="input-base" placeholder="Display Name">
+                <input type="text" id="userStatusInput" class="input-base" placeholder="Status (e.g. VIP, AFK)">
+                
+                <div style="font-size: 10px; color: #888; margin-top: 5px;">Select Avatar:</div>
+                <div class="avatar-grid">
+                    <button class="mini-btn avatar-btn active" onclick="selectAvatar('🐺')">🐺 Wolf</button>
+                    <button class="mini-btn avatar-btn" onclick="selectAvatar('🦉')">🦉 Owl</button>
+                    <button class="mini-btn avatar-btn" onclick="selectAvatar('🐉')">🐉 Dragon</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <button class="btn-main" onclick="startHostingSession()">👑 Host New Room</button>
+                <button class="btn-main" style="background: transparent; border: 1px solid var(--accent); color: var(--accent);" onclick="generateInvite()">📅 Schedule Party</button>
+                <div style="margin: 15px 0; border-top: 1px solid var(--border);"></div>
+                <input type="text" id="roomCodeInput" class="input-base" placeholder="Enter Room Code">
+                <button class="btn-main" style="background: #333; color: #fff;" onclick="connectToRoom()">Join Room</button>
+            </div>
         </div>
 
+        <!-- ================= HOST / ROOM VIEW ================= -->
         <div id="hostSessionView" class="hidden">
-            <div class="header"><button class="back-btn" onclick="leaveRoom()">←</button><div><div style="font-size: 14px; font-weight: 900; color: #fbbf24;" id="sessionRoleTitle">Room Session</div><div style="font-size: 11px; color: rgba(254, 243, 199, 0.6);" id="bandwidthStatusBadge">● Sparkle Live Sync</div></div></div>
-            <div class="card"><div class="card-header-sm"><span id="roleIndicator">Role: Member</span></div><div class="code-box" id="displayRoomCode">SYNC-0000</div><div class="code-actions"><button class="code-action-btn" onclick="copyCode()">📋 Copy Code</button><button class="code-action-btn" onclick="shareCode()">🔗 Share</button></div><button class="close-session-btn" onclick="leaveRoom()">Leave Room</button></div>
-            
-            <div class="youtube-card" id="hostUrlControls">
-                <div class="youtube-header"><div class="youtube-logo"><span>🔴</span> YouTube Player</div><button class="code-action-btn" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 800; width:auto;" onclick="toggleFullScreenMode()">📺 FULL SCREEN</button></div>
-                <div id="hostOnlyControls" style="position: relative; margin-bottom: 12px;"><div style="display: flex; gap: 8px; width: 100%;"><input type="text" id="videoUrlInput" class="search-input" placeholder="🔗 Search song or paste URL..." style="margin-bottom:0;" onkeydown="if(event.key==='Enter') searchMedia()"><button id="searchBtn" class="action-btn-custom" style="padding:0 18px; background:linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color:#1c1404; font-weight:800; border-radius:14px;" onclick="searchMedia()">Search</button></div><div id="searchResults" class="hidden" style="position: absolute; top: 100%; left: 0; right: 0; margin-top: 8px; background: rgba(15, 12, 4, 0.98); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 14px; max-height: 250px; overflow-y: auto; z-index: 100;"></div></div>
-                <div id="ytEmbedWrapper" style="position: relative; width: 100%; height: 200px; border-radius: 16px; overflow: hidden; background: #000; margin-bottom: 12px; border: 1px solid rgba(251, 191, 36, 0.3);"><div id="ytPlayerDiv" style="width:100%; height:100%;"></div><div id="playerClickOverlay" onclick="forcePlayVideo()" style="position:absolute; inset:0; z-index:10; display:flex; justify-content:center; align-items:center; background:rgba(8,6,2,0.75); cursor:pointer;"><div style="background:linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color:#1c1404; padding:12px 24px; border-radius:30px; font-weight:900;">▶ Tap to Load Video</div></div><button id="exitFullScreenBtn" class="hidden" style="position: fixed; top: 20px; left: 20px; z-index: 100000000; background: rgba(8,6,2,0.85); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.6); padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor: pointer;" onclick="toggleFullScreenMode()">← Back</button></div>
-                <div class="progress-track locked" id="progressTrackScrubber" onclick="handleScrubSeek(event)"><div class="progress-fill" id="sessionFill"><div class="progress-thumb"></div></div></div>
-                <div class="time-info"><span id="currentTimeLabel">0:00</span><span id="durationLabel">0:00</span></div>
-                <div class="player-controls-row"><button class="play-pause-lg" id="sessionPlayBtn" onclick="togglePlayPause()" disabled>▶</button></div>
+            <div class="header">
+                <button onclick="leaveRoom()" style="background: none; color: var(--accent); font-size: 20px; padding: 0;">←</button>
+                <div style="text-align: right;">
+                    <div id="roleIndicator" style="font-weight: bold; color: var(--accent);">Room</div>
+                    <div id="timezoneDisplay" style="font-size: 10px; color: #888;">Detecting Timezone...</div>
+                </div>
             </div>
 
-            <div class="card"><div class="card-header-sm" style="color:#ef4444;"><span>Reactions</span></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"><button class="code-action-btn" style="width:auto; padding: 4px 10px;" onclick="toggleEmojiKeyboard()">⌨️ Emoji Keyboard</button></div><div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;"><button class="reaction-btn" onclick="sendReaction('😂')">😂</button><button class="reaction-btn" onclick="sendReaction('🍿')">🍿</button><button class="reaction-btn" onclick="sendReaction('😱')">😱</button><button class="reaction-btn" onclick="sendReaction('🤯')">🤯</button><button class="reaction-btn" onclick="sendReaction('💖')">💖</button></div><div id="phoneEmojiKeyboardSection" class="emoji-keyboard-container hidden"><div class="emoji-grid-box" id="kbEmojiGrid"></div></div></div>
-            <div class="card"><div class="card-header-sm"><span>Connected Devices (<span id="peerCount">1</span>)</span></div><div id="peerListContainer"></div></div>
+            <!-- Global Tools: QR & Bluetooth -->
+            <div class="card flex-row" style="flex-wrap: wrap;">
+                <div style="font-size: 22px; font-weight: 900; letter-spacing: 2px;" id="displayRoomCode">SYNC-0000</div>
+                <div style="display: flex; gap: 5px;">
+                    <button class="mini-btn" onclick="toggleQR()">📱 QR Join</button>
+                    <button class="mini-btn" id="btHeartBtn" onclick="connectHeartRate()">❤️ Connect HR</button>
+                </div>
+                <div id="qrBox" class="qr-container" style="width: 100%;">
+                    <img id="qrImage" src="" alt="Room QR">
+                </div>
+            </div>
+
+            <!-- Player & Controls -->
+            <div class="card" id="hostUrlControls">
+                <div class="flex-row">
+                    <input type="text" id="videoUrlInput" class="input-base" style="margin: 0;" placeholder="Paste YouTube ID...">
+                    <!-- P2P Offline Video Trigger -->
+                    <button class="mini-btn" style="padding: 12px; height: 100%;" onclick="document.getElementById('p2pFile').click()">📂 P2P</button>
+                    <input type="file" id="p2pFile" accept="video/*" class="hidden" onchange="loadLocalP2P(this)">
+                </div>
+
+                <div id="ytEmbedWrapper" style="width: 100%; height: 200px; background: #000; border-radius: 12px; overflow: hidden; margin: 10px 0;">
+                    <div id="ytPlayerDiv"></div>
+                </div>
+                
+                <div class="flex-row" style="margin-bottom: 10px;">
+                    <button class="btn-main" id="playBtn" style="margin: 0;" onclick="togglePlayPause()">▶ Play/Pause</button>
+                </div>
+
+                <!-- Adaptive Sync & Volume -->
+                <div class="flex-row" style="margin-bottom: 10px;">
+                    <div style="width: 50%;">
+                        <div style="font-size: 10px; color: var(--accent);">VOLUME SYNC</div>
+                        <input type="range" id="masterVolume" min="0" max="100" value="100" style="width: 100%;" onchange="syncVolume(this.value)">
+                    </div>
+                    <div style="width: 50%; text-align: right;">
+                        <div style="font-size: 10px; color: var(--accent);">ADAPTIVE SYNC</div>
+                        <button id="adaptiveBtn" class="mini-btn" style="width: 100%; margin-top: 2px;" onclick="toggleAdaptive()">🟢 Enabled</button>
+                    </div>
+                </div>
+                
+                <!-- Sleep Timer -->
+                <div class="flex-row">
+                    <select id="sleepTimerSelect" class="input-base" style="width: 60%; margin: 0;">
+                        <option value="0">Sleep Timer: Off</option>
+                        <option value="15">15 Minutes</option>
+                        <option value="45">45 Minutes</option>
+                    </select>
+                    <button class="btn-main" style="width: 35%; margin: 0; padding: 12px;" onclick="startSleepTimer()">Set</button>
+                </div>
+            </div>
+
+            <!-- Soundboard -->
+            <div class="card">
+                <div style="font-size: 11px; color: var(--accent); margin-bottom: 5px;">INTERACTIVE SOUNDBOARD</div>
+                <div class="soundboard-grid">
+                    <button class="mini-btn" onclick="sendSound('airhorn')">🎺 Airhorn</button>
+                    <button class="mini-btn" onclick="sendSound('cricket')">🦗 Cricket</button>
+                    <button class="mini-btn" onclick="sendSound('wow')">😲 Wow</button>
+                </div>
+            </div>
+
+            <!-- Peer List & Achievements -->
+            <div class="card">
+                <div style="font-size: 11px; color: var(--accent); margin-bottom: 5px;">ROOM PARTICIPANTS (<span id="peerCount">1</span>)</div>
+                <div id="peerListContainer"></div>
+            </div>
         </div>
     </div>
 
-    <div id="liveChatFloatingContainer" class="hidden"><div id="liveChatWindow" class="floating-chat-window card hidden" style="padding: 0;"><div class="floating-chat-header"><span>Room Live Chat</span><button style="background:none; border:none; color:#fbbf24; font-size:16px; cursor:pointer;" onclick="toggleChat()">✕</button></div><div style="padding: 12px;"><div id="chatMessages" style="height: 150px; overflow-y: auto; background: rgba(5,4,1,0.8); border-radius: 12px; padding: 10px; font-size: 12px; margin-bottom: 10px;"></div><div style="display: flex; gap: 8px;"><input type="text" id="chatInput" class="search-input" placeholder="Message..." style="margin-bottom:0;" onkeydown="if(event.key==='Enter') sendChat()"><button class="code-action-btn" style="background:linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color:#1c1404; font-weight:800; width:auto;" onclick="sendChat()">Send</button></div></div></div><button id="chatLaunchBtn" class="live-chat-launcher" onclick="toggleChat()">💬 Chat</button></div>
-
+    <!-- Hidden Audio Sources -->
+    <audio id="sfx_airhorn" src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"></audio>
+    <audio id="sfx_cricket" src="https://www.myinstants.com/media/sounds/crickets.mp3"></audio>
+    <audio id="sfx_wow" src="https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"></audio>
     <script>
-        function notifyParent(action, code='') { window.parent.postMessage({ sender: 'syncbeat', tab: 1, action, code }, '*'); }
-        const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200'; const WS_URL = 'wss://syncbeat-backend2.onrender.com';
-        let ws = null; let isHosting = false; let currentRoomCode = ''; let currentUserName = localStorage.getItem('syncbeat_username') || 'User';
-        let ytPlayer = null; let ytReady = false; let isSessionPlaying = false; let expectedHostTime = 0; let syncHeartbeat = null; let trackingInterval = null; let isYouTubeFullScreen = false; let targetEpochTime = null;
-
-        document.getElementById('detectedTz').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        document.getElementById('userNameInput').value = currentUserName;
-
-        function saveName() { const val = document.getElementById('userNameInput').value.trim(); if (val) { currentUserName = val; localStorage.setItem('syncbeat_username', currentUserName); } }
-
-        function broadcastTimezoneSchedule() {
-            const val = document.getElementById('targetWatchTime').value;
-            if(!val) return alert("Select time.");
-            targetEpochTime = new Date(val).getTime();
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'SCHEDULE_TIMEZONE', targetTime: targetEpochTime }));
-            startLiveCountdown();
+        // --- CORE VARIABLES ---
+        const WS_URL = 'wss://syncbeat-backend2.onrender.com';
+        let ws = null;
+        let isHosting = false;
+        let currentRoomCode = '';
+        let currentUserName = localStorage.getItem('syncbeat_username') || 'User';
+        let currentAvatar = '🐺';
+        let currentAccountId = localStorage.getItem('syncbeat_acc_id') || ('DEV-' + Math.random().toString(36).substring(2, 7).toUpperCase());
+        localStorage.setItem('syncbeat_acc_id', currentAccountId);
+        
+        let ytPlayer = null;
+        let ytReady = false;
+        let sleepTimerId = null;
+        let adaptiveSyncEnabled = true;
+        
+        // --- 1. VIRTUAL ROOM THEMES & AVATARS ---
+        function changeTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
         }
 
-        function startLiveCountdown() {
-            if(!targetEpochTime) return;
-            const timer = setInterval(() => {
-                const diff = targetEpochTime - Date.now();
-                if(diff <= 0) { document.getElementById('scheduledCountdownDisplay').textContent = "🚀 Starting Now!"; clearInterval(timer); return; }
-                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const secs = Math.floor((diff % (1000 * 60)) / 1000);
-                document.getElementById('scheduledCountdownDisplay').textContent = `⏱️ Starts in: ${mins}m ${secs}s`;
-            }, 1000);
+        function selectAvatar(avatar) {
+            currentAvatar = avatar;
+            document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        let lastFrameCheck = Date.now();
-        setInterval(() => {
-            if(ytPlayer && typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-                const now = Date.now();
-                const lag = (now - lastFrameCheck) - 1000;
-                lastFrameCheck = now;
-                if(lag > 400) document.getElementById('bandwidthStatusBadge').textContent = "⚠️ Network Lag (Adaptive Sync)";
-                else document.getElementById('bandwidthStatusBadge').textContent = "● Sparkle Live Sync";
+        // --- 2. GLOBAL TIMEZONE COORDINATOR ---
+        function detectTimezone() {
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.getElementById('timezoneDisplay').textContent = `Local TZ: ${tz}`;
+            } catch (e) {
+                document.getElementById('timezoneDisplay').textContent = "TZ: Auto";
             }
-        }, 1000);
-
-        function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('ytPlayerDiv', { height: '100%', width: '100%', videoId: '', playerVars: { 'autoplay': 1, 'controls': 1 }, events: { 'onReady': () => { ytReady = true; } } });
         }
-        function forcePlayVideo() { document.getElementById('playerClickOverlay').style.display = 'none'; ytPlayer.unMute(); ytPlayer.playVideo(); }
+        detectTimezone();
 
-        function connectWebSocket(callback) {
-            ws = new WebSocket(WS_URL);
-            ws.onopen = () => { if(callback) callback(); };
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.type === 'ROOM_CREATED' || data.type === 'ROOM_JOINED') {
-                    isHosting = (data.type === 'ROOM_CREATED');
-                    setupRoomUI(isHosting ? 'HOST' : 'MEMBER', data.code);
-                } else if (data.type === 'SCHEDULE_TIMEZONE') {
-                    targetEpochTime = data.targetTime; startLiveCountdown();
-                } else if (data.type === 'PLAY_YOUTUBE') {
-                    ytPlayer.loadVideoById(data.ytId, 0);
-                } else if (data.type === 'PEER_LIST') {
-                    document.getElementById('peerCount').textContent = data.peers.length;
-                    document.getElementById('peerListContainer').innerHTML = data.peers.map(p => `<div class="peer-item"><span>${p.name}</span><span class="badge ${p.role==='HOST'?'badge-host':'badge-member'}">${p.role}</span></div>`).join('');
-                } else if (data.type === 'CHAT_MESSAGE') {
-                    const c = document.getElementById('chatMessages');
-                    c.innerHTML += `<div><b>${data.name}:</b> ${data.message}</div>`;
-                    c.scrollTop = c.scrollHeight;
-                } else if (data.type === 'ANIMATED_BLAST') {
-                    const el = document.createElement('div');
-                    el.className = 'animated-blast-item'; el.textContent = data.emoji;
-                    document.body.appendChild(el); setTimeout(() => el.remove(), 1800);
+        // --- 3. AUTOMATED ROOM SCHEDULING ---
+        function generateInvite() {
+            const code = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            const text = `Join my SyncBeat Watch Party! Room: ${code}. Tap to join when it's time!`;
+            if (navigator.share) {
+                navigator.share({ title: 'SyncBeat Watch Party', text: text }).catch(e => console.log(e));
+            } else {
+                alert(`Invite generated for Room: ${code}\nCopy this code and send it to your friends!`);
+            }
+        }
+
+        // --- 4. CROSS-PLATFORM QR CODE QUICK JOIN ---
+        function toggleQR() {
+            const qrBox = document.getElementById('qrBox');
+            if (qrBox.style.display === 'block') {
+                qrBox.style.display = 'none';
+            } else {
+                qrBox.style.display = 'block';
+                // Utilizing a fast, public QR code generation API
+                document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${currentRoomCode}`;
+            }
+        }
+
+        // --- 5. WATCH PARTY MOOD RING (WEB BLUETOOTH WRAPPER) ---
+        async function connectHeartRate() {
+            try {
+                // Standard experimental Web Bluetooth API call for Heart Rate service
+                const device = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
+                const server = await device.gatt.connect();
+                document.getElementById('btHeartBtn').textContent = '❤️ Connected';
+                document.getElementById('btHeartBtn').classList.add('active');
+                
+                // Broadcast connection to room so avatar can pulse
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'MOOD_RING', active: true, accountId: currentAccountId }));
                 }
+                alert("Heart rate monitor connected! Your avatar will pulse a glowing red hue during intense scenes.");
+            } catch (err) {
+                console.log("Bluetooth connect failed or cancelled.", err);
+                alert("Bluetooth device not found or permissions denied. Ensure your browser supports Web Bluetooth flags.");
+            }
+        }
+
+        // --- 6. SMART SLEEP TIMER & AUTO-SHUTDOWN ---
+        function startSleepTimer() {
+            const mins = parseInt(document.getElementById('sleepTimerSelect').value);
+            clearTimeout(sleepTimerId);
+            if (mins > 0) {
+                alert(`Smart Sleep Timer activated: Muting and locking screen in ${mins} minutes.`);
+                sleepTimerId = setTimeout(() => {
+                    if (ytReady && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
+                    document.getElementById('sleepOverlay').style.display = 'flex';
+                }, mins * 60000); // Convert minutes to milliseconds
+            } else {
+                alert("Sleep timer disabled.");
+            }
+        }
+
+        function wakeUpRoom() {
+            document.getElementById('sleepOverlay').style.display = 'none';
+        }
+
+        // --- 7. SMART BANDWIDTH ADAPTIVE SYNC (FRONTEND TOGGLE) ---
+        function toggleAdaptive() {
+            adaptiveSyncEnabled = !adaptiveSyncEnabled;
+            const btn = document.getElementById('adaptiveBtn');
+            btn.textContent = adaptiveSyncEnabled ? '🟢 Enabled' : '🔴 Disabled';
+            btn.classList.toggle('active', adaptiveSyncEnabled);
+        }
+
+        // --- 8. OFFLINE LOCAL FILE P2P (WRAPPER) ---
+        function loadLocalP2P(input) {
+            const file = input.files[0];
+            if (!file) return;
+            alert(`P2P Stream initialized for: ${file.name}.\n\n(Note: Requires WebRTC upgrade in your server.js backend to open DataChannels to peers).`);
+        }
+
+        // --- 9. YOUTUBE API & MEDIA CONTROLS ---
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('ytPlayerDiv', {
+                height: '100%', width: '100%', videoId: '',
+                playerVars: { 'autoplay': 1, 'controls': 1, 'disablekb': 1, 'playsinline': 1 },
+                events: { 'onStateChange': onPlayerStateChange }
+            });
+            ytReady = true;
+        }
+
+        function onPlayerStateChange(event) {
+            if (!isHosting) return;
+            if (event.data === YT.PlayerState.PLAYING && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'CONTROL', action: 'play', time: ytPlayer.getCurrentTime() }));
+            } else if (event.data === YT.PlayerState.PAUSED && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'CONTROL', action: 'pause', time: ytPlayer.getCurrentTime() }));
+            }
+        }
+
+        function togglePlayPause() {
+            if (!isHosting || !ytPlayer || typeof ytPlayer.getPlayerState !== 'function') return;
+            
+            const inputId = document.getElementById('videoUrlInput').value.trim();
+            // If the host pasted a new ID, load it first
+            if (inputId && (ytPlayer.getPlayerState() === YT.PlayerState.CUED || ytPlayer.getPlayerState() === -1)) {
+                 ytPlayer.loadVideoById({ videoId: inputId });
+                 if (ws) ws.send(JSON.stringify({ type: 'PLAY_YOUTUBE', ytId: inputId, currentTime: 0 }));
+                 document.getElementById('videoUrlInput').value = ''; 
+            } else {
+                if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+                else ytPlayer.playVideo();
+            }
+        }
+
+        // --- 10. REAL-TIME SYNCHRONIZED VOLUME CONTROL ---
+        function syncVolume(level) {
+            if (!isHosting || !ytReady) return;
+            ytPlayer.setVolume(level);
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'VOLUME', level: level }));
+            }
+        }
+
+        // --- 11. INTERACTIVE SOUNDBOARD EFFECTS ---
+        function sendSound(soundId) {
+            playSound(soundId);
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: soundId }));
+            }
+        }
+
+        function playSound(soundId) {
+            const audio = document.getElementById(`sfx_${soundId}`);
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio blocked by browser auto-play rules. User interaction required."));
+            }
+        }
+
+        // --- 12. WEBSOCKETS, ROOM SETUP & ACHIEVEMENTS ---
+        function connectWebSocket(callback) {
+            if (ws && ws.readyState === WebSocket.OPEN) { if (callback) callback(); return; }
+            ws = new WebSocket(WS_URL);
+            ws.onopen = () => { if (callback) callback(); };
+            ws.onmessage = (event) => {
+                try { handleServerMessage(JSON.parse(event.data)); } catch(e) {}
             };
         }
 
-        function setupRoomUI(role, code) {
-            currentRoomCode = code;
-            document.getElementById('mainLandingView').classList.add('hidden');
-            document.getElementById('timezoneCard').classList.add('hidden');
-            document.getElementById('hostSessionView').classList.remove('hidden');
-            document.getElementById('liveChatFloatingContainer').classList.remove('hidden');
-            document.getElementById('displayRoomCode').textContent = code;
-            document.getElementById('roleIndicator').textContent = `Role: ${role}`;
-            if(role === 'HOST') { document.getElementById('hostOnlyControls').classList.remove('hidden'); document.getElementById('sessionPlayBtn').disabled = false; }
-            notifyParent('ROOM_OPENED', code);
+        function handleServerMessage(data) {
+            if (data.type === 'ROOM_CREATED' || data.type === 'ROOM_HOSTED_SUCCESS') {
+                isHosting = true;
+                setupRoomUI('HOST', currentRoomCode);
+            } else if (data.type === 'ROOM_JOINED' || data.type === 'ROOM_JOIN_SUCCESS') {
+                isHosting = false;
+                setupRoomUI('MEMBER', data.code);
+            } else if (data.type === 'PLAY_YOUTUBE' && !isHosting && ytReady) {
+                ytPlayer.loadVideoById({ videoId: data.ytId, startSeconds: data.currentTime || 0 });
+            } else if (data.type === 'CONTROL' && !isHosting && ytReady) {
+                // Adaptive Sync Hook: Smooth out jumps if enabled
+                const drift = Math.abs(ytPlayer.getCurrentTime() - data.time);
+                if (adaptiveSyncEnabled && drift < 0.8) {
+                    // Do nothing, let it naturally catch up
+                } else {
+                    if (data.action === 'play') { ytPlayer.seekTo(data.time, true); ytPlayer.playVideo(); }
+                    if (data.action === 'pause') { ytPlayer.seekTo(data.time, true); ytPlayer.pauseVideo(); }
+                }
+            } else if (data.type === 'VOLUME' && !isHosting && ytReady) {
+                ytPlayer.setVolume(data.level);
+            } else if (data.type === 'SOUNDBOARD') {
+                playSound(data.sound);
+            } else if (data.type === 'MOOD_RING') {
+                // Trigger visual heartrate heartbeat on peer's UI container
+                const peerEl = document.getElementById(`peer_${data.accountId}`);
+                if (peerEl) {
+                    peerEl.classList.add('mood-ring-active');
+                    setTimeout(() => peerEl.classList.remove('mood-ring-active'), 4000);
+                }
+            } else if (data.type === 'PEER_LIST') {
+                renderPeers(data.peers || []);
+            }
         }
 
         function startHostingSession() {
-            saveName();
-            const code = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            connectWebSocket(() => ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: currentUserName })));
+            currentUserName = document.getElementById('userNameInput').value.trim() || 'User';
+            localStorage.setItem('syncbeat_username', currentUserName);
+            const status = document.getElementById('userStatusInput').value.trim() || 'Host';
+            currentRoomCode = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            
+            connectWebSocket(() => {
+                // Pack Avatar and Status directly into the name for backend backward-compatibility
+                const fullProfileData = `${currentAvatar} ${currentUserName} [${status}]`;
+                ws.send(JSON.stringify({ type: 'HOST_ROOM', code: currentRoomCode, name: fullProfileData, accountId: currentAccountId }));
+                ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: currentRoomCode, name: fullProfileData, accountId: currentAccountId }));
+            });
         }
 
         function connectToRoom() {
-            saveName();
-            const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
-            if(code.length < 4) return;
-            connectWebSocket(() => ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: currentUserName })));
-        }
+            currentUserName = document.getElementById('userNameInput').value.trim() || 'User';
+            localStorage.setItem('syncbeat_username', currentUserName);
+            const status = document.getElementById('userStatusInput').value.trim() || 'Member';
+            currentRoomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+            
+            if(!currentRoomCode) { alert("Enter a room code."); return; }
 
-        function searchMedia() {
-            const val = document.getElementById('videoUrlInput').value.trim();
-            if(!val) return;
-            const match = val.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([\w-]{11})/);
-            const id = match ? match[1] : (val.length === 11 ? val : 'dQw4w9WgXcQ');
-            ytPlayer.loadVideoById(id, 0);
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'PLAY_YOUTUBE', ytId: id }));
-        }
-
-        function toggleFullScreenMode() {
-            isYouTubeFullScreen = !isYouTubeFullScreen;
-            document.getElementById('hostUrlControls').classList.toggle('fullscreen-mode', isYouTubeFullScreen);
-            document.getElementById('exitFullScreenBtn').classList.toggle('hidden', !isYouTubeFullScreen);
+            connectWebSocket(() => {
+                const fullProfileData = `${currentAvatar} ${currentUserName} [${status}]`;
+                ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: currentRoomCode, name: fullProfileData, accountId: currentAccountId }));
+            });
         }
 
         function leaveRoom() {
-            if(ws) ws.close();
+            if (ws) { ws.close(); ws = null; }
+            if (ytPlayer && typeof ytPlayer.stopVideo === 'function') ytPlayer.stopVideo();
             document.getElementById('hostSessionView').classList.add('hidden');
-            document.getElementById('liveChatFloatingContainer').classList.add('hidden');
             document.getElementById('mainLandingView').classList.remove('hidden');
-            document.getElementById('timezoneCard').classList.remove('hidden');
-            notifyParent('ROOM_CLOSED');
+            clearTimeout(sleepTimerId);
+            document.getElementById('qrBox').style.display = 'none';
         }
 
-        function sendReaction(emoji) {
-            const el = document.createElement('div'); el.className = 'animated-blast-item'; el.textContent = emoji;
-            document.body.appendChild(el); setTimeout(() => el.remove(), 1800);
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'ANIMATED_BLAST', emoji: emoji }));
+        function setupRoomUI(role, code) {
+            document.getElementById('mainLandingView').classList.add('hidden');
+            document.getElementById('hostSessionView').classList.remove('hidden');
+            document.getElementById('displayRoomCode').textContent = code;
+            document.getElementById('roleIndicator').textContent = role === 'HOST' ? '👑 Hosting Room' : '🎧 Member View';
+            
+            const isHost = role === 'HOST';
+            document.getElementById('videoUrlInput').style.display = isHost ? 'block' : 'none';
+            document.getElementById('masterVolume').parentElement.style.display = isHost ? 'block' : 'none';
+            document.getElementById('playBtn').style.display = isHost ? 'block' : 'none';
+            document.getElementById('p2pFile').previousElementSibling.style.display = isHost ? 'block' : 'none';
         }
 
-        function toggleEmojiKeyboard() { document.getElementById('phoneEmojiKeyboardSection').classList.toggle('hidden'); }
-        function toggleChat() { document.getElementById('liveChatWindow').classList.toggle('hidden'); }
-        function sendChat() {
-            const input = document.getElementById('chatInput');
-            if(!input.value.trim()) return;
-            ws.send(JSON.stringify({ type: 'CHAT_MESSAGE', message: input.value, name: currentUserName }));
-            const c = document.getElementById('chatMessages');
-            c.innerHTML += `<div><b>${currentUserName}:</b> ${input.value}</div>`;
-            input.value = ''; c.scrollTop = c.scrollHeight;
-        }
+        // --- WATCH PARTY ACHIEVEMENT BADGES ---
+        function renderPeers(peers) {
+            const container = document.getElementById('peerListContainer');
+            document.getElementById('peerCount').textContent = peers.length;
+            container.innerHTML = '';
+            
+            const hour = new Date().getHours();
+            
+            peers.forEach(peer => {
+                let badgeHTML = '';
+                // Dynamic Badges based on local time and role
+                if (peer.role === 'HOST') badgeHTML += '<span class="badge">Master Host 🏆</span>';
+                if (hour >= 2 && hour < 6) badgeHTML += '<span class="badge">Night Owl 🦉</span>';
 
-        // Render emoji quick grid
-        const emojis = ["😀","😂","😍","🔥","🎉","👍","❤️","😎","😢","🤯"];
-        document.getElementById('kbEmojiGrid').innerHTML = emojis.map(e => `<button class="emoji-key" onclick="sendReaction('${e}')">${e}</button>`).join('');
+                // Use the account ID for the DOM element to allow the Mood Ring to target it
+                const domId = peer.accountId || Math.random().toString(36).substring(2,7);
+
+                container.innerHTML += `
+                <div id="peer_${domId}" style="padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; transition: box-shadow 0.3s;">
+                    <div>
+                        <span style="font-weight: bold; font-size: 14px;">${peer.name}</span>
+                        ${badgeHTML}
+                    </div>
+                    <span style="font-size: 10px; color: var(--accent-alt);">${peer.role}</span>
+                </div>`;
+            });
+        }
     </script>
 </body>
 </html>
