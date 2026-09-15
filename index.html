@@ -151,13 +151,6 @@
                     <div class="avatar-btn" onclick="setAvatar('🎵', this)">🎵</div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header-sm">System Preferences</div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; font-weight:700;">
-                    <span>Adaptive Audio Sync</span>
-                    <input type="checkbox" id="adaptiveSyncToggle" checked onchange="saveProfile()">
-                </div>
-            </div>
         </div>
     </div>
 
@@ -285,8 +278,8 @@
 
     <script>
         // === 1. GLOBAL STATE & CONFIG ===
-        const WS_URL = 'wss://syncbeat-backend2.onrender.com'; //[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
-        const TMDB_API = '3fd2be6f0c70a2a598f084ddfb75487c'; //[span_7](start_span)[span_7](end_span)
+        const WS_URL = 'wss://syncbeat-backend2.onrender.com';
+        const TMDB_API = '3fd2be6f0c70a2a598f084ddfb75487c';
         let ws = null;
         let profile = { name: 'User', avatar: '👤', status: 'Ready' };
         let accountId = localStorage.getItem('syncbeat_device_id') || ('DEV-' + Math.random().toString(36).substring(2,7).toUpperCase());
@@ -296,7 +289,7 @@
         let activeAction = ''; // 'CREATE' or 'JOIN'
         let targetType = '';   // 'movie', 'music', 'youtube'
         
-        let activePlayer = null; // Reference to the active media DOM element
+        let activePlayer = null; 
         let ytPlayerObj = null;
         let syncInterval = null;
         let progressInterval = null;
@@ -387,12 +380,11 @@
         function initiateRoom(type, role, code) {
             showToast("Connecting to Realtime Server...");
             if(ws) ws.close();
-            ws = new WebSocket(WS_URL);[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)
+            ws = new WebSocket(WS_URL);
             
             ws.onopen = () => {
                 const payloadStr = `${profile.avatar} ${profile.name} [Ready]`;
                 if(role === 'HOST') {
-                    // Send creation requests[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)
                     ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: payloadStr, accountId: accountId, roomType: type }));
                     ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: code, name: payloadStr, accountId: accountId, roomType: type }));
                 } else {
@@ -465,7 +457,7 @@
             } else {
                 hostInput.classList.add('hidden');
                 playBtn.disabled = true;
-                // Force Audio Unlock for members due to autoplay policies[span_12](start_span)[span_12](end_span)
+                // Force Audio Unlock for members due to browser autoplay policies
                 document.getElementById('playerClickOverlay').style.display = 'flex';
             }
 
@@ -475,7 +467,7 @@
             if(roomState.type === 'youtube' && !ytPlayerObj) {
                 ytPlayerObj = new YT.Player('ytPlayerDiv', { 
                     height:'100%', width:'100%', 
-                    playerVars: { 'autoplay':1, 'controls':0, 'disablekb':1 },[span_13](start_span)[span_13](end_span)
+                    playerVars: { 'autoplay':1, 'controls':0, 'disablekb':1 },
                     events: { 'onStateChange': onPlayerStateChange }
                 });
             }
@@ -511,7 +503,7 @@
         async function searchTMDb(query) {
             if(!query) return;
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&query=${encodeURIComponent(query)}`);[span_14](start_span)[span_14](end_span)
+                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&query=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(data.results && data.results.length > 0) {
                     const id = data.results[0].id;
@@ -519,7 +511,7 @@
                     const extRes = await fetch(`https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${TMDB_API}`);
                     const extData = await extRes.json();
                     const imdbId = extData.imdb_id;
-                    const embedUrl = `https://autoembed.co/movie/imdb/${imdbId}`;[span_15](start_span)[span_15](end_span)
+                    const embedUrl = `https://autoembed.co/movie/imdb/${imdbId}`;
                     
                     document.getElementById('mediaTitle').textContent = title;
                     activePlayer = document.getElementById('movieIframe');
@@ -534,7 +526,7 @@
 
         function loadYouTubeMedia(url) {
             let id = url;
-            const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)
+            const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
             if(match) id = match[1];
             
             document.getElementById('mediaTitle').textContent = "YouTube Video Loaded";
@@ -561,7 +553,7 @@
             activePlayer.src = url;
             setupHTML5Listeners(activePlayer);
             
-            // Note: Cannot sync local file objects, so we tell members to pick the same file[span_18](start_span)[span_18](end_span)
+            // Note: Cannot sync local file objects, so we tell members to pick the same file
             ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', title: file.name }));
         }
 
@@ -617,7 +609,7 @@
 
         function handleRemoteSync(msg) {
             if(roomState.role === 'HOST' || !activePlayer) return;
-            const targetTime = msg.time + 0.15; // Network compensation[span_19](start_span)[span_19](end_span)
+            const targetTime = msg.time + 0.15; // Network compensation
             let current = roomState.type === 'youtube' ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
             
             if(msg.action === 'play') {
@@ -676,7 +668,7 @@
         const masterSounds = [
             {id:'airhorn', file:'mlg-airhorn.mp3'}, {id:'cricket', file:'crickets.mp3'}, {id:'wow', file:'anime-wow-sound-effect.mp3'},
             {id:'boom', file:'vine-boom.mp3'}, {id:'punch', file:'punch.mp3'}, {id:'fail', file:'fail-trombone-01.mp3'}
-        ];[span_20](start_span)[span_20](end_span)
+        ];
         
         function buildSoundboard() {
             const grid = document.getElementById('soundGrid');
@@ -693,7 +685,7 @@
         }
         function buildEmojis() {
             const grid = document.getElementById('emojiGrid');
-            const emojis = ['😂','🍿','😱','🤯','💖','👍','👎','🔥','🎉','💀'];[span_21](start_span)[span_21](end_span)[span_22](start_span)[span_22](end_span)
+            const emojis = ['😂','🍿','😱','🤯','💖','👍','👎','🔥','🎉','💀'];
             emojis.forEach(e => {
                 const b = document.createElement('button'); b.className = 'emoji-btn'; b.textContent = e;
                 b.onclick = () => { triggerGlobalEvent('REACTION', e); closeFab(); };
@@ -721,7 +713,7 @@
             const el = document.createElement('div'); el.className = 'floating-reaction'; el.textContent = emoji;
             el.style.left = (Math.random() * (window.innerWidth - 80) + 20) + 'px';
             document.body.appendChild(el);
-            setTimeout(() => el.remove(), 2200);[span_23](start_span)[span_23](end_span)
+            setTimeout(() => el.remove(), 2200);
         }
 
         function updateParticipants(peers) {
