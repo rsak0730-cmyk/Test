@@ -31,8 +31,18 @@
         .btn-purple { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 800; border: none; box-shadow: 0 6px 20px rgb(var(--color-shadow) / 0.4); margin-bottom: 8px; transition: background-color 0.8s, color 0.8s; }
         .close-session-btn { background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.2); width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
-        .code-input, .search-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgb(var(--color-border)); color: rgb(var(--color-text-main)); padding: 14px; border-radius: 12px; font-size: 14px; outline: none; transition: all 0.3s ease; margin-bottom: 8px; }
+        /* Search Input & Results UI */
+        .input-group { display: flex; gap: 8px; margin-bottom: 8px; width: 100%; }
+        .code-input, .search-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgb(var(--color-border)); color: rgb(var(--color-text-main)); padding: 14px; border-radius: 12px; font-size: 14px; outline: none; transition: all 0.3s ease; }
+        .input-group .code-input { margin-bottom: 0; }
+        .input-group .btn-search { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); border: none; border-radius: 12px; padding: 0 20px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgb(var(--color-shadow) / 0.3); }
+        
         .code-input:focus, .search-input:focus { border-color: rgb(var(--color-accent)); box-shadow: 0 0 15px rgb(var(--color-shadow) / 0.5); }
+        
+        .search-results-box { max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.6); border: 1px solid rgb(var(--color-border)); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .search-result-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 12px; font-weight: 700; color: rgb(var(--color-text-main)); text-align: left; }
+        .search-result-item:hover { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); }
+        .search-result-item img { height: 40px; width: 40px; object-fit: cover; border-radius: 6px; margin-right: 12px; }
         
         /* --- 3. CARDS & LAYOUTS --- */
         .card { background: rgb(var(--color-bg-card)); backdrop-filter: blur(16px); border: 1px solid rgb(var(--color-border) / 0.5); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); transition: background-color 0.8s, border-color 0.8s; }
@@ -76,7 +86,9 @@
         .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px 2px; border-bottom: 1px solid rgb(var(--color-border) / 0.5); margin-bottom: 10px; scrollbar-width: none; }
         .kb-tab-btn { background: rgba(0,0,0,0.5); border: 1px solid rgb(var(--color-border) / 0.3); border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; color: rgb(var(--color-text-muted)); }
         .kb-tab-btn.active { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); border-color: rgb(var(--color-accent)); }
-        .emoji-grid-box { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-height: 180px; overflow-y: auto; padding: 8px 4px; }
+        
+        .emoji-grid-box { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; max-height: 180px; overflow-y: auto; overflow-x: hidden; padding: 10px 5px; justify-items: center; }
+        
         .emoji-key { background: none; border: none; font-size: 26px; cursor: pointer; padding: 4px; border-radius: 8px; text-align: center; }
         .emoji-key:active { transform: scale(1.2); }
 
@@ -87,9 +99,9 @@
         #globalFab { position: fixed; right: 20px; bottom: 100px; width: 56px; height: 56px; background: rgb(var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgb(var(--color-btn-text)); font-size: 20px; box-shadow: 0 8px 25px rgb(var(--color-shadow) / 0.4); z-index: 1000001; cursor: pointer; transition: background-color 0.8s, color 0.8s; }
         .fab-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000002; display: flex; flex-direction: column; justify-content: flex-end; transform: translateY(100%); transition: 0.3s; }
         .fab-modal.show { transform: translateY(0); }
-        .fab-content { background: rgb(var(--color-bg-card)); border: 1px solid rgb(var(--color-border)); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 16px; max-height: 60vh; display: flex; flex-direction: column; transition: background-color 0.8s, border-color 0.8s; }
+        .fab-content { background: rgb(var(--color-bg-card)); border: 1px solid rgb(var(--color-border)); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 16px; max-height: 70vh; display: flex; flex-direction: column; transition: background-color 0.8s, border-color 0.8s; }
         .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; overflow-y: auto; margin-top: 10px; padding-bottom: 20px; }
-        .sound-btn { background: rgba(0,0,0,0.4); border: 1px solid rgb(var(--color-border) / 0.5); color: rgb(var(--color-text-main)); padding: 12px 6px; border-radius: 12px; font-size: 11px; font-weight: 700; text-align: center; transition: border-color 0.8s; }
+        .sound-btn { background: rgba(0,0,0,0.4); border: 1px solid rgb(var(--color-border) / 0.5); color: rgb(var(--color-text-main)); padding: 12px 6px; border-radius: 12px; font-size: 11px; font-weight: 700; text-align: center; transition: border-color 0.8s; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         /* Modals & Utility */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s; }
@@ -107,7 +119,7 @@
 
     <div id="toast">Notification</div>
 
-    <!-- PRELOAD AUDIO CACHE FOR SOUNDBOARD -->
+    <!-- PRELOAD AUDIO CACHE FOR SOUNDBOARD (DEFAULTS) -->
     <div id="audioCache" class="hidden">
         <audio id="sfx_airhorn" src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" preload="auto"></audio>
         <audio id="sfx_cricket" src="https://www.myinstants.com/media/sounds/crickets.mp3" preload="auto"></audio>
@@ -177,7 +189,6 @@
     </nav>
 
     <!-- ================= MODALS ================= -->
-    <!-- Room Type Selection -->
     <div id="typeModal" class="modal-overlay">
         <div class="modal-content">
             <div class="card-header-sm" style="font-size:14px; margin-bottom:20px;" id="typeModalTitle">Select Room Type</div>
@@ -195,7 +206,6 @@
         </div>
     </div>
 
-    <!-- Join Code Entry -->
     <div id="joinCodeModal" class="modal-overlay">
         <div class="modal-content">
             <div class="card-header-sm" style="font-size:14px; margin-bottom:10px;">Enter Room Code</div>
@@ -231,7 +241,9 @@
             <div class="card-header-sm" style="color:rgb(var(--color-accent)); margin-bottom: 10px;">● Media Player</div>
             
             <!-- Host Inputs -->
-            <div id="hostMediaInputArea" class="hidden" style="margin-bottom: 12px; padding-bottom:12px; border-bottom:1px solid rgb(var(--color-border)/0.3);"></div>
+            <div id="hostMediaInputArea" class="hidden" style="margin-bottom: 12px; padding-bottom:12px; border-bottom:1px solid rgb(var(--color-border)/0.3);">
+                <!-- Dynamic Search UI will be injected here -->
+            </div>
 
             <div style="text-align:center; margin-bottom: 10px;">
                 <h3 id="mediaTitle" style="font-size: 15px; font-weight: 800; color: rgb(var(--color-text-main)); transition: 0.8s;">Waiting for Media...</h3>
@@ -256,10 +268,9 @@
             <button class="play-pause-lg" id="playPauseBtn" onclick="togglePlayPause()" disabled><i class="fa-solid fa-play"></i></button>
         </div>
 
-        <!-- RESTORED EMOJI KEYBOARD -->
         <div class="card">
             <div class="card-header-sm">Reactions & Sounds</div>
-            <button class="code-action-btn" onclick="openFab()" style="margin-bottom:10px;">🔊 Open 50+ Sounds</button>
+            <button class="code-action-btn" onclick="openFab()" style="margin-bottom:10px;">🔊 Open 1000+ Sounds</button>
             
             <div class="emoji-keyboard-container">
                 <div class="keyboard-tabs-row">
@@ -278,16 +289,19 @@
         </div>
     </div>
 
-    <!-- ================= FAB (Only for Sounds now) ================= -->
+    <!-- ================= FAB (Dynamic Soundboard API) ================= -->
     <div id="globalFab" class="hidden" onclick="openFab()"><i class="fa-solid fa-music"></i></div>
     
     <div id="fabModal" class="fab-modal">
         <div class="fab-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="font-weight:800; color:rgb(var(--color-accent));">Soundboard</h3>
+                <h3 style="font-weight:800; color:rgb(var(--color-accent));">Search 1000+ Sounds</h3>
                 <button onclick="closeFab()" style="background:none; border:none; color:rgb(var(--color-text-main)); font-size:20px;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <input type="text" class="code-input" placeholder="Search Sounds..." oninput="filterSounds(this.value)">
+            <div class="input-group">
+                <input type="text" id="soundSearchInput" class="code-input" placeholder="E.g., Bruh, Vine Boom..." onkeydown="if(event.key==='Enter') filterSounds(this.value)">
+                <button class="btn-search" onclick="filterSounds(document.getElementById('soundSearchInput').value)"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
             <div id="soundGrid" class="sound-grid"></div>
         </div>
     </div>
@@ -314,7 +328,6 @@
         let isHostScrubbing = false;
         let adaptiveSyncEnabled = true;
 
-        // Emoji Categories Restored
         const emojiCategories = {
             'smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','💀','👻','🤖'],
             'gestures': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','💪'],
@@ -326,9 +339,8 @@
         // === 2. INITIALIZATION ===
         window.onload = () => {
             loadProfile();
-            buildSoundboard();
+            buildSoundboard(); // Load defaults on open
             renderEmojiGrid();
-            // Restore default golden theme
             changeTheme('golden');
         };
 
@@ -345,7 +357,7 @@
             event.currentTarget.classList.add('active');
         }
 
-        // --- DYNAMIC THEME EXTRACTION[span_3](start_span)[span_3](end_span) ---
+        // --- DYNAMIC THEME EXTRACTION ---
         function changeTheme(theme) {
             if(theme === 'golden') {
                 isAutoTheme = true;
@@ -468,11 +480,12 @@
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
                 if(msg.type === 'SOUNDBOARD') { playLocalSound(msg.sound); }
+                if(msg.type === 'SOUNDBOARD_URL') { playAudioURL(msg.url); }
                 if(msg.type === 'REACTION') { renderFloatingEmoji(msg.emoji); }
             };
         }
 
-        // === 5. UNIFIED ROOM UI ===
+        // === 5. UNIFIED ROOM UI WITH SEARCH LISTS ===
         function setupRoomUI() {
             document.getElementById('bottomNav').style.display = 'none';
             document.getElementById('roomView').classList.add('active');
@@ -496,16 +509,21 @@
             if (roomState.role === 'HOST') {
                 hostInput.classList.remove('hidden');
                 playBtn.disabled = false;
+                
+                // Dynamic Unified Search UI injected into the host area
+                hostInput.innerHTML = `
+                    <div class="input-group">
+                        <input type="text" id="masterSearchInput" class="code-input" placeholder="Search ${roomState.type.toUpperCase()}..." onkeydown="if(event.key==='Enter') executeMediaSearch()">
+                        <button class="btn-search" onclick="executeMediaSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                    <div id="searchResultsBox" class="search-results-box hidden"></div>
+                `;
+
                 if (roomState.type === 'movie') {
-                    // Local File strictly restricted to movie room
-                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search TMDb Movie..." onkeydown="if(event.key==='Enter') searchTMDb(this.value)">
-                                           <div style="font-size:11px; text-align:center; color:rgb(var(--color-text-muted)); margin-bottom:8px;">OR</div>
-                                           <label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Local Movie File:</label>
-                                           <input type="file" accept="video/*" onchange="loadLocalMedia(this, 'movie')" style="width:100%; color:rgb(var(--color-text-main)); margin-top:4px;">`;
-                } else if (roomState.type === 'music') {
-                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Paste Audio URL" onkeydown="if(event.key==='Enter') loadAudioMedia(this.value)">`;
-                } else if (roomState.type === 'youtube') {
-                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Paste YouTube URL or ID" onkeydown="if(event.key==='Enter') loadYouTubeMedia(this.value)">`;
+                    hostInput.innerHTML += `
+                        <div style="font-size:11px; text-align:center; color:rgb(var(--color-text-muted)); margin:8px 0;">OR</div>
+                        <label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Host Local File (Streams to peers):</label>
+                        <input type="file" accept="video/*" onchange="loadLocalMedia(this)" style="width:100%; color:rgb(var(--color-text-main)); margin-top:4px;">`;
                 }
             } else {
                 hostInput.classList.add('hidden');
@@ -525,7 +543,6 @@
             startProgressLoop();
         }
 
-        // Dedicated Leave Room Functionality
         function leaveRoom() {
             if(ws) { if(roomState.role === 'HOST') ws.send(JSON.stringify({type: 'CLOSE_ROOM'})); ws.close(); }
             clearInterval(syncInterval); clearInterval(progressInterval);
@@ -543,96 +560,140 @@
             roomState.active = false;
         }
 
-        // === 6. MEDIA LOADING LOGIC ===
-        async function searchTMDb(query) {
+        // === 6. UNIFIED SEARCH & MEDIA LOADING LOGIC ===
+        async function executeMediaSearch() {
+            const query = document.getElementById('masterSearchInput').value.trim();
             if(!query) return;
-            try {
-                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&query=${encodeURIComponent(query)}`);
-                const data = await res.json();
-                if(data.results && data.results.length > 0) {
-                    const id = data.results[0].id;
-                    const title = data.results[0].title;
-                    const posterUrl = `https://image.tmdb.org/t/p/w92${data.results[0].poster_path}`;
-                    const extRes = await fetch(`https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${TMDB_API}`);
-                    const extData = await extRes.json();
-                    const embedUrl = `https://autoembed.co/movie/imdb/${extData.imdb_id}`;
-                    
-                    document.getElementById('mediaTitle').textContent = title;
-                    activePlayer = document.getElementById('movieIframe');
-                    activePlayer.classList.remove('hidden');
-                    document.getElementById('movieVideo').classList.add('hidden');
-                    activePlayer.src = embedUrl;
-                    
-                    // Trigger Dynamic Color Extraction
-                    document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(posterUrl)}`;
-                    
-                    ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'iframe', title: title, url: embedUrl, posterUrl: posterUrl }));
-                }
-            } catch(e) { showToast("TMDb Search Failed"); }
-        }
+            const resBox = document.getElementById('searchResultsBox');
+            resBox.classList.remove('hidden');
+            resBox.innerHTML = '<div style="text-align:center; padding:10px; font-size:12px;">Searching...</div>';
 
-        function loadYouTubeMedia(url) {
-            let id = url;
-            const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
-            if(match) id = match[1];
-            
-            document.getElementById('mediaTitle').textContent = "YouTube Video Loaded";
-            
-            // Trigger Dynamic Color Extraction from YT Thumbnail
-            const posterUrl = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-            document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(posterUrl)}`;
-            
-            if(ytPlayerObj && ytPlayerObj.loadVideoById) {
-                activePlayer = ytPlayerObj;
-                ytPlayerObj.loadVideoById({videoId: id, startSeconds: 0});
-                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'youtube', ytId: id, posterUrl: posterUrl }));
+            try {
+                if(roomState.type === 'movie') {
+                    const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&query=${encodeURIComponent(query)}`);
+                    const data = await res.json();
+                    resBox.innerHTML = '';
+                    if(data.results.length === 0) resBox.innerHTML = '<div>No results.</div>';
+                    data.results.forEach(m => {
+                        const div = document.createElement('div'); div.className = 'search-result-item';
+                        const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : '';
+                        div.innerHTML = `<img src="${poster}"> <span>${m.title}</span>`;
+                        div.onclick = async () => {
+                            resBox.classList.add('hidden');
+                            document.getElementById('mediaTitle').textContent = m.title;
+                            document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(poster)}`;
+                            
+                            const extRes = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/external_ids?api_key=${TMDB_API}`);
+                            const extData = await extRes.json();
+                            const embedUrl = `https://autoembed.co/movie/imdb/${extData.imdb_id}`;
+                            
+                            activePlayer = document.getElementById('movieIframe');
+                            activePlayer.classList.remove('hidden'); document.getElementById('movieVideo').classList.add('hidden');
+                            activePlayer.src = embedUrl;
+                            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'iframe', title: m.title, url: embedUrl, posterUrl: poster }));
+                        };
+                        resBox.appendChild(div);
+                    });
+                } 
+                else if(roomState.type === 'youtube') {
+                    // Using Piped API (free YouTube proxy) to get search lists without API Keys
+                    const res = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=all`);
+                    const data = await res.json();
+                    resBox.innerHTML = '';
+                    const vids = data.items.filter(i => i.type === 'stream');
+                    if(vids.length === 0) resBox.innerHTML = '<div>No results.</div>';
+                    vids.forEach(v => {
+                        const div = document.createElement('div'); div.className = 'search-result-item';
+                        div.innerHTML = `<img src="${v.thumbnail}"> <span>${v.title}</span>`;
+                        div.onclick = () => {
+                            resBox.classList.add('hidden');
+                            document.getElementById('mediaTitle').textContent = v.title;
+                            document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(v.thumbnail)}`;
+                            if(ytPlayerObj && ytPlayerObj.loadVideoById) {
+                                activePlayer = ytPlayerObj;
+                                ytPlayerObj.loadVideoById({videoId: v.url.split('v=')[1], startSeconds: 0});
+                                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'youtube', ytId: v.url.split('v=')[1], posterUrl: v.thumbnail, title: v.title }));
+                            }
+                        };
+                        resBox.appendChild(div);
+                    });
+                }
+                else if(roomState.type === 'music') {
+                    // iTunes Public API for music search
+                    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
+                    const data = await res.json();
+                    resBox.innerHTML = '';
+                    if(data.results.length === 0) resBox.innerHTML = '<div>No results.</div>';
+                    data.results.forEach(t => {
+                        const div = document.createElement('div'); div.className = 'search-result-item';
+                        div.innerHTML = `<img src="${t.artworkUrl100}"> <span>${t.trackName} - ${t.artistName}</span>`;
+                        div.onclick = () => {
+                            resBox.classList.add('hidden');
+                            document.getElementById('mediaTitle').textContent = `${t.trackName} - ${t.artistName}`;
+                            document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(t.artworkUrl100)}`;
+                            
+                            activePlayer = document.getElementById('musicAudio');
+                            activePlayer.src = t.previewUrl;
+                            setupHTML5Listeners(activePlayer);
+                            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'audio', url: t.previewUrl, posterUrl: t.artworkUrl100, title: `${t.trackName} - ${t.artistName}` }));
+                        };
+                        resBox.appendChild(div);
+                    });
+                }
+            } catch(e) {
+                resBox.innerHTML = '<div style="color:red; padding:10px;">Search failed. Try again.</div>';
             }
         }
 
-        function loadAudioMedia(url) {
-            activePlayer = document.getElementById('musicAudio');
-            activePlayer.src = url;
-            setupHTML5Listeners(activePlayer);
-            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'audio', url: url }));
-        }
-
-        function loadLocalMedia(input, type) {
+        // Host loads file and sends the actual file stream (Base64 DataURL) to peers
+        function loadLocalMedia(input) {
             const file = input.files[0];
             if(!file) return;
-            const url = URL.createObjectURL(file);
-            activePlayer = document.getElementById('movieVideo');
-            activePlayer.classList.remove('hidden');
-            document.getElementById('movieIframe').classList.add('hidden');
+            showToast("Reading file... (Large files may crash connection)");
             
-            document.getElementById('mediaTitle').textContent = file.name;
-            activePlayer.src = url;
-            setupHTML5Listeners(activePlayer);
-            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', title: file.name }));
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                activePlayer = document.getElementById('movieVideo');
+                activePlayer.classList.remove('hidden');
+                document.getElementById('movieIframe').classList.add('hidden');
+                
+                document.getElementById('mediaTitle').textContent = file.name;
+                activePlayer.src = dataUrl;
+                setupHTML5Listeners(activePlayer);
+                
+                // Broadcasts the file directly to peers via WebSocket
+                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local_stream', dataUrl: dataUrl, title: file.name }));
+                showToast("File synchronized with peers.");
+            };
+            reader.readAsDataURL(file);
         }
 
         function handleRemoteMediaLoad(msg) {
             if(roomState.role === 'HOST') return;
             if(msg.posterUrl) document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(msg.posterUrl)}`;
+            if(msg.title) document.getElementById('mediaTitle').textContent = msg.title;
             
             if(msg.mode === 'iframe') {
-                document.getElementById('mediaTitle').textContent = msg.title;
                 activePlayer = document.getElementById('movieIframe');
-                activePlayer.classList.remove('hidden'); activePlayer.src = msg.url;
+                activePlayer.classList.remove('hidden'); document.getElementById('movieVideo').classList.add('hidden');
+                activePlayer.src = msg.url;
             }
-            if(msg.mode === 'youtube' && ytPlayerObj) {
-                document.getElementById('mediaTitle').textContent = "Synchronized YouTube";
+            else if(msg.mode === 'youtube' && ytPlayerObj) {
                 activePlayer = ytPlayerObj;
                 ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: 0});
             }
-            if(msg.mode === 'audio') {
+            else if(msg.mode === 'audio') {
                 activePlayer = document.getElementById('musicAudio');
                 activePlayer.src = msg.url;
             }
-            if(msg.mode === 'local') {
-                document.getElementById('mediaTitle').textContent = `Host selected: ${msg.title}. Select your local copy to sync.`;
-                const inputArea = document.getElementById('hostMediaInputArea');
-                inputArea.classList.remove('hidden');
-                inputArea.innerHTML = `<label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Same File:</label><input type="file" accept="video/*" onchange="loadLocalMedia(this, 'movie')" style="color:rgb(var(--color-text-main)); margin-top:4px;">`;
+            else if(msg.mode === 'local_stream') {
+                // Peers receive the file stream directly, no manual file upload required
+                activePlayer = document.getElementById('movieVideo');
+                activePlayer.classList.remove('hidden');
+                document.getElementById('movieIframe').classList.add('hidden');
+                activePlayer.src = msg.dataUrl;
+                document.getElementById('mediaTitle').textContent = `Host sharing: ${msg.title}`;
             }
         }
 
@@ -713,7 +774,7 @@
             ws.send(JSON.stringify({ type: 'CONTROL', action: 'seek', time: newTime }));
         }
 
-        // === 8. IN-ROOM EMOJIS & GLOBAL FAB SOUNDS ===
+        // === 8. IN-ROOM EMOJIS & GLOBAL FAB SOUNDS (1000+) ===
         function switchEmojiCategory(e, key) {
             activeEmojiCategory = key;
             document.querySelectorAll('.kb-tab-btn').forEach(b => b.classList.remove('active'));
@@ -736,14 +797,15 @@
         function openFab() { document.getElementById('fabModal').classList.add('show'); }
         function closeFab() { document.getElementById('fabModal').classList.remove('show'); }
 
-        const masterSounds = [
+        const defaultSounds = [
             {id:'airhorn', name:'Airhorn'}, {id:'cricket', name:'Cricket'}, {id:'wow', name:'Wow'},
             {id:'boom', name:'Vine Boom'}, {id:'punch', name:'Punch'}, {id:'fail', name:'Fail'}
         ];
         
         function buildSoundboard() {
             const grid = document.getElementById('soundGrid');
-            masterSounds.forEach(s => {
+            grid.innerHTML = '';
+            defaultSounds.forEach(s => {
                 const b = document.createElement('button');
                 b.className = 'sound-btn'; b.textContent = s.name;
                 b.onclick = () => { triggerGlobalEvent('SOUNDBOARD', s.id); closeFab(); };
@@ -751,21 +813,57 @@
             });
         }
 
+        // Unlimited Sound API Integration via AllOrigins proxy to handle CORS
+        async function filterSounds(query) {
+            const grid = document.getElementById('soundGrid');
+            if(!query) { buildSoundboard(); return; }
+            
+            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color: rgb(var(--color-text-muted)); padding: 20px;">Searching 1000+ sounds...</div>';
+            
+            try {
+                const url = `https://www.myinstants.com/api/v1/instants/?format=json&name=${encodeURIComponent(query)}`;
+                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const res = await fetch(proxy);
+                const data = await res.json();
+                const parsed = JSON.parse(data.contents);
+                
+                grid.innerHTML = '';
+                if(parsed.results && parsed.results.length > 0) {
+                    parsed.results.forEach(s => {
+                        const b = document.createElement('button');
+                        b.className = 'sound-btn'; 
+                        b.textContent = s.name;
+                        b.onclick = () => { triggerGlobalEvent('SOUNDBOARD_URL', s.sound); closeFab(); };
+                        grid.appendChild(b);
+                    });
+                } else {
+                    grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color: rgb(var(--color-text-muted));">No matching sounds found.</div>';
+                }
+            } catch(e) {
+                grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color: rgb(var(--color-accent));">Error connecting to sound database.</div>';
+            }
+        }
+
         function triggerGlobalEvent(type, payload) {
             if(type === 'SOUNDBOARD') playLocalSound(payload);
+            if(type === 'SOUNDBOARD_URL') playAudioURL(payload);
             if(type === 'REACTION') renderFloatingEmoji(payload);
+            
             if(ws && ws.readyState === WebSocket.OPEN) {
                 if(type === 'SOUNDBOARD') ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: payload }));
+                if(type === 'SOUNDBOARD_URL') ws.send(JSON.stringify({ type: 'SOUNDBOARD_URL', url: payload }));
                 if(type === 'REACTION') ws.send(JSON.stringify({ type: 'REACTION', emoji: payload }));
             }
         }
 
         function playLocalSound(id) {
             const a = document.getElementById(`sfx_${id}`);
-            if(a) { 
-                a.currentTime = 0; 
-                a.play().catch(e => console.warn("Browser blocked audio.")); 
-            }
+            if(a) { a.currentTime = 0; a.play().catch(e => console.warn("Browser blocked audio.")); }
+        }
+
+        function playAudioURL(url) {
+            const audio = new Audio(url);
+            audio.play().catch(e => console.warn("Browser blocked audio playback."));
         }
 
         function renderFloatingEmoji(emoji) {
@@ -789,4 +887,3 @@
     </script>
 </body>
 </html>
-
