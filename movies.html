@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streamflix - Watch Party</title>
     <style>
-        /* --- VIRTUAL ROOM THEMES (Feature 8) --- */
+        /* --- VIRTUAL ROOM THEMES --- */
         :root {
             --bg-page: #f8fafc;
             --text-main: #0f172a;
@@ -74,7 +74,41 @@
             --black-box-text: #ffffff;
         }
 
-        /* --- ORIGINAL STYLES WITH CSS VARIABLES --- */
+        [data-theme="terminal"] {
+            --bg-page: #050505;
+            --text-main: #00ff00;
+            --text-muted: #008800;
+            --primary: #00ff00;
+            --primary-light: rgba(0, 255, 0, 0.15);
+            --primary-border: #00ff00;
+            --card-bg: #0a0a0a;
+            --card-border: #00ff00;
+            --input-bg: #000000;
+            --success: #00ff00;
+            --success-light: rgba(0, 255, 0, 0.2);
+            --black-box: #000000;
+            --black-box-border: #00ff00;
+            --black-box-text: #00ff00;
+        }
+
+        [data-theme="esports"] {
+            --bg-page: #0f111a;
+            --text-main: #ffffff;
+            --text-muted: #8a91a6;
+            --primary: #ff4655; 
+            --primary-light: rgba(255, 70, 85, 0.2);
+            --primary-border: #ff4655;
+            --card-bg: #181a25;
+            --card-border: #2b2e40;
+            --input-bg: #0f111a;
+            --success: #00ffcc;
+            --success-light: rgba(0, 255, 204, 0.2);
+            --black-box: #000000;
+            --black-box-border: #ff4655;
+            --black-box-text: #ffffff;
+        }
+
+        /* --- STYLES --- */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-page); color: var(--text-main); margin: 0; padding: 15px; padding-bottom: 95px !important; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; transition: all 0.3s ease; }
         .container { width: 100%; max-width: 420px; }
         button, .btn-purple, .code-action-btn, .close-session-btn, .banner-card { position: relative; overflow: hidden; transition: transform 0.1s ease; cursor: pointer; }
@@ -220,12 +254,14 @@
                     <h1>Streamflix</h1>
                     <span class="room-badge" id="loggedAccountBadge">ID: Loading...</span>
                 </div>
-                <!-- VIRTUAL THEME SELECTOR (Feature 8) -->
+                <!-- VIRTUAL THEME SELECTOR -->
                 <select id="themeSelector" onchange="changeTheme(this.value)" style="background: var(--input-bg); color: var(--primary); border: 1px solid var(--card-border); padding: 5px; border-radius: 8px; font-size: 11px; font-weight: bold; outline: none;">
                     <option value="default">Default Streamflix</option>
                     <option value="cyberpunk">Cyberpunk Neon</option>
                     <option value="vhs">Retro VHS</option>
                     <option value="cinema">Cinema Dark</option>
+                    <option value="terminal">Hacker Terminal</option>
+                    <option value="esports">Esports HUD</option>
                 </select>
             </div>
             
@@ -236,7 +272,7 @@
                 <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-bottom: 8px;" id="deviceAccountDisplay">Permanent ID: Generating...</div>
                 
                 <input type="text" id="userNameInput" class="code-input" placeholder="Enter Your Name" style="padding: 10px 14px; font-size: 13px; text-align: left;" oninput="autoSaveProfileName()">
-                <!-- CUSTOM STATUS (Feature 10) -->
+                <!-- CUSTOM STATUS -->
                 <input type="text" id="userStatusInput" class="code-input" placeholder="Custom Status (e.g., VIP, Chilling)" style="padding: 10px 14px; font-size: 13px; text-align: left;">
                 
                 <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Select Avatar:</div>
@@ -281,7 +317,7 @@
                 <div class="banner-arrow">→</div>
             </div>
 
-            <!-- AUTOMATED SCHEDULING (Feature 7) -->
+            <!-- AUTOMATED SCHEDULING -->
             <button class="btn-purple" style="background: transparent; border: 1px dashed var(--primary); color: var(--primary);" onclick="generateInvite()">📅 Schedule Watch Party</button>
 
             <div class="card" id="connectMemberCard">
@@ -299,7 +335,7 @@
                 <button class="back-btn" onclick="goBackToHome()">←</button>
                 <div style="text-align: right;">
                     <div style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="sessionHeaderTitle">Room Session</div>
-                    <!-- GLOBAL TIMEZONE COORDINATOR (Feature 1) -->
+                    <!-- GLOBAL TIMEZONE COORDINATOR -->
                     <div style="font-size: 10px; color: var(--text-muted);" id="timezoneDisplay">Detecting Timezone...</div>
                 </div>
             </div>
@@ -313,11 +349,11 @@
                 
                 <div class="code-actions">
                     <button class="code-action-btn" onclick="copyCode()">📋 Copy</button>
-                    <!-- CROSS-PLATFORM QR CODE (Feature 3) -->
+                    <!-- CROSS-PLATFORM QR CODE -->
                     <button class="code-action-btn" onclick="toggleQR()">📱 QR Code</button>
                 </div>
 
-                <!-- WATCH PARTY MOOD RING (Feature 2) -->
+                <!-- WATCH PARTY MOOD RING -->
                 <button class="btn-purple" style="background: transparent; border: 1px solid #ff0055; color: #ff0055; font-size: 12px; padding: 10px;" id="btHeartBtn" onclick="connectHeartRate()">❤️ Connect Wearable (HR Monitor)</button>
 
                 <!-- QR Code Box -->
@@ -338,7 +374,7 @@
                     </div>
                 </div>
 
-                <!-- Volume & Adaptive Controls (Features 4 & 9) -->
+                <!-- Volume & Adaptive Controls -->
                 <div id="advancedControlsPanel" style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; border-top: 1px solid var(--black-box-border); padding-top: 10px;">
                     <div style="flex: 1;">
                         <div style="font-size: 10px; color: var(--primary);">ROOM VOLUME (Host)</div>
@@ -402,7 +438,7 @@
                         <div style="font-size: 24px; margin-bottom: 4px;">📁</div>
                         <div style="font-size: 13px; font-weight: 800; color: var(--primary);">Select Downloaded Movie File</div>
                     </div>
-                    <!-- OFFLINE P2P TRIGGER (Feature 5) -->
+                    <!-- OFFLINE P2P TRIGGER -->
                     <button class="code-action-btn" style="width: 100%; margin-bottom: 8px;" id="p2pStreamBtn" onclick="startP2PStream()">📡 Start P2P WebRTC Broadcast (Host)</button>
                     
                     <div id="localVideoWrapper" class="iframe-wrapper">
@@ -413,7 +449,7 @@
                 <button id="exitFullScreenBtn" class="hidden" style="position: fixed; top: 20px; left: 20px; z-index: 100000000; background: rgba(0,0,0,0.85); color: white; border: 1px solid rgba(255,255,255,0.6); padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; pointer-events: auto;" onclick="toggleFullScreenMode()">← Back to Room</button>
             </div>
 
-            <!-- Interactive Soundboard (Feature 11) & Original Emoji Keyboard -->
+            <!-- Interactive Soundboard & Original Emoji Keyboard -->
             <div class="card" style="margin-top: 14px;">
                 <div class="card-header-sm" style="color:var(--primary);"><span>Reactions & Soundboard</span></div>
                 
@@ -421,6 +457,9 @@
                     <button class="code-action-btn" onclick="sendSound('airhorn')">🎺 Airhorn</button>
                     <button class="code-action-btn" onclick="sendSound('cricket')">🦗 Cricket</button>
                     <button class="code-action-btn" onclick="sendSound('wow')">😲 Wow</button>
+                    <button class="code-action-btn" onclick="sendSound('boom')">💥 Vine Boom</button>
+                    <button class="code-action-btn" onclick="sendSound('hitmarker')">🎯 Hitmarker</button>
+                    <button class="code-action-btn" onclick="sendSound('cheer')">🙌 Cheer</button>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -447,7 +486,7 @@
                 </div>
             </div>
 
-            <!-- Peer List (Includes Avatar & Badges Feature 6 & 10) -->
+            <!-- Peer List (Includes Avatar & Badges) -->
             <div class="card">
                 <div class="card-header-sm" style="color:var(--primary);"><span>IN THIS ROOM (<span id="peerCount">1</span>)</span></div>
                 <div id="peerListContainer">
@@ -483,6 +522,10 @@
     <audio id="sfx_airhorn" src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3"></audio>
     <audio id="sfx_cricket" src="https://www.myinstants.com/media/sounds/crickets.mp3"></audio>
     <audio id="sfx_wow" src="https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3"></audio>
+    <audio id="sfx_boom" src="https://www.myinstants.com/media/sounds/vine-boom.mp3"></audio>
+    <audio id="sfx_hitmarker" src="https://www.myinstants.com/media/sounds/hitmarker_2.mp3"></audio>
+    <audio id="sfx_cheer" src="https://www.myinstants.com/media/sounds/crowd-cheering.mp3"></audio>
+
     <script>
         // --- NOTIFICATION UTILITY ---
         function notifyParent(action, code='') { window.parent.postMessage({ sender: 'syncbeat', tab: 0, action, code }, '*'); }
@@ -530,12 +573,12 @@
             document.getElementById('userNameInput').value = currentUserName;
         });
 
-        // --- FEATURE 8: VIRTUAL ROOM THEMES ---
+        // --- VIRTUAL ROOM THEMES ---
         function changeTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
         }
 
-        // --- FEATURE 10: CUSTOM AVATAR & STATUS ---
+        // --- CUSTOM AVATAR & STATUS ---
         function selectAvatar(avatar) {
             currentAvatar = avatar;
             document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
@@ -556,7 +599,7 @@
             } 
         }
 
-        // --- FEATURE 1: GLOBAL TIMEZONE COORDINATOR ---
+        // --- GLOBAL TIMEZONE COORDINATOR ---
         function detectTimezone() {
             try {
                 const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -566,7 +609,7 @@
             }
         }
 
-        // --- FEATURE 7: AUTOMATED ROOM SCHEDULING ---
+        // --- AUTOMATED ROOM SCHEDULING ---
         function generateInvite() {
             const code = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase();
             const text = `Join my Streamflix Watch Party! Room Code: ${code}. Get your popcorn ready! 🍿`;
@@ -577,7 +620,7 @@
             }
         }
 
-        // --- FEATURE 3: QR CODE QUICK JOIN ---
+        // --- QR CODE QUICK JOIN ---
         function toggleQR() {
             const qrBox = document.getElementById('qrBox');
             if (qrBox.style.display === 'block') {
@@ -588,7 +631,7 @@
             }
         }
 
-        // --- FEATURE 2: WATCH PARTY MOOD RING (HEARTRATE BLUETOOTH) ---
+        // --- WATCH PARTY MOOD RING (HEARTRATE BLUETOOTH) ---
         async function connectHeartRate() {
             try {
                 const device = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
@@ -608,7 +651,7 @@
             }
         }
 
-        // --- FEATURE 5: OFFLINE P2P STREAMER (STUB) ---
+        // --- OFFLINE P2P STREAMER (STUB) ---
         function loadLocalP2P(input) {
             const file = input.files[0];
             if (!file) return;
@@ -618,7 +661,7 @@
             showToast("WebRTC P2P signaling requires server.js backend upgrade.");
         }
 
-        // --- FEATURE 4: ADAPTIVE SYNC TOGGLE ---
+        // --- ADAPTIVE SYNC TOGGLE ---
         function toggleAdaptive() {
             adaptiveSyncEnabled = !adaptiveSyncEnabled;
             const btn = document.getElementById('adaptiveBtn');
@@ -626,7 +669,7 @@
             btn.style.background = adaptiveSyncEnabled ? 'var(--success)' : '#ef4444';
         }
 
-        // --- FEATURE 9: REAL-TIME VOLUME CONTROL ---
+        // --- REAL-TIME VOLUME CONTROL ---
         function syncVolume(level) {
             if (!isHosting) return;
             if (activeSyncMode === 'local' && streamflixPlayer) {
@@ -637,7 +680,7 @@
             }
         }
 
-        // --- FEATURE 11: SOUNDBOARD EFFECTS ---
+        // --- SOUNDBOARD EFFECTS ---
         function sendSound(soundId) {
             playSound(soundId);
             if (ws && ws.readyState === WebSocket.OPEN) {
@@ -653,7 +696,7 @@
             }
         }
 
-        // --- ORIGINAL STREAMFLIX FUNCTIONS (Fully Retained) ---
+        // --- ORIGINAL STREAMFLIX FUNCTIONS ---
         function forceClearRoomState() { 
             localStorage.removeItem('syncbeat_active_room'); 
             checkBackgroundRoomState(); 
@@ -976,7 +1019,6 @@
                     const drift = Math.abs(streamflixPlayer.currentTime - data.time);
                     
                     if (data.action === 'play' || data.action === 'seek') { 
-                        // Adaptive Sync Hook
                         if (adaptiveSyncEnabled && data.action === 'play' && drift < 0.8) {
                             // Let it drift naturally
                         } else {
@@ -1034,7 +1076,7 @@
             }
         }
         
-        // --- FEATURE 6: ACHIEVEMENT BADGES ---
+        // --- ACHIEVEMENT BADGES ---
         let previousPeerCount = 0;
         function handlePeerListUpdate(newPeers) { 
             const container = document.getElementById('peerListContainer'); 
