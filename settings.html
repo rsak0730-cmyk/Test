@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncBeat - Global Settings</title>
+    <style>
+        :root {
+            --bg-page: #0a0f24; --text-main: #e2e8f0; --text-muted: #94a3b8;
+            --primary: #3b82f6; --primary-light: rgba(59, 130, 246, 0.2); --primary-border: #3b82f6;
+            --card-bg: #0f1932; --card-border: #1e293b; --input-bg: #0b1120;
+            --success: #10b981;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: var(--bg-page); color: var(--text-main); margin: 0; padding: 15px; padding-bottom: 95px !important; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        .container { width: 100%; max-width: 420px; }
+        .header { margin-bottom: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 800; color: var(--primary); }
+        .header p { margin: 5px 0 0 0; font-size: 12px; color: var(--text-muted); }
+        
+        .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
+        .card-header-sm { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; letter-spacing: 1px; }
+        
+        .code-input { width: 100%; background: var(--input-bg); border: 1px solid var(--card-border); padding: 14px; border-radius: 12px; font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 10px; font-weight: 600; color: var(--text-main); transition: all 0.3s ease; }
+        .code-input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary-light); }
+        
+        .avatar-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
+        .avatar-btn { background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px; font-size: 22px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .avatar-btn.active { background: var(--primary-light); border-color: var(--primary); transform: scale(1.05); }
+        
+        .btn-purple { background: var(--primary); color: white; border: none; width: 100%; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; transition: transform 0.1s; box-shadow: 0 6px 20px var(--primary-light); }
+        .btn-purple:active { transform: scale(0.96); }
+
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); font-size: 13px; font-weight: 600; }
+        .info-row:last-child { border-bottom: none; }
+        
+        #toastModal { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--success); color: #000; padding: 12px 24px; border-radius: 20px; font-size: 13px; font-weight: 800; z-index: 10000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); }
+        #toastModal.show { opacity: 1; }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Global Settings</h1>
+            <p>Your profile syncs across all Watch Parties</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header-sm">👤 Identity & Profile</div>
+            
+            <input type="text" id="globalNameInput" class="code-input" placeholder="Display Name">
+            <input type="text" id="globalStatusInput" class="code-input" placeholder="Custom Status (e.g., VIP, Chilling)">
+            
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">Choose Global Avatar:</div>
+            <div class="avatar-grid" id="avatarContainer">
+                <div class="avatar-btn active" onclick="selectAvatar('👤')">👤</div>
+                <div class="avatar-btn" onclick="selectAvatar('🦊')">🦊</div>
+                <div class="avatar-btn" onclick="selectAvatar('🐺')">🐺</div>
+                <div class="avatar-btn" onclick="selectAvatar('👽')">👽</div>
+                <div class="avatar-btn" onclick="selectAvatar('🤖')">🤖</div>
+                <div class="avatar-btn" onclick="selectAvatar('👻')">👻</div>
+                <div class="avatar-btn" onclick="selectAvatar('🎧')">🎧</div>
+                <div class="avatar-btn" onclick="selectAvatar('🔥')">🔥</div>
+                <div class="avatar-btn" onclick="selectAvatar('🐉')">🐉</div>
+                <div class="avatar-btn" onclick="selectAvatar('🎵')">🎵</div>
+            </div>
+
+            <button class="btn-purple" onclick="saveGlobalProfile()">💾 Save Global Profile</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header-sm">⚙️ System Info</div>
+            <div class="info-row">
+                <span style="color: var(--text-muted);">Device Permanent ID</span>
+                <span style="color: var(--primary);" id="permanentIdDisplay">Loading...</span>
+            </div>
+            <div class="info-row">
+                <span style="color: var(--text-muted);">Platform Engine</span>
+                <span>SyncBeat V2</span>
+            </div>
+            <div class="info-row" style="cursor: pointer;" onclick="resetID()">
+                <span style="color: #ef4444;">Reset Device ID</span>
+                <span style="color: #ef4444;">🔄</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastModal">Profile Saved! Applied to all tabs.</div>
+
+    <script>
+        let currentAvatar = localStorage.getItem('syncbeat_global_avatar') || '👤';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load existing data
+            document.getElementById('globalNameInput').value = localStorage.getItem('syncbeat_global_name') || 'User';
+            document.getElementById('globalStatusInput').value = localStorage.getItem('syncbeat_global_status') || 'Listening';
+            
+            // Set active avatar
+            document.querySelectorAll('.avatar-btn').forEach(btn => {
+                if (btn.innerText === currentAvatar) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            // Load Permanent ID
+            let pId = localStorage.getItem('syncbeat_permanent_device_id');
+            if (!pId) {
+                pId = 'SYNC-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+                localStorage.setItem('syncbeat_permanent_device_id', pId);
+            }
+            document.getElementById('permanentIdDisplay').textContent = pId;
+        });
+
+        function selectAvatar(avatar) {
+            currentAvatar = avatar;
+            document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function saveGlobalProfile() {
+            const name = document.getElementById('globalNameInput').value.trim() || 'User';
+            const status = document.getElementById('globalStatusInput').value.trim() || 'Ready';
+            
+            // Save to LocalStorage
+            localStorage.setItem('syncbeat_global_name', name);
+            localStorage.setItem('syncbeat_global_status', status);
+            localStorage.setItem('syncbeat_global_avatar', currentAvatar);
+
+            // Broadcast to Hub
+            window.parent.postMessage({
+                sender: 'syncbeat',
+                action: 'UPDATE_GLOBAL_PROFILE',
+                profile: { name: name, status: status, avatar: currentAvatar }
+            }, '*');
+
+            // Show Toast
+            const toast = document.getElementById('toastModal');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function resetID() {
+            if(confirm("Are you sure you want to reset your Permanent Device ID? Active sessions might disconnect.")) {
+                localStorage.removeItem('syncbeat_permanent_device_id');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
+
