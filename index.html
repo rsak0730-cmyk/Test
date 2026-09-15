@@ -143,7 +143,18 @@
 
             <div class="card">
                 <div class="card-header-sm">Join a Session</div>
-                <button class="btn-purple" style="background: transparent; color: rgb(var(--color-accent)); border: 1px solid rgb(var(--color-accent));" onclick="openRoomModal('JOIN')"><i class="fa-solid fa-right-to-bracket"></i> JOIN ROOM</button>
+                <p style="font-size: 11px; color: rgb(var(--color-text-muted)); margin-bottom: 8px;">Select room type and enter the host's code:</p>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                    <select id="quickJoinType" class="code-input" style="flex: 1; padding: 12px; margin-bottom: 0;">
+                        <option value="youtube">YouTube Room</option>
+                        <option value="movie">Movie Room</option>
+                        <option value="music">Music Room</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="quickJoinCode" class="code-input" placeholder="e.g. SYNC-A1B2" style="text-align: center; font-size: 16px; letter-spacing: 2px; text-transform: uppercase;">
+                    <button class="btn-search" onclick="quickJoin()"><i class="fa-solid fa-right-to-bracket"></i></button>
+                </div>
             </div>
         </div>
 
@@ -201,21 +212,12 @@
                 <i class="fa-solid fa-film"></i><div style="color:rgb(var(--color-text-main));"><h3>Movie Room</h3><p style="color:rgb(var(--color-text-muted));">Sync TMDb & Local Files</p></div>
             </div>
             <div class="room-type-btn" onclick="executeRoomFlow('music')">
-                <i class="fa-solid fa-music"></i><div style="color:rgb(var(--color-text-main));"><h3>Music Room</h3><p style="color:rgb(var(--color-text-muted));">Sync Audio URLs</p></div>
+                <i class="fa-solid fa-music"></i><div style="color:rgb(var(--color-text-main));"><h3>Music Room</h3><p style="color:rgb(var(--color-text-muted));">Listen to full YouTube Audio</p></div>
             </div>
             <div class="room-type-btn" onclick="executeRoomFlow('youtube')">
                 <i class="fa-brands fa-youtube"></i><div style="color:rgb(var(--color-text-main));"><h3>YouTube Room</h3><p style="color:rgb(var(--color-text-muted));">Watch Videos Together</p></div>
             </div>
             <button class="close-session-btn" style="margin-top: 10px;" onclick="closeModals()">Cancel</button>
-        </div>
-    </div>
-
-    <div id="joinCodeModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="card-header-sm" style="font-size:14px; margin-bottom:10px;">Enter Room Code</div>
-            <input type="text" id="joinRoomInput" class="code-input" placeholder="e.g. SYNC-A1B2" style="text-align: center; font-size: 18px; letter-spacing: 2px; text-transform: uppercase;">
-            <button class="btn-purple" style="margin-top:10px;" onclick="finalizeJoin()">Join Now</button>
-            <button class="close-session-btn" onclick="closeModals()">Cancel</button>
         </div>
     </div>
 
@@ -253,10 +255,6 @@
             <div class="iframe-wrapper hidden" id="wrap-movie">
                 <iframe id="movieIframe" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen" class="hidden"></iframe>
                 <video id="movieVideo" playsinline preload="auto" class="hidden"></video>
-            </div>
-            <div class="iframe-wrapper hidden" id="wrap-music" style="height:140px; display:flex; align-items:center; justify-content:center; background:#111;">
-                <i class="fa-solid fa-music" style="font-size:40px; color:rgb(var(--color-accent));"></i>
-                <audio id="musicAudio"></audio>
             </div>
 
             <div class="progress-track" id="progressTrack" onclick="handleScrub(event)">
@@ -304,7 +302,7 @@
     </div>
 
     <script>
-        // === 1. GLOBAL CONFIG ===
+        // === 1. GLOBAL CONFIG & URL UPDATED ===
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
         const TMDB_API = '3fd2be6f0c70a2a598f084ddfb75487c';
         let ws = null;
@@ -316,9 +314,6 @@
         let activeAction = ''; let targetType = ''; let isAutoTheme = true;
         let activePlayer = null; let ytPlayerObj = null; let syncInterval = null; let progressInterval = null;
         let isPlaying = false; let isHostScrubbing = false;
-
-        let localStream = null; let peerConnections = {}; let knownPeers = [];
-        const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
         const allAvatars = ['👨‍💻','🥷','🧙‍♂️','🧛','🧟','🦸‍♂️','🦹‍♂️','🧙‍♀️','👩‍🚀','👨‍🎤','🕵️‍♂️','💂','👷','🤴','👸','🧝‍♂️','🧛‍♂️','🧞‍♂️','🧜‍♂️','🧚‍♂️','👽','🤖','👻','💀','👾'];
         const emojiCategories = {
@@ -343,6 +338,17 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
             event.currentTarget.classList.add('active');
+        }
+
+        // --- RELIABLE MULTI-TIER PROXY FETCHER ---
+        async function reliableFetch(urls) {
+            for (let url of urls) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) { return await res.json(); }
+                } catch (e) { console.warn("Proxy failed, failing over to next..."); }
+            }
+            throw new Error("All proxy servers are currently unavailable.");
         }
 
         // --- PROFILE, VIP & AVATARS ---
@@ -413,18 +419,21 @@
         function openRoomModal(action) {
             activeAction = action; document.getElementById('typeModalTitle').textContent = action === 'CREATE' ? 'Create a Room' : 'Join a Room'; document.getElementById('typeModal').classList.add('show');
         }
-        function closeModals() { document.getElementById('typeModal').classList.remove('show'); document.getElementById('joinCodeModal').classList.remove('show'); }
+        function closeModals() { document.getElementById('typeModal').classList.remove('show'); }
+        
         function executeRoomFlow(type) {
             targetType = type; closeModals();
-            if (activeAction === 'CREATE') { initiateRoom(targetType, 'HOST', 'SYNC-' + Math.random().toString(36).substring(2,6).toUpperCase()); } 
-            else { document.getElementById('joinTypeLabel').textContent = targetType.toUpperCase(); document.getElementById('joinCodeModal').classList.add('show'); }
-        }
-        function finalizeJoin() {
-            const code = document.getElementById('joinRoomInput').value.trim().toUpperCase();
-            if(code.length < 4) return showToast("Invalid Code"); closeModals(); initiateRoom(targetType, 'MEMBER', code);
+            initiateRoom(targetType, 'HOST', 'SYNC-' + Math.random().toString(36).substring(2,6).toUpperCase());
         }
 
-        // === 4. WEBSOCKET SIGNALING & WEBRTC HANDLING ===
+        function quickJoin() {
+            const type = document.getElementById('quickJoinType').value;
+            const code = document.getElementById('quickJoinCode').value.trim().toUpperCase();
+            if(code.length < 4) return showToast("Invalid Code");
+            initiateRoom(type, 'MEMBER', code);
+        }
+
+        // === 4. WEBSOCKET SIGNALING ===
         function initiateRoom(type, role, code) {
             showToast("Connecting to Server...");
             if(ws) ws.close(); ws = new WebSocket(WS_URL);
@@ -440,7 +449,7 @@
             ws.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
                 if(msg.type === 'ROOM_HOSTED_SUCCESS' || msg.type === 'ROOM_JOIN_SUCCESS') {
-                    if (msg.type === 'ROOM_JOIN_SUCCESS' && msg.roomType && msg.roomType !== targetType) {
+                    if (msg.type === 'ROOM_JOIN_SUCCESS' && msg.roomType && msg.roomType !== type) {
                         showToast(`Error: Code is for a ${msg.roomType.toUpperCase()} room!`); ws.close(); return;
                     }
                     roomState = { active: true, id: code, type: type, role: role }; setupRoomUI();
@@ -453,38 +462,8 @@
                 if(msg.type === 'SOUNDBOARD') { playLocalSound(msg.sound); }
                 if(msg.type === 'SOUNDBOARD_URL') { playAudioURL(msg.url); }
                 if(msg.type === 'REACTION') { renderFloatingEmoji(msg.emoji); }
-                
-                if(msg.type === 'WEBRTC_OFFER' && msg.target === accountId) handleRTCAnswer(msg);
-                if(msg.type === 'WEBRTC_ANSWER' && msg.target === accountId) handleRTCAnswerResponse(msg);
-                if(msg.type === 'WEBRTC_ICE' && msg.target === accountId) handleRTCIce(msg);
             };
         }
-
-        // === WEBRTC CORE FUNCTIONS ===
-        async function startP2PStream() { if (!localStream) return; knownPeers.forEach(peerId => createAndSendOffer(peerId)); }
-
-        async function createAndSendOffer(targetId) {
-            const pc = new RTCPeerConnection(rtcConfig); peerConnections[targetId] = pc;
-            localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
-            pc.onicecandidate = e => { if (e.candidate) ws.send(JSON.stringify({ type: 'WEBRTC_ICE', target: targetId, sender: accountId, candidate: e.candidate })); };
-            const offer = await pc.createOffer(); await pc.setLocalDescription(offer);
-            ws.send(JSON.stringify({ type: 'WEBRTC_OFFER', target: targetId, sender: accountId, sdp: pc.localDescription }));
-        }
-
-        async function handleRTCAnswer(msg) {
-            const pc = new RTCPeerConnection(rtcConfig); peerConnections[msg.sender] = pc;
-            pc.onicecandidate = e => { if (e.candidate) ws.send(JSON.stringify({ type: 'WEBRTC_ICE', target: msg.sender, sender: accountId, candidate: e.candidate })); };
-            pc.ontrack = e => {
-                activePlayer = document.getElementById('movieVideo'); activePlayer.classList.remove('hidden'); document.getElementById('movieIframe').classList.add('hidden');
-                activePlayer.srcObject = e.streams[0]; document.getElementById('mediaTitle').textContent = "Live P2P Stream from Host";
-            };
-            await pc.setRemoteDescription(new RTCSessionDescription(msg.sdp));
-            const answer = await pc.createAnswer(); await pc.setLocalDescription(answer);
-            ws.send(JSON.stringify({ type: 'WEBRTC_ANSWER', target: msg.sender, sender: accountId, sdp: pc.localDescription }));
-        }
-
-        async function handleRTCAnswerResponse(msg) { const pc = peerConnections[msg.sender]; if (pc) await pc.setRemoteDescription(new RTCSessionDescription(msg.sdp)); }
-        async function handleRTCIce(msg) { const pc = peerConnections[msg.sender]; if (pc) await pc.addIceCandidate(new RTCIceCandidate(msg.candidate)); }
 
         // === 5. UNIFIED ROOM UI WITH SEARCH LISTS ===
         function setupRoomUI() {
@@ -499,7 +478,9 @@
             
             if (roomState.role === 'HOST') {
                 hostInput.classList.remove('hidden'); playBtn.disabled = false;
+                
                 let placeholderStr = roomState.type === 'youtube' ? "Paste YouTube Link or Search..." : `Search ${roomState.type.toUpperCase()}...`;
+                if(roomState.type === 'music') placeholderStr = "Search YouTube Audio...";
                 
                 hostInput.innerHTML = `
                     <div class="input-group">
@@ -511,15 +492,21 @@
                 if (roomState.type === 'movie') {
                     hostInput.innerHTML += `
                         <div style="font-size:11px; text-align:center; color:rgb(var(--color-text-muted)); margin:8px 0;">OR</div>
-                        <label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Host Local File (Streams directly to peers via P2P):</label>
+                        <label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Host Local File:</label>
                         <input type="file" accept="video/*" onchange="loadLocalMedia(this)" style="width:100%; color:rgb(var(--color-text-main)); margin-top:4px;">`;
                 }
             } else { hostInput.classList.add('hidden'); playBtn.disabled = true; }
 
-            document.getElementById(`wrap-${roomState.type}`).classList.remove('hidden');
-            if(roomState.type === 'youtube' && !ytPlayerObj) {
-                ytPlayerObj = new YT.Player('ytPlayerDiv', { height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls':0, 'disablekb':1 }, events: { 'onStateChange': onPlayerStateChange }});
+            // Both Youtube and Music room now use the YouTube iFrame
+            if (roomState.type === 'youtube' || roomState.type === 'music') {
+                document.getElementById('wrap-youtube').classList.remove('hidden');
+                if(!ytPlayerObj) {
+                    ytPlayerObj = new YT.Player('ytPlayerDiv', { height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls':0, 'disablekb':1 }, events: { 'onStateChange': onPlayerStateChange }});
+                }
+            } else {
+                document.getElementById(`wrap-${roomState.type}`).classList.remove('hidden');
             }
+
             if(roomState.role === 'HOST') startHostBroadcast();
             startProgressLoop();
         }
@@ -529,13 +516,10 @@
             if(ws) { if(roomState.role === 'HOST') ws.send(JSON.stringify({type: 'CLOSE_ROOM'})); ws.close(); }
             clearInterval(syncInterval); clearInterval(progressInterval);
             
-            if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
-            Object.values(peerConnections).forEach(pc => pc.close()); peerConnections = {};
-
             if(ytPlayerObj && ytPlayerObj.stopVideo) ytPlayerObj.stopVideo();
             
-            document.getElementById('movieVideo').src = ''; document.getElementById('movieVideo').srcObject = null;
-            document.getElementById('movieIframe').src = ''; document.getElementById('musicAudio').src = ''; document.getElementById('uiThumbnail').src = '';
+            document.getElementById('movieVideo').src = '';
+            document.getElementById('movieIframe').src = ''; document.getElementById('uiThumbnail').src = '';
             document.getElementById('mediaTitle').textContent = 'Waiting for Media...';
             document.getElementById('progressFill').style.width = `0%`;
             document.getElementById('timeCurrent').textContent = "0:00";
@@ -550,9 +534,9 @@
 
         // === 6. UNIFIED SEARCH & MEDIA LOADING LOGIC ===
         async function executeMediaSearch() {
-            const query = document.getElementById('masterSearchInput').value.trim(); if(!query) return;
+            let query = document.getElementById('masterSearchInput').value.trim(); if(!query) return;
             
-            if(roomState.type === 'youtube' && (query.includes('youtube.com/') || query.includes('youtu.be/'))) {
+            if((roomState.type === 'youtube' || roomState.type === 'music') && (query.includes('youtube.com/') || query.includes('youtu.be/'))) {
                 loadDirectYouTube(query); return;
             }
 
@@ -573,13 +557,19 @@
                         }; resBox.appendChild(div);
                     });
                 } 
-                else if(roomState.type === 'youtube') {
-                    // Swapped to a more reliable Piped proxy instance
-                    const res = await fetch(`https://api.piped.projectsegfau.lt/search?q=${encodeURIComponent(query)}&filter=all`).catch(e => null);
-                    if(!res || !res.ok) {
-                        resBox.innerHTML = '<div style="color:rgb(var(--color-accent)); padding:10px; text-align:center;">Search Server Busy.<br>Please paste a direct YouTube Video Link instead.</div>'; return;
-                    }
-                    const data = await res.json();
+                else if(roomState.type === 'youtube' || roomState.type === 'music') {
+                    
+                    if (roomState.type === 'music') query += " audio song";
+
+                    const pipedInstances = [
+                        `https://api.piped.projectsegfau.lt/search?q=${encodeURIComponent(query)}&filter=all`,
+                        `https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=all`,
+                        `https://pipedapi.smnz.de/search?q=${encodeURIComponent(query)}&filter=all`,
+                        `https://piped-api.lunar.icu/search?q=${encodeURIComponent(query)}&filter=all`
+                    ];
+                    
+                    const data = await reliableFetch(pipedInstances);
+                    
                     resBox.innerHTML = ''; const vids = data.items.filter(i => i.type === 'stream'); if(vids.length === 0) resBox.innerHTML = '<div>No results.</div>';
                     vids.forEach(v => {
                         const div = document.createElement('div'); div.className = 'search-result-item'; div.innerHTML = `<img src="${v.thumbnail}"> <span>${v.title}</span>`;
@@ -589,18 +579,6 @@
                                 activePlayer = ytPlayerObj; ytPlayerObj.loadVideoById({videoId: v.url.split('v=')[1], startSeconds: 0});
                                 ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'youtube', ytId: v.url.split('v=')[1], posterUrl: v.thumbnail, title: v.title }));
                             }
-                        }; resBox.appendChild(div);
-                    });
-                }
-                else if(roomState.type === 'music') {
-                    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15`); const data = await res.json();
-                    resBox.innerHTML = ''; if(data.results.length === 0) resBox.innerHTML = '<div>No results.</div>';
-                    data.results.forEach(t => {
-                        const div = document.createElement('div'); div.className = 'search-result-item'; div.innerHTML = `<img src="${t.artworkUrl100}"> <span>${t.trackName} - ${t.artistName}</span>`;
-                        div.onclick = () => {
-                            resBox.classList.add('hidden'); document.getElementById('mediaTitle').textContent = `${t.trackName} - ${t.artistName}`; document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(t.artworkUrl100)}`;
-                            activePlayer = document.getElementById('musicAudio'); activePlayer.src = t.previewUrl; setupHTML5Listeners(activePlayer);
-                            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'audio', url: t.previewUrl, posterUrl: t.artworkUrl100, title: `${t.trackName} - ${t.artistName}` }));
                         }; resBox.appendChild(div);
                     });
                 }
@@ -622,24 +600,28 @@
 
         function loadLocalMedia(input) {
             const file = input.files[0]; if(!file) return;
-            showToast("Initializing P2P Live Stream...");
             const url = URL.createObjectURL(file); activePlayer = document.getElementById('movieVideo'); activePlayer.classList.remove('hidden'); document.getElementById('movieIframe').classList.add('hidden');
             document.getElementById('mediaTitle').textContent = file.name; activePlayer.src = url; setupHTML5Listeners(activePlayer);
-            activePlayer.onloadedmetadata = () => {
-                const captureFn = activePlayer.captureStream || activePlayer.mozCaptureStream;
-                if(captureFn) { localStream = captureFn.call(activePlayer); startP2PStream(); } else { showToast("Browser does not support P2P stream capturing."); }
-            };
-            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'webrtc_stream', title: file.name }));
+            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', title: file.name }));
         }
 
         function handleRemoteMediaLoad(msg) {
             if(roomState.role === 'HOST') return;
             if(msg.posterUrl) document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(msg.posterUrl)}`;
             if(msg.title) document.getElementById('mediaTitle').textContent = msg.title;
-            if(msg.mode === 'iframe') { activePlayer = document.getElementById('movieIframe'); activePlayer.classList.remove('hidden'); document.getElementById('movieVideo').classList.add('hidden'); activePlayer.src = msg.url; }
-            else if(msg.mode === 'youtube' && ytPlayerObj) { activePlayer = ytPlayerObj; ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: 0}); }
-            else if(msg.mode === 'audio') { activePlayer = document.getElementById('musicAudio'); activePlayer.src = msg.url; }
-            else if(msg.mode === 'webrtc_stream') { document.getElementById('mediaTitle').textContent = `Waiting for Live Stream: ${msg.title}`; }
+            
+            if(msg.mode === 'iframe') { 
+                activePlayer = document.getElementById('movieIframe'); activePlayer.classList.remove('hidden'); document.getElementById('movieVideo').classList.add('hidden'); activePlayer.src = msg.url; 
+            }
+            else if(msg.mode === 'youtube' && ytPlayerObj) { 
+                activePlayer = ytPlayerObj; ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: 0}); 
+            }
+            else if(msg.mode === 'local') { 
+                document.getElementById('mediaTitle').textContent = `Host selected: ${msg.title}. Select your matching local copy.`;
+                const inputArea = document.getElementById('hostMediaInputArea');
+                inputArea.classList.remove('hidden');
+                inputArea.innerHTML = `<label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Same File:</label><input type="file" accept="video/*" onchange="loadLocalMedia(this)" style="color:rgb(var(--color-text-main)); margin-top:4px;">`;
+            }
         }
 
         // === 7. SYNCHRONIZATION LOGIC ===
@@ -653,27 +635,29 @@
         }
         function togglePlayPause() {
             if(!activePlayer) return;
-            if(roomState.type === 'youtube') { if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo(); } else { if(isPlaying) activePlayer.pause(); else activePlayer.play(); }
+            if(roomState.type === 'youtube' || roomState.type === 'music') { if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo(); } else { if(isPlaying) activePlayer.pause(); else activePlayer.play(); }
         }
         function updatePlayBtn() { document.getElementById('playPauseBtn').innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>'; }
 
         function startHostBroadcast() {
             clearInterval(syncInterval);
             syncInterval = setInterval(() => {
-                if(isPlaying && activePlayer && !localStream) { 
-                    let t = roomState.type === 'youtube' ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime; ws.send(JSON.stringify({ type: 'SYNC_TIME', time: t }));
+                if(isPlaying && activePlayer) { 
+                    let t = (roomState.type === 'youtube' || roomState.type === 'music') ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime; ws.send(JSON.stringify({ type: 'SYNC_TIME', time: t }));
                 }
             }, 2000);
         }
 
         function handleRemoteSync(msg) {
             if(roomState.role === 'HOST' || !activePlayer) return;
-            const targetTime = msg.time + 0.15; let current = roomState.type === 'youtube' ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
-            if(msg.action === 'play') { if(roomState.type === 'youtube') ytPlayerObj.playVideo(); else activePlayer.play(); }
-            else if(msg.action === 'pause') { if(roomState.type === 'youtube') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
+            let current = (roomState.type === 'youtube' || roomState.type === 'music') ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
+            const targetTime = msg.time + 0.15; 
             
-            if (!activePlayer.srcObject && (Math.abs(current - targetTime) > 1.5 || msg.action === 'seek')) {
-                if(roomState.type === 'youtube') ytPlayerObj.seekTo(targetTime, true); else activePlayer.currentTime = targetTime;
+            if(msg.action === 'play') { if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.playVideo(); else activePlayer.play(); }
+            else if(msg.action === 'pause') { if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
+            
+            if (Math.abs(current - targetTime) > 1.5 || msg.action === 'seek') {
+                if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.seekTo(targetTime, true); else activePlayer.currentTime = targetTime;
             }
         }
 
@@ -681,11 +665,9 @@
             clearInterval(progressInterval);
             progressInterval = setInterval(() => {
                 if(!activePlayer || isHostScrubbing) return;
-                if(activePlayer.srcObject) {
-                    document.getElementById('progressFill').style.width = `100%`; document.getElementById('timeCurrent').textContent = "LIVE"; document.getElementById('timeTotal').textContent = "P2P"; return;
-                }
+                
                 let cur = 0, dur = 0;
-                if(roomState.type === 'youtube') { if(ytPlayerObj && ytPlayerObj.getCurrentTime) { cur = ytPlayerObj.getCurrentTime(); dur = ytPlayerObj.getDuration(); } } 
+                if(roomState.type === 'youtube' || roomState.type === 'music') { if(ytPlayerObj && ytPlayerObj.getCurrentTime) { cur = ytPlayerObj.getCurrentTime(); dur = ytPlayerObj.getDuration(); } } 
                 else { cur = activePlayer.currentTime; dur = activePlayer.duration; }
                 if(dur > 0 && dur !== Infinity) { document.getElementById('progressFill').style.width = `${(cur/dur)*100}%`; document.getElementById('timeCurrent').textContent = formatTime(cur); document.getElementById('timeTotal').textContent = formatTime(dur); }
             }, 500);
@@ -693,10 +675,10 @@
         function formatTime(s) { const m=Math.floor(s/60); const sc=Math.floor(s%60); return `${m}:${sc<10?'0':''}${sc}`; }
 
         function handleScrub(e) {
-            if(roomState.role !== 'HOST' || !activePlayer || activePlayer.srcObject) return;
+            if(roomState.role !== 'HOST' || !activePlayer) return;
             const track = document.getElementById('progressTrack'); const rect = track.getBoundingClientRect(); const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            let dur = roomState.type === 'youtube' ? ytPlayerObj.getDuration() : activePlayer.duration; let newTime = pct * dur;
-            if(roomState.type === 'youtube') ytPlayerObj.seekTo(newTime, true); else activePlayer.currentTime = newTime;
+            let dur = (roomState.type === 'youtube' || roomState.type === 'music') ? ytPlayerObj.getDuration() : activePlayer.duration; let newTime = pct * dur;
+            if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.seekTo(newTime, true); else activePlayer.currentTime = newTime;
             ws.send(JSON.stringify({ type: 'CONTROL', action: 'seek', time: newTime }));
         }
 
@@ -717,20 +699,30 @@
             defaultSounds.forEach(s => { const b = document.createElement('button'); b.className = 'sound-btn'; b.textContent = s.name; b.onclick = () => { triggerGlobalEvent('SOUNDBOARD', s.id); closeFab(); }; grid.appendChild(b); });
         }
         
-        // Fix applied: Using the RAW endpoint of AllOrigins proxy to bypass strict parsing errors
         async function filterSounds(query) {
             const grid = document.getElementById('soundGrid'); if(!query) { buildSoundboard(); return; }
             grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color: rgb(var(--color-text-muted)); padding: 20px;">Searching...</div>';
             try {
-                const url = `https://www.myinstants.com/api/v1/instants/?format=json&name=${encodeURIComponent(query)}`; 
-                const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                const targetUrl = encodeURIComponent(`https://www.myinstants.com/api/v1/instants/?format=json&name=${encodeURIComponent(query)}`);
                 
-                const res = await fetch(proxy); const parsed = await res.json();
+                const corsProxies = [
+                    `https://api.allorigins.win/raw?url=${targetUrl}`,
+                    `https://corsproxy.io/?${targetUrl}`,
+                    `https://api.codetabs.com/v1/proxy?quest=${decodeURIComponent(targetUrl)}`
+                ];
+                
+                let data;
+                for(let proxy of corsProxies) {
+                    try { const res = await fetch(proxy); if(res.ok) { data = await res.json(); break; } } catch(e) {}
+                }
+                
+                if(!data) throw new Error();
+                
                 grid.innerHTML = '';
-                if(parsed.results && parsed.results.length > 0) {
-                    parsed.results.forEach(s => { const b = document.createElement('button'); b.className = 'sound-btn'; b.textContent = s.name; b.onclick = () => { triggerGlobalEvent('SOUNDBOARD_URL', s.sound); closeFab(); }; grid.appendChild(b); });
+                if(data.results && data.results.length > 0) {
+                    data.results.forEach(s => { const b = document.createElement('button'); b.className = 'sound-btn'; b.textContent = s.name; b.onclick = () => { triggerGlobalEvent('SOUNDBOARD_URL', s.sound); closeFab(); }; grid.appendChild(b); });
                 } else { grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px;">No sounds found.</div>'; }
-            } catch(e) { grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px;">Error connecting to API.</div>'; }
+            } catch(e) { grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color:rgb(var(--color-accent));">Error connecting to API.</div>'; }
         }
 
         function triggerGlobalEvent(type, payload) {
@@ -748,16 +740,9 @@
             document.body.appendChild(el); setTimeout(() => el.remove(), 2200);
         }
 
-        // --- BADGES IN ROOM PARSING (Fix: Proper Text Color for host badges) ---
         function updateParticipants(peers) {
             document.getElementById('peerCount').textContent = peers.length;
             const container = document.getElementById('peerListContainer'); container.innerHTML = '';
-            
-            const currentPeerIds = peers.map(p => p.accountId).filter(id => id !== accountId);
-            const newPeers = currentPeerIds.filter(id => !knownPeers.includes(id));
-            knownPeers = currentPeerIds;
-
-            if (roomState.role === 'HOST' && localStream) { newPeers.forEach(id => createAndSendOffer(id)); }
 
             peers.forEach(p => {
                 const div = document.createElement('div'); div.className = 'peer-item';
@@ -769,8 +754,6 @@
                 }
 
                 let badgeHtml = `<span class="badge-tag ${vip ? 'badge-vip' : 'badge-normal'}">${bg}</span>`;
-                
-                // FIXED: Changed background to rgb(var(--color-accent)) and color to rgb(var(--color-btn-text))
                 div.innerHTML = `<div><span style="margin-right:6px; font-size:16px;">${av}</span> <b>${n}</b> ${badgeHtml}</div> <span style="font-size:10px; background:rgb(var(--color-accent)); color:rgb(var(--color-btn-text)); padding:4px 8px; border-radius:6px; font-weight:800;">${p.role}</span>`;
                 container.appendChild(div);
             });
