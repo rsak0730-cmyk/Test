@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SyncPlay Premium</title>
     
-    <!-- PWA Links -->
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./icon-192.png">
     
@@ -61,9 +60,11 @@
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #00d2ff; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: 800; z-index: 999; transition: 0.4s; box-shadow: 0 10px 25px rgba(0,210,255,0.5); }
         #toast.show { transform: translateX(-50%) translateY(0); }
         
-        /* Custom Scrollbar for Search Results */
         ::-webkit-scrollbar { display: none; }
         .search-results-box { max-height: 250px; overflow-y: auto; scrollbar-width: none; }
+        
+        /* Ensures YouTube Iframe stays above the black background */
+        #wrap-youtube iframe { position: relative; z-index: 10; }
     </style>
 </head>
 <body class="h-screen w-screen flex flex-col items-center">
@@ -114,13 +115,24 @@
             <div class="card space-y-4">
                 <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Redeem Reward Code</h2>
                 <div class="flex gap-2">
-                    <input type="text" id="redeemInput" placeholder="Enter code (e.g. EDIT.OG_)" class="flex-1 bg-black/50 border border-gray-600 p-3 rounded-xl text-sm focus:outline-none">
+                    <input type="text" id="redeemInput" placeholder="Enter Reward Code..." class="flex-1 bg-black/50 border border-gray-600 p-3 rounded-xl text-sm focus:outline-none">
                     <button onclick="redeemCode()" class="bg-cyan-600 px-4 rounded-xl font-bold">REDEEM</button>
                 </div>
             </div>
 
+            <!-- TASKS & ACHIEVEMENTS -->
             <div class="card space-y-4">
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Choose Avatar</h2>
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">TASKS & ACHIEVEMENTS</h2>
+                <div id="tasksList" class="flex flex-col gap-3 max-h-48 overflow-y-auto"></div>
+            </div>
+
+            <div class="card space-y-4">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Unlocked Categories</h2>
+                <div id="categoryGrid" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-1"></div>
+            </div>
+
+            <div class="card space-y-4">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Unlocked Avatars</h2>
                 <div id="avatarGrid" class="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto p-2"></div>
             </div>
         </div>
@@ -171,45 +183,37 @@
             <div id="hostControls" class="card hidden space-y-3 border border-cyan-500/30 overflow-visible relative z-40">
                 <h3 class="text-xs font-bold text-cyan-400">HOST MEDIA CONTROLS</h3>
                 
-                <!-- MOVIE ROOM (Local Only) -->
                 <div id="movieInputArea" class="hidden">
                     <label class="block text-xs text-gray-400 mb-1">Select Local File (Members must select same file):</label>
                     <input type="file" accept="video/*" onchange="loadLocalMedia(this)" class="w-full text-sm">
                 </div>
                 
-                <!-- YOUTUBE & MUSIC ROOM (Search & Paste) -->
                 <div id="youtubeMusicInputArea" class="hidden relative">
                     <div class="flex gap-2">
                         <input type="text" id="mediaSearchInput" placeholder="Search track/video or Paste YT Link" class="flex-1 bg-black/50 p-3 rounded-xl border border-gray-600 text-sm focus:outline-none focus:border-cyan-400" onkeydown="if(event.key==='Enter') executeSearch()">
                         <button onclick="executeSearch()" id="searchBtn" class="bg-cyan-600 px-4 rounded-xl font-bold text-sm hover:bg-cyan-500 transition">SEARCH</button>
                     </div>
-                    
-                    <!-- Search Results Dropdown -->
-                    <div id="searchResultsBox" class="hidden absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-gray-600 rounded-xl search-results-box z-50 shadow-2xl flex-col divide-y divide-gray-700">
-                        <!-- Results dynamically populated -->
-                    </div>
+                    <div id="searchResultsBox" class="hidden absolute top-full left-0 right-0 mt-2 bg-gray-900 border border-gray-600 rounded-xl search-results-box z-50 shadow-2xl flex-col divide-y divide-gray-700"></div>
                 </div>
             </div>
 
             <!-- Media Player Container -->
             <div class="bg-black rounded-2xl border border-gray-800 overflow-hidden relative shadow-2xl z-10">
-                <div class="absolute top-2 left-2 z-10 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 pointer-events-none">
+                <div class="absolute top-2 left-2 z-20 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 pointer-events-none">
                     <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> <span>LIVE SYNC</span>
                 </div>
-                <div class="absolute top-2 right-2 z-10 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-cyan-400 pointer-events-none">
+                <div class="absolute top-2 right-2 z-20 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-cyan-400 pointer-events-none">
                     <span id="userRoleUI">MEMBER</span>
                 </div>
 
                 <div id="mediaTitle" class="absolute top-10 w-full text-center text-xs font-bold text-gray-500 z-10 drop-shadow-md pointer-events-none">Waiting for media...</div>
 
-                <!-- Shared YouTube Player (Used for both YT & Music rooms) -->
-                <div id="wrap-youtube" class="w-full aspect-video hidden">
-                    <!-- Embedded API Player. Controls enabled so members can touch & change quality -->
+                <!-- Fixed YouTube Player wrapper (ensure block and z-10 so it isn't hidden behind black background) -->
+                <div id="wrap-youtube" class="w-full aspect-video hidden relative z-10">
                     <div id="ytPlayerDiv"></div>
                 </div>
 
-                <!-- Music Room UI Overlay (Hides iframe visually, shows thumb) -->
-                <div id="wrap-music-ui" class="w-full aspect-video hidden flex-col items-center justify-center bg-gray-900 relative">
+                <div id="wrap-music-ui" class="w-full aspect-video hidden flex-col items-center justify-center bg-gray-900 relative z-10">
                     <div class="relative w-32 h-32 rounded-2xl shadow-[0_0_40px_rgba(8,145,178,0.5)] mb-3 border-2 border-gray-800 overflow-hidden">
                         <img id="musicThumbUi" src="" class="w-full h-full object-cover" onerror="this.src=''" alt="Cover">
                     </div>
@@ -217,13 +221,11 @@
                     <div id="musicArtistUi" class="text-xs text-gray-400 text-center mt-1">Artist</div>
                 </div>
 
-                <!-- Local Video Player (Movie Room) -->
-                <video id="movieVideo" class="w-full aspect-video hidden" playsinline controls></video>
+                <video id="movieVideo" class="w-full aspect-video hidden relative z-10" playsinline controls></video>
                 
-                <div id="reactionArea" class="absolute inset-0 pointer-events-none flex justify-center overflow-hidden z-20"></div>
+                <div id="reactionArea" class="absolute inset-0 pointer-events-none flex justify-center overflow-hidden z-30"></div>
 
-                <!-- Custom Timeline UI -->
-                <div class="p-4 bg-gradient-to-t from-black to-transparent">
+                <div class="p-4 bg-gradient-to-t from-black to-transparent relative z-20">
                     <div class="progress-track" id="progressTrack" onclick="handleScrub(event)">
                         <div class="progress-fill" id="progressFill"></div>
                     </div>
@@ -236,6 +238,12 @@
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <!-- Connected Devices UI -->
+            <div class="card z-10 relative mt-4">
+                <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Connected Devices (<span id="connectedCountUI">1</span>)</h3>
+                <div id="connectedDevicesList" class="flex flex-col gap-2 max-h-40 overflow-y-auto"></div>
             </div>
 
             <!-- Live Chat -->
@@ -259,14 +267,31 @@
     </div>
 
     <script>
-        // --- CONSTANTS & API KEYS ---
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200';
         
-        const AVATARS = ['🤖 Cyberpunk', '🥷 Neon Warrior', '🧑‍🚀 Space Explorer', '👾 Pixel Char', '👩‍💻 Hacker', '🐱 Anime Cat', '🌌 Cosmic', '🕹️ Arcade', '👤 Shadow', '🎹 Synthwave', '🧙 Fantasy', '🚀 Astronaut', '🛡️ Guardian', '🎧 Neon DJ', '🎬 Movie Buff', '🎵 Maestro', '▶️ Tuber', '💻 Glitch', '🧠 AI Mind', '🎭 Actor'];
-        
-        // --- STATE ---
-        let user = { name: 'Guest', avatar: '🤖', isVip: false, deviceId: '' };
+        // --- DATA SETS & TASKS ---
+        const ALL_TASKS = [
+            { id: 't1', metric: 'chats', target: 5, rewardType: 'avatar', rewardVal: '🐱 Anime Cat', desc: 'Send 5 chat messages' },
+            { id: 't2', metric: 'host', target: 2, rewardType: 'category', rewardVal: 'Room Master', desc: 'Host 2 rooms' },
+            { id: 't3', metric: 'reacts', target: 10, rewardType: 'category', rewardVal: 'Reaction King', desc: 'Send 10 emojis' },
+            { id: 't4', metric: 'join', target: 3, rewardType: 'avatar', rewardVal: '🎬 Movie Buff', desc: 'Join 3 rooms' },
+            { id: 't5', metric: 'chats', target: 20, rewardType: 'avatar', rewardVal: '🧑‍🚀 Space Explorer', desc: 'Send 20 chat messages' },
+            { id: 't6', metric: 'host', target: 5, rewardType: 'category', rewardVal: 'Night Owl', desc: 'Host 5 rooms' }
+        ];
+
+        let user = { 
+            name: 'Guest', 
+            avatar: '🤖 Cyberpunk', 
+            category: '', 
+            isVip: false, 
+            deviceId: '',
+            unlockedAvatars: ['🤖 Cyberpunk'],
+            unlockedCategories: [],
+            stats: { chats: 0, host: 0, reacts: 0, join: 0 },
+            claimedTasks: []
+        };
+
         let room = { active: false, code: '', type: '', role: 'MEMBER' };
         
         let ws = null;
@@ -277,7 +302,6 @@
         let progressInterval = null;
         let lastHostTime = 0;
 
-        // Ensure clicking outside closes search results
         document.addEventListener('click', (e) => {
             const searchArea = document.getElementById('youtubeMusicInputArea');
             if (searchArea && !searchArea.contains(e.target)) {
@@ -300,13 +324,48 @@
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
+        // --- PROGRESS & TRACKING ---
+        function trackStat(metric, amount = 1) {
+            user.stats[metric] += amount;
+            localStorage.setItem('sb_stats', JSON.stringify(user.stats));
+            renderSettings();
+        }
+
+        function claimTask(taskId) {
+            const task = ALL_TASKS.find(t => t.id === taskId);
+            if(!task || user.claimedTasks.includes(taskId)) return;
+
+            user.claimedTasks.push(taskId);
+            if(task.rewardType === 'avatar' && !user.unlockedAvatars.includes(task.rewardVal)) {
+                user.unlockedAvatars.push(task.rewardVal);
+            } else if (task.rewardType === 'category' && !user.unlockedCategories.includes(task.rewardVal)) {
+                user.unlockedCategories.push(task.rewardVal);
+            }
+
+            localStorage.setItem('sb_claimed', JSON.stringify(user.claimedTasks));
+            localStorage.setItem('sb_unlockedAvatars', JSON.stringify(user.unlockedAvatars));
+            localStorage.setItem('sb_unlockedCategories', JSON.stringify(user.unlockedCategories));
+            
+            showToast(`Unlocked: ${task.rewardVal}!`);
+            renderSettings();
+        }
+
         function initDevice() {
             let id = localStorage.getItem('sb_device_id');
             if (!id) { id = 'EDIT-' + Math.random().toString(36).substr(2, 4).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(); localStorage.setItem('sb_device_id', id); }
             user.deviceId = id;
             user.name = localStorage.getItem('sb_name') || `User_${id.split('-')[1]}`;
-            user.avatar = localStorage.getItem('sb_avatar') || AVATARS[0];
+            user.avatar = localStorage.getItem('sb_avatar') || '🤖 Cyberpunk';
+            user.category = localStorage.getItem('sb_category') || '';
             user.isVip = localStorage.getItem('sb_vip') === 'true';
+            
+            // Load saved progress
+            try {
+                user.stats = JSON.parse(localStorage.getItem('sb_stats')) || { chats: 0, host: 0, reacts: 0, join: 0 };
+                user.claimedTasks = JSON.parse(localStorage.getItem('sb_claimed')) || [];
+                user.unlockedAvatars = JSON.parse(localStorage.getItem('sb_unlockedAvatars')) || ['🤖 Cyberpunk'];
+                user.unlockedCategories = JSON.parse(localStorage.getItem('sb_unlockedCategories')) || [];
+            } catch(e) {}
             
             document.getElementById('profileName').value = user.name;
             document.getElementById('deviceIdDisplay').textContent = id;
@@ -333,14 +392,58 @@
         }
 
         function renderSettings() {
+            // Render Tasks
+            const tList = document.getElementById('tasksList');
+            tList.innerHTML = '';
+            ALL_TASKS.forEach(t => {
+                let current = user.stats[t.metric] || 0;
+                let pct = Math.min(100, (current / t.target) * 100);
+                let isClaimed = user.claimedTasks.includes(t.id);
+                let canClaim = current >= t.target && !isClaimed;
+
+                let btnHtml = '';
+                if(isClaimed) btnHtml = `<button disabled class="text-[10px] bg-gray-800 text-gray-500 px-2 py-1 rounded">CLAIMED</button>`;
+                else if(canClaim) btnHtml = `<button onclick="claimTask('${t.id}')" class="text-[10px] bg-green-600 text-white px-2 py-1 rounded font-bold animate-pulse">GET REWARD</button>`;
+                else btnHtml = `<span class="text-[10px] text-gray-500">${current}/${t.target}</span>`;
+
+                tList.innerHTML += `
+                    <div class="bg-black/40 p-3 rounded-xl border border-gray-700">
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <div class="text-xs font-bold text-white">${t.desc}</div>
+                                <div class="text-[10px] text-cyan-400 mt-0.5">Reward: ${t.rewardVal}</div>
+                            </div>
+                            ${btnHtml}
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-cyan-400 h-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>`;
+            });
+
+            // Render Avatars
             const avGrid = document.getElementById('avatarGrid');
             avGrid.innerHTML = '';
-            AVATARS.forEach(a => {
+            user.unlockedAvatars.forEach(a => {
                 const btn = document.createElement('button');
                 btn.className = `glass p-2 rounded-xl text-2xl hover:bg-white/20 transition-colors ${user.avatar === a ? 'border border-cyan-400' : ''}`;
                 btn.textContent = a.split(' ')[0];
                 btn.onclick = () => { user.avatar = a; localStorage.setItem('sb_avatar', a); renderSettings(); updateHeader(); };
                 avGrid.appendChild(btn);
+            });
+
+            // Render Categories
+            const catGrid = document.getElementById('categoryGrid');
+            catGrid.innerHTML = '';
+            if(user.unlockedCategories.length === 0) {
+                catGrid.innerHTML = '<span class="text-xs text-gray-500">No categories unlocked yet.</span>';
+            }
+            user.unlockedCategories.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = `text-[10px] font-bold px-3 py-1.5 rounded-lg border transition-colors ${user.category === c ? 'bg-cyan-600 text-white border-cyan-400' : 'bg-black/40 text-gray-400 border-gray-600 hover:border-cyan-400'}`;
+                btn.textContent = c;
+                btn.onclick = () => { user.category = c; localStorage.setItem('sb_category', c); renderSettings(); showToast(`Category Set: ${c}`); };
+                catGrid.appendChild(btn);
             });
         }
 
@@ -365,12 +468,14 @@
             closeModal('typeModal');
             const code = Math.random().toString(36).substr(2, 6).toUpperCase();
             initiateRoom(type, 'HOST', code);
+            trackStat('host');
         }
 
         function joinRoomBtn() {
             const code = document.getElementById('joinRoomInput').value.trim().toUpperCase();
             if(code.length < 4) return showToast("Invalid Code");
             initiateRoom('', 'MEMBER', code);
+            trackStat('join');
         }
 
         function copyCode() {
@@ -384,7 +489,9 @@
             ws = new WebSocket(WS_URL);
             
             ws.onopen = () => {
-                const payloadStr = `${user.avatar.split(' ')[0]} ${user.name}`;
+                // Send complex payload so peers can render Connected Devices properly
+                const payloadStr = `${user.avatar.split(' ')[0]}|${user.name}|${user.isVip}|${user.category}`;
+                
                 if(role === 'HOST') {
                     ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
                     ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
@@ -402,9 +509,11 @@
                 }
                 
                 if(msg.type === 'ROOM_NOT_FOUND') { showToast("Room not found or already closed."); ws.close(); }
-                if(msg.type === 'ROOM_CLOSED') { showToast("Host has left. Room is closed permanently."); forceLeaveRoom(); }
                 
-                if(msg.type === 'PEER_LIST') { document.getElementById('peerCount').textContent = msg.peers.length; }
+                // HOST LEAVE -> WIPE DATA AND CLOSE
+                if(msg.type === 'ROOM_CLOSED') { showToast("Host closed the room. Returning to menu."); forceLeaveRoom(); }
+                
+                if(msg.type === 'PEER_LIST') { renderConnectedDevices(msg.peers); }
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
                 if(msg.type === 'REACTION') { renderFloatingReaction(msg.emoji); }
@@ -412,6 +521,37 @@
             };
 
             ws.onerror = () => { showToast("Server connection error."); };
+        }
+
+        function renderConnectedDevices(peers) {
+            document.getElementById('peerCount').textContent = peers.length;
+            document.getElementById('connectedCountUI').textContent = peers.length;
+            
+            const list = document.getElementById('connectedDevicesList');
+            list.innerHTML = '';
+            
+            peers.forEach(peer => {
+                let pAvatar = '🤖', pName = peer.name, pVip = 'false', pCat = '';
+                if(peer.name.includes('|')) {
+                    const parts = peer.name.split('|');
+                    pAvatar = parts[0]; pName = parts[1]; pVip = parts[2]; pCat = parts[3];
+                }
+
+                const vipHtml = pVip === 'true' ? '<span class="text-[8px] bg-cyan-500/20 text-cyan-400 border border-cyan-400 px-1 rounded font-bold animate-pulse tracking-widest mt-1">VIP</span>' : '';
+                const catHtml = pCat ? `<span class="text-[8px] text-gray-400 border border-gray-600 px-1 rounded mt-1">${pCat}</span>` : '';
+
+                list.innerHTML += `
+                    <div class="flex justify-between items-center bg-black/40 p-2 rounded-xl border border-gray-800">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">${pAvatar}</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold ${pVip === 'true' ? 'vip-glow' : 'text-white'}">${pName}</span>
+                                <div class="flex flex-wrap gap-1">${vipHtml}${catHtml}</div>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-1 rounded ${peer.role === 'HOST' ? 'bg-green-500/20 text-green-400' : 'bg-gray-800 text-gray-400'}">${peer.role}</span>
+                    </div>`;
+            });
         }
 
         function setupRoomUI() {
@@ -428,9 +568,10 @@
             document.getElementById('movieInputArea').classList.add('hidden');
             document.getElementById('youtubeMusicInputArea').classList.add('hidden');
             
-            document.getElementById('wrap-youtube').classList.add('hidden');
-            document.getElementById('wrap-music-ui').classList.add('hidden');
-            document.getElementById('movieVideo').classList.add('hidden');
+            // Reset player visibility entirely
+            document.getElementById('wrap-youtube').className = "w-full aspect-video hidden relative z-10";
+            document.getElementById('wrap-music-ui').className = "w-full aspect-video hidden flex-col items-center justify-center bg-gray-900 relative z-10";
+            document.getElementById('movieVideo').className = "w-full aspect-video hidden relative z-10";
             
             if(room.role === 'HOST') {
                 document.getElementById('hostControls').classList.remove('hidden');
@@ -439,24 +580,24 @@
                 startHostBroadcast();
             }
 
-            // Initialize YouTube API if YT/Music Room
             if((room.type === 'youtube' || room.type === 'music') && !ytPlayerObj) {
-                // native controls: 1 allows members to touch video, change quality
                 ytPlayerObj = new YT.Player('ytPlayerDiv', { 
                     height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls':1, 'disablekb':0, 'playsinline':1 },
                     events: { 'onStateChange': onPlayerStateChange }
                 });
             }
 
-            // Visually align iframe rendering based on room type
+            // Reveal appropriate player box
             if(room.type === 'youtube') {
                 document.getElementById('wrap-youtube').classList.remove('hidden');
+                document.getElementById('wrap-youtube').classList.add('block');
             } else if (room.type === 'music') {
                 document.getElementById('wrap-youtube').className = "absolute w-1 h-1 opacity-0 pointer-events-none -z-50";
                 document.getElementById('wrap-music-ui').classList.remove('hidden');
                 document.getElementById('wrap-music-ui').classList.add('flex');
             } else if (room.type === 'movie') {
                 document.getElementById('movieVideo').classList.remove('hidden');
+                document.getElementById('movieVideo').classList.add('block');
             }
 
             startProgressLoop();
@@ -464,6 +605,7 @@
         }
 
         function leaveRoom() {
+            // Delete room data by sending CLOSE_ROOM if host
             if(room.role === 'HOST' && ws && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({type: 'CLOSE_ROOM'}));
             }
@@ -475,7 +617,7 @@
             room.active = false;
             clearInterval(syncInterval); clearInterval(progressInterval);
             
-            if(ytPlayerObj && ytPlayerObj.stopVideo) ytPlayerObj.stopVideo();
+            if(ytPlayerObj && typeof ytPlayerObj.stopVideo === 'function') ytPlayerObj.stopVideo();
             document.getElementById('movieVideo').src = '';
             
             document.getElementById('roomView').classList.remove('active');
@@ -495,7 +637,6 @@
             const query = inputEl.value.trim();
             if (!query) return;
 
-            // Direct ID / Paste Support
             const directId = extractYouTubeId(query);
             if (directId) {
                 playSearchResult({ videoId: directId, title: "Loaded via URL", uploaderName: "Direct Link", thumbUrl: `https://i.ytimg.com/vi/${directId}/hqdefault.jpg` });
@@ -554,7 +695,6 @@
             if (!ytPlayerObj) return;
             document.getElementById('mediaTitle').textContent = room.type === 'youtube' ? "Video Loading..." : "Audio Loading...";
             
-            // Set UI for Music Room
             if (room.type === 'music') {
                 document.getElementById('musicTitleUi').textContent = videoData.title;
                 document.getElementById('musicArtistUi').textContent = videoData.uploaderName;
@@ -564,7 +704,6 @@
             activePlayer = ytPlayerObj;
             ytPlayerObj.loadVideoById({videoId: videoData.videoId, startSeconds: 0});
             
-            // Broadcast to members
             if (ws && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ 
                     type: 'LOAD_VIDEO', 
@@ -654,7 +793,6 @@
             if(msg.action === 'play') { if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.playVideo(); else activePlayer.play(); }
             else if(msg.action === 'pause') { if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
             
-            // Core Snap-Back Engine if drift is detected via host heartbeat
             if(Math.abs(current - targetTime) > 1.5 || msg.action === 'seek') {
                 if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.seekTo(targetTime, true);
                 else activePlayer.currentTime = targetTime;
@@ -672,7 +810,6 @@
             
             if(room.role === 'MEMBER') {
                 showToast("Host controls playback! Snapping back...");
-                // Visual bounce back
                 if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.seekTo(lastHostTime, true);
                 else activePlayer.currentTime = lastHostTime;
             } else {
@@ -696,13 +833,13 @@
                     cur = activePlayer.currentTime; dur = activePlayer.duration; 
                 }
                 
-                // Meticulous Strict Member Snap-back (Checks every 500ms if member used native controls to skip)
+                // Meticulous Strict Member Snap-back logic (Checks if member used native controls to scrub)
                 if (room.role === 'MEMBER') {
                     if (Math.abs(cur - lastHostTime) > 2.0 && lastHostTime > 0) {
                         showToast("Host controls playback! Correcting sync...");
                         if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.seekTo(lastHostTime, true);
                         else activePlayer.currentTime = lastHostTime;
-                        cur = lastHostTime; // reset UI progress immediately
+                        cur = lastHostTime; 
                     }
                 }
 
@@ -718,6 +855,7 @@
         // --- SOCIAL (CHAT & EMOJI) ---
         function sendReaction(emoji) {
             renderFloatingReaction(emoji);
+            trackStat('reacts');
             if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'REACTION', emoji: emoji }));
         }
 
@@ -734,13 +872,24 @@
             const text = input.value.trim();
             if(!text) return;
             renderChat(user.name, text, user.isVip);
-            if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'CHAT', sender: user.name, text: text, isVip: user.isVip }));
+            trackStat('chats');
+            if(ws && ws.readyState === WebSocket.OPEN) {
+                // To display chats with correct user context globally, you pass sender details
+                const fullSenderInfo = `${user.name}${user.isVip ? '|VIP' : ''}`;
+                ws.send(JSON.stringify({ type: 'CHAT', sender: fullSenderInfo, text: text, isVip: user.isVip }));
+            }
             input.value = '';
         }
 
         function renderChat(sender, text, isVip) {
+            let sName = sender;
+            let sVip = isVip;
+            if(typeof sender === 'string' && sender.includes('|VIP')) {
+                sName = sender.split('|')[0];
+                sVip = true;
+            }
             const box = document.getElementById('chatBox');
-            box.innerHTML += `<div><span class="font-bold ${isVip ? 'text-pink-400' : 'text-cyan-400'}">${sender}:</span> <span class="text-white">${text}</span></div>`;
+            box.innerHTML += `<div><span class="font-bold ${sVip ? 'text-pink-400 vip-glow' : 'text-cyan-400'}">${sName}:</span> <span class="text-white">${text}</span></div>`;
             box.scrollTop = box.scrollHeight;
         }
 
