@@ -180,7 +180,6 @@
     </nav>
 
     <!-- ================= MODALS ================= -->
-    <!-- Room Type Selection -->
     <div id="typeModal" class="modal-overlay">
         <div class="modal-content">
             <div class="card-header-sm" style="font-size:14px; margin-bottom:20px;" id="typeModalTitle">Select Room Type</div>
@@ -198,7 +197,6 @@
         </div>
     </div>
 
-    <!-- Join Code Entry -->
     <div id="joinCodeModal" class="modal-overlay">
         <div class="modal-content">
             <div class="card-header-sm" style="font-size:14px; margin-bottom:10px;">Enter Room Code</div>
@@ -225,7 +223,6 @@
             <div style="display:flex; gap:10px; margin-bottom: 12px;">
                 <button class="code-action-btn" onclick="copyRoomCode()">📋 Copy Code</button>
             </div>
-            <!-- DEDICATED LEAVE ROOM BUTTON -->
             <button class="close-session-btn" onclick="leaveRoom()">⚡ LEAVE ROOM</button>
         </div>
 
@@ -243,6 +240,7 @@
             <!-- Media Containers -->
             <div class="iframe-wrapper hidden" id="wrap-youtube"><div id="ytPlayerDiv"></div></div>
             <div class="iframe-wrapper hidden" id="wrap-movie">
+                <iframe id="movieIframe" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen" class="hidden"></iframe>
                 <video id="movieVideo" playsinline preload="auto" class="hidden" style="width: 100%; height: 100%; object-fit: contain;"></video>
             </div>
             <div class="iframe-wrapper hidden" id="wrap-music" style="height:140px; display:flex; align-items:center; justify-content:center; background:#111;">
@@ -258,19 +256,20 @@
             <button class="play-pause-lg" id="playPauseBtn" onclick="togglePlayPause()" disabled><i class="fa-solid fa-play"></i></button>
         </div>
 
-        <!-- LIVE CHAT UI (For Audio Rooms) -->
-        <div class="card hidden" id="chatCard">
-            <div class="card-header-sm">Live Chat</div>
-            <div style="display:flex; gap: 8px; margin-top: 10px;">
-                <input type="text" id="chatInput" class="code-input" placeholder="Type a message..." style="margin-bottom:0;" onkeydown="if(event.key==='Enter') sendChatMessage()">
-                <button class="btn-purple" style="width: auto; margin-bottom:0; padding: 0 20px;" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        <!-- UNIFIED SOCIAL CARD (Dynamically Swaps Chat vs Stickers) -->
+        <div class="card" id="socialCard">
+            <div class="card-header-sm" id="socialCardTitle">Reactions & Chat</div>
+            
+            <!-- LIVE CHAT UI (For Audio Rooms) -->
+            <div id="chatSection" class="hidden">
+                <div style="display:flex; gap: 8px; margin-top: 5px;">
+                    <input type="text" id="chatInput" class="code-input" placeholder="Type a message..." style="margin-bottom:0;" onkeydown="if(event.key==='Enter') sendChatMessage()">
+                    <button class="btn-purple" style="width: auto; margin-bottom:0; padding: 0 20px;" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
             </div>
-        </div>
 
-        <!-- EMOJI STICKER KEYBOARD (For Video Rooms) -->
-        <div class="card hidden" id="stickersCard">
-            <div class="card-header-sm">Reactions</div>
-            <div class="emoji-keyboard-container">
+            <!-- EMOJI STICKER KEYBOARD (For Video Rooms) -->
+            <div class="emoji-keyboard-container" id="stickersSection">
                 <div class="keyboard-tabs-row">
                     <button class="kb-tab-btn active" onclick="switchEmojiCategory(event, 'smileys')">😀 Smileys</button>
                     <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'gestures')">👋 Gestures</button>
@@ -304,6 +303,7 @@
     <script>
         // === 1. GLOBAL CONFIG ===
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
+        const TMDB_API = '3fd2be6f0c70a2a598f084ddfb75487c'; // Restored in backend logic just in case
         
         let ws = null;
         let profile = { name: 'User', avatar: '👤', status: 'Ready' };
@@ -323,7 +323,7 @@
         let isHostScrubbing = false;
         let adaptiveSyncEnabled = true;
 
-        // Emoji Categories for Video/Movie Rooms
+        // Emoji Categories for Video/Movie Rooms (Restored Original)
         const emojiCategories = {
             'smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','💀','👻','🤖'],
             'gestures': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','💪'],
@@ -422,7 +422,7 @@
         // === 3. ROOM CREATION/JOIN FLOW ===
         function openRoomModal(action) {
             activeAction = action;
-            document.getElementById('typeModalTitle').textContent = action === 'CREATE' ? 'Create a Room' : 'Join a Room';
+            document.getElementById('typeModalTitle').textContent = action === 'CREATE' ? 'Create a Room';
             document.getElementById('typeModal').classList.add('show');
         }
         
@@ -512,6 +512,7 @@
             document.getElementById('displayRoomCode').textContent = roomState.id;
 
             document.querySelectorAll('.iframe-wrapper').forEach(w => w.classList.add('hidden'));
+            document.getElementById('movieIframe').classList.add('hidden'); // Restored underlying html clear
             document.getElementById('movieVideo').classList.add('hidden');
             document.getElementById('uiThumbnail').src = '';
             clearInlineTheme();
@@ -520,16 +521,18 @@
             const playBtn = document.getElementById('playPauseBtn');
             hostInput.innerHTML = '';
             
-            // Conditionally show Live Chat vs Stickers
+            // Toggle Chat vs Stickers within the restored unified card design
             if(roomState.type === 'music') {
-                document.getElementById('stickersCard').classList.add('hidden');
-                document.getElementById('chatCard').classList.remove('hidden');
+                document.getElementById('stickersSection').classList.add('hidden');
+                document.getElementById('chatSection').classList.remove('hidden');
+                document.getElementById('socialCardTitle').textContent = "Live Chat";
             } else {
-                document.getElementById('stickersCard').classList.remove('hidden');
-                document.getElementById('chatCard').classList.add('hidden');
+                document.getElementById('stickersSection').classList.remove('hidden');
+                document.getElementById('chatSection').classList.add('hidden');
+                document.getElementById('socialCardTitle').textContent = "Reactions";
             }
 
-            // Setup Host Media Loaders
+            // Setup Host Media Loaders (URL pasting logic restored!)
             if (roomState.role === 'HOST') {
                 hostInput.classList.remove('hidden');
                 playBtn.disabled = false;
@@ -538,9 +541,9 @@
                     hostInput.innerHTML = `<label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Local Video File:</label>
                                            <input type="file" accept="video/*" onchange="loadLocalMedia(this, 'movie')" style="width:100%; color:rgb(var(--color-text-main)); margin-top:4px;">`;
                 } else if (roomState.type === 'music') {
-                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search YouTube for Audio..." onkeydown="if(event.key==='Enter') searchYouTube(this.value, 'music')">`;
+                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search YouTube or Paste Audio URL..." onkeydown="if(event.key==='Enter') { this.value.includes('http') ? loadAudioMedia(this.value) : searchYouTube(this.value, 'music') }">`;
                 } else if (roomState.type === 'youtube') {
-                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search YouTube for Video..." onkeydown="if(event.key==='Enter') searchYouTube(this.value, 'youtube')">`;
+                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search YouTube or Paste URL..." onkeydown="if(event.key==='Enter') { this.value.match(/(youtu\.be|youtube\.com)/) ? loadYouTubeMedia(this.value) : searchYouTube(this.value, 'youtube') }">`;
                 }
             } else {
                 hostInput.classList.add('hidden');
@@ -565,6 +568,7 @@
             clearInterval(syncInterval); clearInterval(progressInterval);
             
             if(ytPlayerObj && ytPlayerObj.stopVideo) ytPlayerObj.stopVideo();
+            document.getElementById('movieIframe').src = ''; // Restored
             document.getElementById('movieVideo').src = '';
             document.getElementById('musicAudio').src = '';
             document.getElementById('uiThumbnail').src = '';
@@ -576,7 +580,34 @@
             roomState.active = false;
         }
 
-        // === 6. MEDIA LOADING LOGIC ===
+        // === 6. MEDIA LOADING LOGIC (All Original Functions Restored) ===
+        
+        // Restored TMDb Search function (Kept in code logic just in case, per instructions)
+        async function searchTMDb(query) {
+            if(!query) return;
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&query=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                if(data.results && data.results.length > 0) {
+                    const id = data.results[0].id;
+                    const title = data.results[0].title;
+                    const posterUrl = `https://image.tmdb.org/t/p/w92${data.results[0].poster_path}`;
+                    const extRes = await fetch(`https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${TMDB_API}`);
+                    const extData = await extRes.json();
+                    const embedUrl = `https://autoembed.co/movie/imdb/${extData.imdb_id}`;
+                    
+                    document.getElementById('mediaTitle').textContent = title;
+                    activePlayer = document.getElementById('movieIframe');
+                    activePlayer.classList.remove('hidden');
+                    document.getElementById('movieVideo').classList.add('hidden');
+                    activePlayer.src = embedUrl;
+                    
+                    document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(posterUrl)}`;
+                    ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'iframe', title: title, url: embedUrl, posterUrl: posterUrl }));
+                }
+            } catch(e) { showToast("TMDb Search Failed"); }
+        }
+
         function searchYouTube(query, type) {
             if(!query) return;
             document.getElementById('mediaTitle').textContent = "Searching YouTube...";
@@ -614,6 +645,7 @@
             const url = URL.createObjectURL(file);
             activePlayer = document.getElementById('movieVideo');
             activePlayer.classList.remove('hidden');
+            document.getElementById('movieIframe').classList.add('hidden'); // Restored original iframe hide check
             
             document.getElementById('mediaTitle').textContent = file.name;
             activePlayer.src = url;
@@ -621,10 +653,16 @@
             ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', title: file.name }));
         }
 
+        // Restored iframe handler logic inside the network load function
         function handleRemoteMediaLoad(msg) {
             if(roomState.role === 'HOST') return;
             if(msg.posterUrl) document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(msg.posterUrl)}`;
             
+            if(msg.mode === 'iframe') {
+                document.getElementById('mediaTitle').textContent = msg.title;
+                activePlayer = document.getElementById('movieIframe');
+                activePlayer.classList.remove('hidden'); activePlayer.src = msg.url;
+            }
             if(msg.mode === 'youtube' && ytPlayerObj) {
                 document.getElementById('mediaTitle').textContent = "Synchronized YouTube";
                 activePlayer = ytPlayerObj;
@@ -824,4 +862,3 @@
     </script>
 </body>
 </html>
-
