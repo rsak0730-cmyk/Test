@@ -36,6 +36,16 @@
             animation: shine 3s linear infinite;
             text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
+
+        .royal-glow {
+            background: linear-gradient(90deg, #fbbf24, #d97706, #f59e0b, #fbbf24);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            animation: shine 2s linear infinite;
+            text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+        }
+
         @keyframes shine { to { background-position: 200% center; } }
         
         .view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
@@ -116,11 +126,20 @@
                     <input type="text" id="profileName" placeholder="Display Name" class="w-full bg-black/50 border border-gray-600 p-3 rounded-xl text-white focus:outline-none focus:border-cyan-400">
                     <div class="text-[10px] text-gray-500 font-mono">DEVICE ID: <span id="deviceIdDisplay"></span></div>
                     <div id="vipBadgeDisplay" class="hidden"><span class="bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs px-2 py-1 rounded font-bold">💎 VIP UNLOCKED</span></div>
+                    <div id="royalBadgeDisplay" class="hidden"><span class="bg-amber-500/20 border border-amber-500 text-amber-400 text-xs px-2 py-1 rounded font-bold">👑 ROYAL HATCH UNLOCKED</span></div>
+                    <div id="primeBadgeDisplay" class="hidden"><span class="bg-purple-500/20 border border-purple-500 text-purple-400 text-xs px-2 py-1 rounded font-bold">🛡️ PRIME GLASS UNLOCKED</span></div>
                     
-                    <!-- SAVE BUTTON ADDED HERE -->
                     <button onclick="saveAllSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
                         <i class="fa-solid fa-floppy-disk mr-2"></i> SAVE ALL SETTINGS
                     </button>
+                </div>
+            </div>
+
+            <!-- UNLOCKED BADGES SHOWCASE UI -->
+            <div class="card space-y-3">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Your Unlocked Badges</h2>
+                <div id="userBadgesShowcase" class="flex flex-wrap gap-2">
+                    <span class="text-xs text-gray-500 italic">No special badges unlocked yet. Redeem codes to collect them!</span>
                 </div>
             </div>
 
@@ -132,10 +151,10 @@
                 </div>
             </div>
 
-            <!-- TASKS & ACHIEVEMENTS -->
+            <!-- TASKS & ACHIEVEMENTS (50+ Tasks) -->
             <div class="card space-y-4">
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">TASKS & ACHIEVEMENTS</h2>
-                <div id="tasksList" class="flex flex-col gap-3 max-h-48 overflow-y-auto"></div>
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">TASKS & ACHIEVEMENTS (50+ TASKS)</h2>
+                <div id="tasksList" class="flex flex-col gap-3 max-h-60 overflow-y-auto"></div>
             </div>
 
             <div class="card space-y-4">
@@ -211,13 +230,6 @@
 
             <!-- Media Player Container -->
             <div class="bg-black rounded-2xl border border-gray-800 overflow-hidden relative shadow-2xl z-10">
-                <div class="absolute top-2 left-2 z-20 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 pointer-events-none">
-                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> <span>LIVE SYNC</span>
-                </div>
-                <div class="absolute top-2 right-2 z-20 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-cyan-400 pointer-events-none">
-                    <span id="userRoleUI">MEMBER</span>
-                </div>
-
                 <div id="mediaTitle" class="absolute top-10 w-full text-center text-xs font-bold text-gray-500 z-10 drop-shadow-md pointer-events-none">Waiting for media...</div>
 
                 <div id="wrap-youtube" class="w-full aspect-video hidden relative z-10">
@@ -243,10 +255,20 @@
                     <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-2">
                         <span id="timeCurrent">0:00</span><span id="timeTotal">0:00</span>
                     </div>
-                    <div class="flex justify-center">
+
+                    <!-- CONTROLS ROW WITH FLOATING SYNC STATUS & ROLE ON EITHER SIDE OF PLAY BUTTON -->
+                    <div class="flex items-center justify-between mt-2 px-2">
+                        <div class="bg-black/70 backdrop-blur px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 border border-white/10">
+                            <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> <span>LIVE SYNC</span>
+                        </div>
+
                         <button id="playPauseBtn" onclick="togglePlayPause()" class="w-12 h-12 rounded-full bg-cyan-600 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(8,145,178,0.5)]">
                             <i class="fa-solid fa-play"></i>
                         </button>
+
+                        <div class="bg-black/70 backdrop-blur px-2.5 py-1 rounded-lg text-[10px] font-bold text-cyan-400 border border-white/10">
+                            <span id="userRoleUI">MEMBER</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -298,14 +320,25 @@
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200';
         
-        const ALL_TASKS = [
-            { id: 't1', metric: 'chats', target: 5, rewardType: 'avatar', rewardVal: '🐱 Anime Cat', desc: 'Send 5 chat messages' },
-            { id: 't2', metric: 'host', target: 2, rewardType: 'category', rewardVal: 'Room Master', desc: 'Host 2 rooms' },
-            { id: 't3', metric: 'reacts', target: 10, rewardType: 'category', rewardVal: 'Reaction King', desc: 'Send 10 emojis' },
-            { id: 't4', metric: 'join', target: 3, rewardType: 'avatar', rewardVal: '🎬 Movie Buff', desc: 'Join 3 rooms' },
-            { id: 't5', metric: 'chats', target: 20, rewardType: 'avatar', rewardVal: '🧑‍🚀 Space Explorer', desc: 'Send 20 chat messages' },
-            { id: 't6', metric: 'host', target: 5, rewardType: 'category', rewardVal: 'Night Owl', desc: 'Host 5 rooms' }
-        ];
+        // --- 50+ TASKS & ACHIEVEMENTS GENERATOR ---
+        const ALL_TASKS = [];
+        const avatarsPool = ['🐱 Anime Cat', '🎬 Movie Buff', '🧑‍🚀 Space Explorer', '🥷 Neon Warrior', '🌌 Cosmic', '🕹️ Arcade', '🎹 Synthwave', '🧙 Fantasy', '🚀 Astronaut', '🎧 Neon DJ'];
+        const categoriesPool = ['Room Master', 'Reaction King', 'Night Owl', 'Music Lover', 'Movie Fan', 'Chat Legend', 'Social Star', 'Sync Expert', 'VIP Pioneer', 'Elite Host'];
+        
+        for(let i = 1; i <= 55; i++) {
+            let metric = i % 4 === 0 ? 'host' : i % 3 === 0 ? 'reacts' : i % 2 === 0 ? 'join' : 'chats';
+            let target = i * 2;
+            let rewardType = i % 2 === 0 ? 'avatar' : 'category';
+            let rewardVal = rewardType === 'avatar' ? avatarsPool[i % avatarsPool.length] + ` #${i}` : categoriesPool[i % categoriesPool.length] + ` Lvl ${i}`;
+            ALL_TASKS.push({
+                id: 't_' + i,
+                metric: metric,
+                target: target,
+                rewardType: rewardType,
+                rewardVal: rewardVal,
+                desc: `Milestone Task #${i}: Accumulate ${target} ${metric} actions`
+            });
+        }
 
         const EMOJI_DB = {
             'smileys': ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾'],
@@ -324,7 +357,10 @@
             name: 'Guest', 
             avatar: '🤖 Cyberpunk', 
             category: '', 
-            isVip: false, 
+            isVip: false,
+            hasRoyalHat: false,
+            hasPrimeGlass: false,
+            activeTheme: 'default',
             deviceId: '',
             unlockedAvatars: ['🤖 Cyberpunk'],
             unlockedCategories: [],
@@ -353,6 +389,7 @@
         window.onload = () => {
             initDevice();
             renderSettings();
+            applyThemeStyles();
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
             }
@@ -364,7 +401,6 @@
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // --- EMOJI KEYBOARD LOGIC ---
         function toggleEmojiKeyboard() {
             const kb = document.getElementById('emojiKeyboardSection');
             kb.classList.toggle('hidden');
@@ -393,7 +429,6 @@
             });
         }
 
-        // --- PROGRESS & TRACKING ---
         function trackStat(metric, amount = 1) {
             user.stats[metric] += amount;
             localStorage.setItem('sb_stats', JSON.stringify(user.stats));
@@ -427,6 +462,9 @@
             user.avatar = localStorage.getItem('sb_avatar') || '🤖 Cyberpunk';
             user.category = localStorage.getItem('sb_category') || '';
             user.isVip = localStorage.getItem('sb_vip') === 'true';
+            user.hasRoyalHat = localStorage.getItem('sb_royal') === 'true';
+            user.hasPrimeGlass = localStorage.getItem('sb_prime') === 'true';
+            user.activeTheme = localStorage.getItem('sb_theme') || 'default';
             
             try {
                 user.stats = JSON.parse(localStorage.getItem('sb_stats')) || { chats: 0, host: 0, reacts: 0, join: 0 };
@@ -444,10 +482,44 @@
             document.getElementById('headerAvatar').textContent = user.avatar.split(' ')[0];
             const nameEl = document.getElementById('headerName');
             nameEl.textContent = user.name;
+            
+            nameEl.className = user.hasRoyalHat ? 'royal-glow font-bold text-lg' : (user.isVip ? 'vip-glow font-bold text-lg' : 'text-white font-bold');
+            
+            if(user.isVip) document.getElementById('vipBadgeDisplay').classList.remove('hidden');
+            if(user.hasRoyalHat) document.getElementById('royalBadgeDisplay').classList.remove('hidden');
+            if(user.hasPrimeGlass) document.getElementById('primeBadgeDisplay').classList.remove('hidden');
+            
+            renderBadgesShowcase();
+        }
+
+        function renderBadgesShowcase() {
+            const showcase = document.getElementById('userBadgesShowcase');
+            if(!showcase) return;
+            showcase.innerHTML = '';
+            
+            let hasAny = false;
             if(user.isVip) {
-                nameEl.classList.add('vip-glow');
-                document.getElementById('vipBadgeDisplay').classList.remove('hidden');
-                document.getElementById('vipBgGlow').classList.remove('hidden');
+                showcase.innerHTML += `<span class="bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs px-3 py-1 rounded-full font-bold">💎 VIP Badge</span>`;
+                hasAny = true;
+            }
+            if(user.hasRoyalHat) {
+                showcase.innerHTML += `<span class="bg-amber-500/20 border border-amber-500 text-amber-400 text-xs px-3 py-1 rounded-full font-bold">👑 Royal Hat Badge</span>`;
+                hasAny = true;
+            }
+            if(user.hasPrimeGlass) {
+                showcase.innerHTML += `<span class="bg-purple-500/20 border border-purple-500 text-purple-400 text-xs px-3 py-1 rounded-full font-bold">🛡️ Prime Glass Badge</span>`;
+                hasAny = true;
+            }
+            if(!hasAny) {
+                showcase.innerHTML = `<span class="text-xs text-gray-500 italic">No special badges unlocked yet. Redeem codes to collect them!</span>`;
+            }
+        }
+
+        function applyThemeStyles() {
+            const bodyEl = document.body;
+            bodyEl.classList.remove('theme-ios', 'theme-samsung', 'theme-default');
+            if(user.hasPrimeGlass && user.activeTheme !== 'default') {
+                bodyEl.classList.add(`theme-${user.activeTheme}`);
             }
         }
 
@@ -512,7 +584,6 @@
             });
         }
 
-        // --- SAVE ALL SETTINGS FUNCTION ---
         function saveAllSettings() {
             const nameInput = document.getElementById('profileName').value.trim();
             user.name = nameInput || 'Guest';
@@ -526,12 +597,32 @@
         function redeemCode() {
             const code = document.getElementById('redeemInput').value.trim().toUpperCase();
             if (code === 'EDIT.OG_') {
-                user.isVip = true; localStorage.setItem('sb_vip', 'true'); updateHeader(); showToast("VIP UNLOCKED: Neon Glow Activated!");
-            } else { showToast("Invalid Reward Code"); }
+                user.isVip = true; 
+                localStorage.setItem('sb_vip', 'true'); 
+                updateHeader(); 
+                showToast("VIP UNLOCKED: Neon Glow Activated!");
+            } else if (code === 'MANISH.OG') {
+                user.hasRoyalHat = true;
+                localStorage.setItem('sb_royal', 'true');
+                user.activeTheme = 'ios';
+                localStorage.setItem('sb_theme', 'ios');
+                updateHeader();
+                applyThemeStyles();
+                showToast("MANISH.OG UNLOCKED: Royal Hat & Liquid Glass Themes Activated!");
+            } else if (code === 'OG.OG') {
+                user.hasPrimeGlass = true;
+                localStorage.setItem('sb_prime', 'true');
+                user.activeTheme = 'samsung';
+                localStorage.setItem('sb_theme', 'samsung');
+                updateHeader();
+                applyThemeStyles();
+                showToast("OG.OG UNLOCKED: Prime Glass & OneUI 9 Design Styles Activated!");
+            } else { 
+                showToast("Invalid Reward Code"); 
+            }
             document.getElementById('redeemInput').value = '';
         }
 
-        // --- REAL WEBSOCKET ROOM LOGIC ---
         function openModal(id) { document.getElementById(id).classList.add('show'); }
         function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
@@ -560,7 +651,7 @@
             ws = new WebSocket(WS_URL);
             
             ws.onopen = () => {
-                const payloadStr = `${user.avatar.split(' ')[0]}|${user.name}|${user.isVip}|${user.category}`;
+                const payloadStr = `${user.avatar.split(' ')[0]}|${user.name}|${user.isVip}|${user.category}|${user.hasRoyalHat}|${user.hasPrimeGlass}`;
                 if(role === 'HOST') {
                     ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
                     ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
@@ -581,7 +672,7 @@
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
                 if(msg.type === 'REACTION') { renderFloatingReaction(msg.emoji); }
-                if(msg.type === 'CHAT') { renderChat(msg.sender, msg.text, msg.isVip); }
+                if(msg.type === 'CHAT') { renderChat(msg.sender, msg.text, msg.isVip, msg.hasRoyalHat); }
             };
 
             ws.onerror = () => { showToast("Server connection error."); };
@@ -594,22 +685,25 @@
             list.innerHTML = '';
             
             peers.forEach(peer => {
-                let pAvatar = '🤖', pName = peer.name, pVip = 'false', pCat = '';
+                let pAvatar = '🤖', pName = peer.name, pVip = 'false', pCat = '', pRoyal = 'false';
                 if(peer.name.includes('|')) {
                     const parts = peer.name.split('|');
-                    pAvatar = parts[0]; pName = parts[1]; pVip = parts[2]; pCat = parts[3];
+                    pAvatar = parts[0]; pName = parts[1]; pVip = parts[2]; pCat = parts[3]; pRoyal = parts[4] || 'false';
                 }
 
-                const vipHtml = pVip === 'true' ? '<span class="text-[8px] bg-cyan-500/20 text-cyan-400 border border-cyan-400 px-1 rounded font-bold animate-pulse tracking-widest mt-1">VIP</span>' : '';
+                const vipHtml = pVip === 'true' ? '<span class="text-[8px] bg-cyan-500/20 text-cyan-400 border border-cyan-400 px-1 rounded font-bold tracking-widest mt-1">VIP</span>' : '';
+                const royalHtml = pRoyal === 'true' ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 border border-amber-400 px-1 rounded font-bold tracking-widest mt-1">👑 ROYAL</span>' : '';
                 const catHtml = pCat ? `<span class="text-[8px] text-gray-400 border border-gray-600 px-1 rounded mt-1">${pCat}</span>` : '';
+
+                const nameStyle = pRoyal === 'true' ? 'royal-glow font-bold' : (pVip === 'true' ? 'vip-glow font-bold' : 'text-white font-bold');
 
                 list.innerHTML += `
                     <div class="flex justify-between items-center bg-black/40 p-2 rounded-xl border border-gray-800">
                         <div class="flex items-center gap-3">
                             <span class="text-2xl">${pAvatar}</span>
                             <div class="flex flex-col">
-                                <span class="text-sm font-bold ${pVip === 'true' ? 'vip-glow' : 'text-white'}">${pName}</span>
-                                <div class="flex flex-wrap gap-1">${vipHtml}${catHtml}</div>
+                                <span class="text-sm ${nameStyle}">${pName}</span>
+                                <div class="flex flex-wrap gap-1">${vipHtml}${royalHtml}${catHtml}</div>
                             </div>
                         </div>
                         <span class="text-[10px] font-bold px-2 py-1 rounded ${peer.role === 'HOST' ? 'bg-green-500/20 text-green-400' : 'bg-gray-800 text-gray-400'}">${peer.role}</span>
@@ -703,7 +797,6 @@
             document.getElementById('bottomNav').style.display = 'flex';
         }
 
-        // --- YOUTUBE API SEARCH & LOAD ---
         function extractYouTubeId(url) {
             const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -786,7 +879,6 @@
             }
         }
 
-        // --- LOCAL FILE (MOVIE ROOM) ---
         function loadLocalMedia(input) {
             const file = input.files[0];
             if(!file) return;
@@ -817,7 +909,6 @@
             }
         }
 
-        // --- PLAYBACK & SYNC ---
         function setupHTML5Listeners(player) {
             player.onplay = () => { isPlaying = true; updatePlayBtn(); if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'CONTROL', action:'play', time:player.currentTime})); };
             player.onpause = () => { isPlaying = false; updatePlayBtn(); if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'CONTROL', action:'pause', time:player.currentTime})); };
@@ -911,7 +1002,6 @@
         }
         function formatTime(s) { const m=Math.floor(s/60); const sc=Math.floor(s%60); return `${m}:${sc<10?'0':''}${sc}`; }
 
-        // --- SOCIAL (CHAT & EMOJI) ---
         function sendReaction(emoji) {
             renderFloatingReaction(emoji);
             trackStat('reacts');
@@ -930,25 +1020,33 @@
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if(!text) return;
-            renderChat(user.name, text, user.isVip);
+            renderChat(user.name, text, user.isVip, user.hasRoyalHat);
             trackStat('chats');
             if(ws && ws.readyState === WebSocket.OPEN) {
-                const fullSenderInfo = `${user.name}${user.isVip ? '|VIP' : ''}`;
-                ws.send(JSON.stringify({ type: 'CHAT', sender: fullSenderInfo, text: text, isVip: user.isVip }));
+                const fullSenderInfo = `${user.name}|${user.isVip}|${user.hasRoyalHat}`;
+                ws.send(JSON.stringify({ type: 'CHAT', sender: fullSenderInfo, text: text }));
             }
             input.value = '';
         }
 
-        function renderChat(sender, text, isVip) {
+        function renderChat(sender, text, isVip, hasRoyalHat) {
             let sName = sender;
             let sVip = isVip;
-            if(typeof sender === 'string' && sender.includes('|VIP')) { 
-                sName = sender.split('|')[0]; 
-                sVip = true; 
+            let sRoyal = hasRoyalHat;
+            
+            if(typeof sender === 'string' && sender.includes('|')) { 
+                const parts = sender.split('|');
+                sName = parts[0]; 
+                sVip = parts[1] === 'true';
+                sRoyal = parts[2] === 'true';
             }
+            
             const box = document.getElementById('chatBox');
-            const nameClass = sVip ? 'text-xs text-pink-400 vip-glow tracking-wide' : 'font-bold text-cyan-400';
-            box.innerHTML += `<div><span class="font-bold ${nameClass}">${sName}:</span> <span class="text-white">${text}</span></div>`;
+            let nameClass = 'font-bold text-cyan-400';
+            if(sRoyal) nameClass = 'text-xs royal-glow tracking-wide';
+            else if(sVip) nameClass = 'text-xs vip-glow tracking-wide';
+
+            box.innerHTML += `<div><span class="${nameClass}">${sName}:</span> <span class="text-white">${text}</span></div>`;
             box.scrollTop = box.scrollHeight;
         }
 
@@ -960,3 +1058,4 @@
     </script>
 </body>
 </html>
+
