@@ -15,6 +15,7 @@
             transition: --color-accent 1s, --color-bg-base 1s, --color-bg-card 1s, --color-border 1s; 
         }
 
+        /* Preset Themes */
         [data-theme="cyberpunk"] { --color-accent: 0 255 204; --color-bg-base: 10 10 26; --color-bg-card: 20 10 40; --color-text-main: 224 224 255; --color-text-muted: 136 136 170; --color-border: 0 255 204; --color-shadow: 0 255 204; --color-btn-text: 0 0 0; }
         [data-theme="cinema"] { --color-accent: 229 9 20; --color-bg-base: 17 17 17; --color-bg-card: 20 20 20; --color-text-main: 255 255 255; --color-text-muted: 170 170 170; --color-border: 229 9 20; --color-shadow: 229 9 20; --color-btn-text: 255 255 255; }
         [data-theme="esports"] { --color-accent: 255 70 85; --color-bg-base: 15 17 26; --color-bg-card: 24 26 37; --color-text-main: 255 255 255; --color-text-muted: 138 145 166; --color-border: 255 70 85; --color-shadow: 255 70 85; --color-btn-text: 255 255 255; }
@@ -30,16 +31,8 @@
         .btn-purple { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); width: 100%; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 800; border: none; box-shadow: 0 6px 20px rgb(var(--color-shadow) / 0.4); margin-bottom: 8px; transition: background-color 0.8s, color 0.8s; }
         .close-session-btn { background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.2); width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
-        .input-group { display: flex; gap: 8px; margin-bottom: 8px; width: 100%; }
-        .code-input, .search-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgb(var(--color-border)); color: rgb(var(--color-text-main)); padding: 14px; border-radius: 12px; font-size: 14px; outline: none; transition: all 0.3s ease; }
-        .input-group .code-input { margin-bottom: 0; }
-        .input-group .btn-search { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); border: none; border-radius: 12px; padding: 0 20px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgb(var(--color-shadow) / 0.3); }
+        .code-input, .search-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgb(var(--color-border)); color: rgb(var(--color-text-main)); padding: 14px; border-radius: 12px; font-size: 14px; outline: none; transition: all 0.3s ease; margin-bottom: 8px; }
         .code-input:focus, .search-input:focus { border-color: rgb(var(--color-accent)); box-shadow: 0 0 15px rgb(var(--color-shadow) / 0.5); }
-        
-        .search-results-box { max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.6); border: 1px solid rgb(var(--color-border)); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-        .search-result-item { display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 12px; font-weight: 700; color: rgb(var(--color-text-main)); text-align: left; }
-        .search-result-item:hover { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); }
-        .search-result-item img { height: 40px; width: 40px; object-fit: cover; border-radius: 6px; margin-right: 12px; }
         
         /* --- 3. CARDS & LAYOUTS --- */
         .card { background: rgb(var(--color-bg-card)); backdrop-filter: blur(16px); border: 1px solid rgb(var(--color-border) / 0.5); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); transition: background-color 0.8s, border-color 0.8s; }
@@ -49,22 +42,25 @@
         .top-header h1 { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #fff 0%, rgb(var(--color-accent)) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 10px rgb(var(--color-shadow) / 0.4)); transition: filter 0.8s; }
         .back-btn { background: rgba(255,255,255,0.05); border: 1px solid rgb(var(--color-border)); font-size: 20px; font-weight: bold; color: rgb(var(--color-accent)); width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
         
+        /* --- 4. NAVIGATION (2 Tabs) --- */
         .tab-bar { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 320px; height: 60px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); border: 1px solid rgb(var(--color-border)); border-radius: 30px; display: flex; padding: 0 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 9999; transition: border-color 0.8s; }
         .tab-btn { flex: 1; border: none; background: transparent; color: rgba(255,255,255,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s ease; }
         .tab-btn i { font-size: 18px; margin-bottom: 4px; transition: 0.3s; }
         .tab-btn.active { color: rgb(var(--color-accent)); }
         .tab-btn.active i { transform: translateY(-3px) scale(1.1); filter: drop-shadow(0 0 8px rgb(var(--color-shadow) / 0.5)); }
         
+        /* Views System */
         .view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Full Screen Room Container */
         #roomView { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgb(var(--color-bg-base)); z-index: 100000; overflow-y: auto; padding: 15px; padding-bottom: 40px; display: none; transition: background-color 0.8s; }
         #roomView.active { display: block; }
 
-        /* --- 5. ROOM UI & VIP BADGES --- */
+        /* --- 5. ROOM UI ELEMENTS --- */
         .code-box { background: rgba(0,0,0,0.5); border: 2px dashed rgb(var(--color-border)); border-radius: 16px; padding: 12px; text-align: center; font-size: 22px; font-weight: 900; color: rgb(var(--color-accent)); letter-spacing: 3px; margin-bottom: 12px; transition: color 0.8s, border-color 0.8s; }
-        .code-action-btn { background: rgba(0,0,0,0.3); border: 1px solid rgb(var(--color-border)); color: rgb(var(--color-accent)); padding: 10px 4px; border-radius: 12px; font-size: 11px; font-weight: 800; text-align: center; width: 100%; transition: color 0.8s, border-color 0.8s; cursor: pointer; }
+        .code-action-btn { background: rgba(0,0,0,0.3); border: 1px solid rgb(var(--color-border)); color: rgb(var(--color-accent)); padding: 10px 4px; border-radius: 12px; font-size: 11px; font-weight: 800; text-align: center; width: 100%; transition: color 0.8s, border-color 0.8s; }
         
         .black-player-box { background: #050505; border: 1px solid rgb(var(--color-border) / 0.5); border-radius: 20px; padding: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; margin-bottom: 14px; transition: border-color 0.8s; }
         .iframe-wrapper { position: relative; width: 100%; height: 200px; border-radius: 12px; overflow: hidden; background: #000; margin-top: 10px; border: 1px solid rgb(var(--color-border) / 0.3); transition: border-color 0.8s; }
@@ -75,36 +71,30 @@
         .time-info { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: rgb(var(--color-text-muted)); margin-bottom: 14px; }
         .play-pause-lg { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; border: 2px solid rgba(255,255,255,0.6); box-shadow: 0 6px 20px rgb(var(--color-shadow) / 0.4); margin: 0 auto; transition: background-color 0.8s, color 0.8s; }
         
-        /* Badges */
-        .peer-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgb(var(--color-border) / 0.3); font-size: 13px; font-weight: 600; }
-        .badge-tag { padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-left: 8px; display: inline-block; }
-        .badge-normal { background: rgba(255,255,255,0.1); color: rgb(var(--color-text-main)); border: 1px solid rgba(255,255,255,0.2); }
-        .badge-vip { background: linear-gradient(90deg, #ff00a0, #7a00ff, #00d4ff, #ff00a0); background-size: 300% 300%; animation: rgbGlow 3s linear infinite; color: white; text-shadow: 0 0 5px rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 0 10px rgba(122, 0, 255, 0.8); }
-        @keyframes rgbGlow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-
-        /* Avatar Grid */
-        .avatar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; max-height: 150px; overflow-y: auto; margin-bottom: 16px; padding: 5px; }
-        .avatar-btn { font-size: 24px; padding: 8px; border-radius: 12px; border: 1px solid transparent; cursor: pointer; text-align: center; transition: 0.2s; background: rgba(0,0,0,0.3); }
-        .avatar-btn.active { border-color: rgb(var(--color-accent)); background: rgba(255,255,255,0.1); transform: scale(1.1); box-shadow: 0 0 10px rgb(var(--color-shadow)/0.5); }
-
-        /* --- 6. EMOJI KEYBOARD & SOUNDBOARD --- */
+        /* --- 6. EMOJI KEYBOARD & LIVE CHAT POPUP --- */
         .emoji-keyboard-container { background: rgba(0,0,0,0.3); border: 1px solid rgb(var(--color-border) / 0.5); border-radius: 16px; padding: 12px; margin-top: 10px; transition: border-color 0.8s; }
         .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px 2px; border-bottom: 1px solid rgb(var(--color-border) / 0.5); margin-bottom: 10px; scrollbar-width: none; }
         .kb-tab-btn { background: rgba(0,0,0,0.5); border: 1px solid rgb(var(--color-border) / 0.3); border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; color: rgb(var(--color-text-muted)); }
         .kb-tab-btn.active { background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); border-color: rgb(var(--color-accent)); }
-        .emoji-grid-box { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 8px; max-height: 180px; overflow-y: auto; overflow-x: hidden; padding: 10px 5px; justify-items: center; }
+        .emoji-grid-box { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-height: 180px; overflow-y: auto; padding: 8px 4px; }
         .emoji-key { background: none; border: none; font-size: 26px; cursor: pointer; padding: 4px; border-radius: 8px; text-align: center; }
         .emoji-key:active { transform: scale(1.2); }
+
         .floating-reaction { position: fixed; bottom: 100px; font-size: 42px; animation: floatUp 2.2s ease-out forwards; z-index: 9999999; pointer-events: none; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
         @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 20% { transform: translateY(-30px) scale(1.2); } 100% { transform: translateY(-300px) scale(1); opacity: 0; } }
 
+        .chat-popup { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: rgb(var(--color-bg-card)); border: 1px solid rgb(var(--color-accent)); color: rgb(var(--color-text-main)); padding: 12px 24px; border-radius: 20px; z-index: 9999999; animation: popDownOut 4s forwards; font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 10px 25px rgb(var(--color-shadow) / 0.5); }
+        @keyframes popDownOut { 0% { top: -50px; opacity: 0; } 10% { top: 15px; opacity: 1; } 90% { top: 15px; opacity: 1; } 100% { top: -50px; opacity: 0; } }
+
+        /* --- 7. SOUNDBOARD FAB MODAL --- */
         #globalFab { position: fixed; right: 20px; bottom: 100px; width: 56px; height: 56px; background: rgb(var(--color-accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgb(var(--color-btn-text)); font-size: 20px; box-shadow: 0 8px 25px rgb(var(--color-shadow) / 0.4); z-index: 1000001; cursor: pointer; transition: background-color 0.8s, color 0.8s; }
         .fab-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000002; display: flex; flex-direction: column; justify-content: flex-end; transform: translateY(100%); transition: 0.3s; }
         .fab-modal.show { transform: translateY(0); }
-        .fab-content { background: rgb(var(--color-bg-card)); border: 1px solid rgb(var(--color-border)); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 16px; max-height: 70vh; display: flex; flex-direction: column; transition: background-color 0.8s, border-color 0.8s; }
+        .fab-content { background: rgb(var(--color-bg-card)); border: 1px solid rgb(var(--color-border)); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 16px; max-height: 60vh; display: flex; flex-direction: column; transition: background-color 0.8s, border-color 0.8s; }
         .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; overflow-y: auto; margin-top: 10px; padding-bottom: 20px; }
-        .sound-btn { background: rgba(0,0,0,0.4); border: 1px solid rgb(var(--color-border) / 0.5); color: rgb(var(--color-text-main)); padding: 12px 6px; border-radius: 12px; font-size: 11px; font-weight: 700; text-align: center; transition: border-color 0.8s; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sound-btn { background: rgba(0,0,0,0.4); border: 1px solid rgb(var(--color-border) / 0.5); color: rgb(var(--color-text-main)); padding: 12px 6px; border-radius: 12px; font-size: 11px; font-weight: 700; text-align: center; transition: border-color 0.8s; }
         
+        /* Modals & Utility */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
         .modal-content { background: rgb(var(--color-bg-card)); border: 1px solid rgb(var(--color-border)); padding: 24px; border-radius: 24px; width: 90%; max-width: 380px; box-shadow: 0 15px 40px rgb(var(--color-shadow) / 0.4); transform: scale(0.95); transition: 0.3s; }
@@ -113,15 +103,24 @@
         .hidden { display: none !important; }
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgb(var(--color-accent)); color: rgb(var(--color-btn-text)); padding: 12px 24px; border-radius: 20px; font-size: 13px; font-weight: 800; z-index: 9999999; transition: 0.4s; box-shadow: 0 10px 25px rgb(var(--color-shadow) / 0.5); }
         #toast.show { transform: translateX(-50%) translateY(0); }
+        .peer-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgb(var(--color-border) / 0.3); font-size: 13px; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <div id="toast">Notification</div>
+
+    <!-- PRELOAD AUDIO CACHE FOR SOUNDBOARD -->
     <div id="audioCache" class="hidden">
         <audio id="sfx_airhorn" src="https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" preload="auto"></audio>
+        <audio id="sfx_cricket" src="https://www.myinstants.com/media/sounds/crickets.mp3" preload="auto"></audio>
+        <audio id="sfx_wow" src="https://www.myinstants.com/media/sounds/anime-wow-sound-effect.mp3" preload="auto"></audio>
         <audio id="sfx_boom" src="https://www.myinstants.com/media/sounds/vine-boom.mp3" preload="auto"></audio>
+        <audio id="sfx_punch" src="https://www.myinstants.com/media/sounds/punch.mp3" preload="auto"></audio>
+        <audio id="sfx_fail" src="https://www.myinstants.com/media/sounds/fail-trombone-01.mp3" preload="auto"></audio>
     </div>
+
+    <!-- Hidden Image for Thumbnail Color Extraction -->
     <img id="uiThumbnail" crossorigin="Anonymous" class="hidden" alt="Thumbnail Extract">
 
     <div class="app-container">
@@ -133,91 +132,80 @@
                     <option value="golden">Golden Premium</option>
                     <option value="cyberpunk">Cyberpunk Neon</option>
                     <option value="cinema">Cinema Dark</option>
+                    <option value="esports">Esports HUD</option>
                 </select>
             </div>
             
             <div class="card">
                 <div class="card-header-sm">Host a Session</div>
+                <p style="font-size: 12px; color: rgb(var(--color-text-muted)); margin-bottom: 16px;">Create a room to sync media with friends.</p>
                 <button class="btn-purple" onclick="openRoomModal('CREATE')"><i class="fa-solid fa-plus"></i> CREATE ROOM</button>
             </div>
 
             <div class="card">
                 <div class="card-header-sm">Join a Session</div>
-                <p style="font-size: 11px; color: rgb(var(--color-text-muted)); margin-bottom: 8px;">Select room type and enter the host's code:</p>
-                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-                    <select id="quickJoinType" class="code-input" style="flex: 1; padding: 12px; margin-bottom: 0;">
-                        <option value="youtube">YouTube Room</option>
-                        <option value="movie">Movie Room</option>
-                        <option value="music">Music Room</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="quickJoinCode" class="code-input" placeholder="e.g. SYNC-A1B2" style="text-align: center; font-size: 16px; letter-spacing: 2px; text-transform: uppercase;">
-                    <button class="btn-search" onclick="quickJoin()"><i class="fa-solid fa-right-to-bracket"></i></button>
-                </div>
+                <p style="font-size: 12px; color: rgb(var(--color-text-muted)); margin-bottom: 16px;">Enter a room code provided by a host.</p>
+                <button class="btn-purple" style="background: transparent; color: rgb(var(--color-accent)); border: 1px solid rgb(var(--color-accent));" onclick="openRoomModal('JOIN')"><i class="fa-solid fa-right-to-bracket"></i> JOIN ROOM</button>
             </div>
         </div>
 
-        <!-- ================= SETTING TAB (PROFILES & VIP) ================= -->
+        <!-- ================= SETTING TAB ================= -->
         <div id="tab-settings" class="view">
-            <div class="top-header"><h1>Profile & Settings</h1></div>
-            
+            <div class="top-header"><h1>Settings</h1></div>
             <div class="card">
-                <div class="card-header-sm">Your Identity</div>
+                <div class="card-header-sm">Your Profile</div>
                 <input type="text" id="profileName" class="code-input" placeholder="Display Name" onchange="saveProfile()">
-                
-                <div style="font-size: 11px; color: rgb(var(--color-text-muted)); margin: 12px 0 8px 0; font-weight: 800;">CHOOSE AVATAR (20+)</div>
-                <div class="avatar-grid" id="avatarGridBox"></div>
-            </div>
-
-            <div class="card">
-                <div class="card-header-sm">Roles & Badges</div>
-                <p style="font-size: 11px; color: rgb(var(--color-text-muted)); margin-bottom: 8px;">Select a badge to display next to your name in rooms.</p>
-                <select id="badgeSelector" class="code-input" onchange="saveProfile()">
-                    <option value="Newbie">Newbie</option>
-                    <option value="Night Owl">Night Owl</option>
-                    <option value="Deep Listener">Deep Listener</option>
-                    <option value="Movie Lover">Movie Lover</option>
-                    <option value="Music Lover">Music Lover</option>
-                    <option value="Bedrock Master">Bedrock Master</option>
-                    <option value="Pro Gamer">Pro Gamer</option>
-                    <option value="Mobile Scripter">Mobile Scripter</option>
-                    <option value="Cinematographer">Cinematographer</option>
-                    <option value="Social Butterfly">Social Butterfly</option>
-                    <option value="Sync Legend">Sync Legend</option>
-                    <option value="Vibe Checker">Vibe Checker</option>
-                </select>
-
-                <div style="font-size: 11px; color: rgb(var(--color-accent)); margin: 12px 0 8px 0; font-weight: 800;"><i class="fa-solid fa-crown"></i> REDEEM VIP CODE</div>
-                <div class="input-group">
-                    <input type="text" id="promoInput" class="code-input" placeholder="Enter Code...">
-                    <button class="btn-search" onclick="claimVIP()"><i class="fa-solid fa-check"></i></button>
+                <div style="font-size: 11px; color: rgb(var(--color-text-muted)); margin-bottom: 8px; font-weight: 800;">AVATAR</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+                    <div class="code-action-btn active" style="font-size: 24px; padding: 8px;" onclick="setAvatar('👤', this)">👤</div>
+                    <div class="code-action-btn" style="font-size: 24px; padding: 8px;" onclick="setAvatar('🎮', this)">🎮</div>
+                    <div class="code-action-btn" style="font-size: 24px; padding: 8px;" onclick="setAvatar('🎬', this)">🎬</div>
+                    <div class="code-action-btn" style="font-size: 24px; padding: 8px;" onclick="setAvatar('🎵', this)">🎵</div>
                 </div>
-                <div id="vipStatusText" style="font-size:12px; color:rgb(var(--color-success)); font-weight:bold; display:none; margin-top:5px;">✨ VIP Unlocked! Glowing Badge Active.</div>
+            </div>
+            <div class="card">
+                <div class="card-header-sm">System</div>
+                <p style="font-size: 12px; color: rgb(var(--color-text-muted)); margin-bottom: 8px;">Adaptive Sync corrects slight audio drift automatically.</p>
+                <label style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700;">
+                    <input type="checkbox" id="adaptiveSyncToggle" checked onchange="saveProfile()"> Enable Adaptive Sync
+                </label>
             </div>
         </div>
     </div>
 
-    <!-- ================= BOTTOM NAVIGATION ================= -->
+    <!-- ================= BOTTOM NAVIGATION (2 Tabs) ================= -->
     <nav class="tab-bar" id="bottomNav">
         <button class="tab-btn active" onclick="navigateTab('main')"><i class="fa-solid fa-house"></i>Main</button>
-        <button class="tab-btn" onclick="navigateTab('settings')"><i class="fa-solid fa-gear"></i>Profile</button>
+        <button class="tab-btn" onclick="navigateTab('settings')"><i class="fa-solid fa-gear"></i>Setting</button>
     </nav>
 
     <!-- ================= MODALS ================= -->
+    <!-- Room Type Selection -->
     <div id="typeModal" class="modal-overlay">
         <div class="modal-content">
             <div class="card-header-sm" style="font-size:14px; margin-bottom:20px;" id="typeModalTitle">Select Room Type</div>
+            
             <div class="room-type-btn" onclick="executeRoomFlow('movie')">
-                <i class="fa-solid fa-film"></i><div style="color:rgb(var(--color-text-main));"><h3>Movie Room</h3><p style="color:rgb(var(--color-text-muted));">Sync TMDb & Local Files</p></div>
+                <i class="fa-solid fa-film"></i><div style="color:rgb(var(--color-text-main));"><h3>Movie Room</h3><p style="color:rgb(var(--color-text-muted));">Sync Local Video Files</p></div>
             </div>
             <div class="room-type-btn" onclick="executeRoomFlow('music')">
-                <i class="fa-solid fa-music"></i><div style="color:rgb(var(--color-text-main));"><h3>Music Room</h3><p style="color:rgb(var(--color-text-muted));">Listen to full YouTube Audio</p></div>
+                <i class="fa-solid fa-music"></i><div style="color:rgb(var(--color-text-main));"><h3>Music Room</h3><p style="color:rgb(var(--color-text-muted));">Sync YouTube Audio</p></div>
             </div>
             <div class="room-type-btn" onclick="executeRoomFlow('youtube')">
                 <i class="fa-brands fa-youtube"></i><div style="color:rgb(var(--color-text-main));"><h3>YouTube Room</h3><p style="color:rgb(var(--color-text-muted));">Watch Videos Together</p></div>
             </div>
             <button class="close-session-btn" style="margin-top: 10px;" onclick="closeModals()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Join Code Entry -->
+    <div id="joinCodeModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="card-header-sm" style="font-size:14px; margin-bottom:10px;">Enter Room Code</div>
+            <p style="font-size:11px; color:rgb(var(--color-text-muted)); margin-bottom: 20px;">Joining a <span id="joinTypeLabel" style="color:rgb(var(--color-accent)); font-weight:bold;"></span> room.</p>
+            <input type="text" id="joinRoomInput" class="code-input" placeholder="e.g. SYNC-A1B2" style="text-align: center; font-size: 18px; letter-spacing: 2px; text-transform: uppercase;">
+            <button class="btn-purple" onclick="finalizeJoin()">Join Now</button>
+            <button class="close-session-btn" onclick="closeModals()">Cancel</button>
         </div>
     </div>
 
@@ -237,6 +225,7 @@
             <div style="display:flex; gap:10px; margin-bottom: 12px;">
                 <button class="code-action-btn" onclick="copyRoomCode()">📋 Copy Code</button>
             </div>
+            <!-- DEDICATED LEAVE ROOM BUTTON -->
             <button class="close-session-btn" onclick="leaveRoom()">⚡ LEAVE ROOM</button>
         </div>
 
@@ -244,6 +233,7 @@
         <div class="black-player-box" id="playerBox">
             <div class="card-header-sm" style="color:rgb(var(--color-accent)); margin-bottom: 10px;">● Media Player</div>
             
+            <!-- Host Inputs -->
             <div id="hostMediaInputArea" class="hidden" style="margin-bottom: 12px; padding-bottom:12px; border-bottom:1px solid rgb(var(--color-border)/0.3);"></div>
 
             <div style="text-align:center; margin-bottom: 10px;">
@@ -253,10 +243,14 @@
             <!-- Media Containers -->
             <div class="iframe-wrapper hidden" id="wrap-youtube"><div id="ytPlayerDiv"></div></div>
             <div class="iframe-wrapper hidden" id="wrap-movie">
-                <iframe id="movieIframe" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen" class="hidden"></iframe>
-                <video id="movieVideo" playsinline preload="auto" class="hidden"></video>
+                <video id="movieVideo" playsinline preload="auto" class="hidden" style="width: 100%; height: 100%; object-fit: contain;"></video>
+            </div>
+            <div class="iframe-wrapper hidden" id="wrap-music" style="height:140px; display:flex; align-items:center; justify-content:center; background:#111;">
+                <i class="fa-solid fa-music" style="font-size:40px; color:rgb(var(--color-accent));"></i>
+                <audio id="musicAudio"></audio>
             </div>
 
+            <!-- Global Controls -->
             <div class="progress-track" id="progressTrack" onclick="handleScrub(event)">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
@@ -264,15 +258,24 @@
             <button class="play-pause-lg" id="playPauseBtn" onclick="togglePlayPause()" disabled><i class="fa-solid fa-play"></i></button>
         </div>
 
-        <div class="card">
-            <div class="card-header-sm">Reactions & Sounds</div>
-            <button class="code-action-btn" onclick="openFab()" style="margin-bottom:10px;">🔊 Open 1000+ Sounds</button>
-            
+        <!-- LIVE CHAT UI (For Audio Rooms) -->
+        <div class="card hidden" id="chatCard">
+            <div class="card-header-sm">Live Chat</div>
+            <div style="display:flex; gap: 8px; margin-top: 10px;">
+                <input type="text" id="chatInput" class="code-input" placeholder="Type a message..." style="margin-bottom:0;" onkeydown="if(event.key==='Enter') sendChatMessage()">
+                <button class="btn-purple" style="width: auto; margin-bottom:0; padding: 0 20px;" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <!-- EMOJI STICKER KEYBOARD (For Video Rooms) -->
+        <div class="card hidden" id="stickersCard">
+            <div class="card-header-sm">Reactions</div>
             <div class="emoji-keyboard-container">
                 <div class="keyboard-tabs-row">
                     <button class="kb-tab-btn active" onclick="switchEmojiCategory(event, 'smileys')">😀 Smileys</button>
                     <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'gestures')">👋 Gestures</button>
                     <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'animals')">🐶 Animals</button>
+                    <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'hearts')">❤️ Hearts</button>
                 </div>
                 <div class="emoji-grid-box" id="kbEmojiGrid"></div>
             </div>
@@ -284,52 +287,67 @@
         </div>
     </div>
 
-    <!-- ================= FAB SOUNDBOARD ================= -->
+    <!-- ================= GLOBAL SOUNDBOARD FAB ================= -->
     <div id="globalFab" class="hidden" onclick="openFab()"><i class="fa-solid fa-music"></i></div>
     
     <div id="fabModal" class="fab-modal">
         <div class="fab-content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3 style="font-weight:800; color:rgb(var(--color-accent));">Search Sounds</h3>
+                <h3 style="font-weight:800; color:rgb(var(--color-accent));">Soundboard</h3>
                 <button onclick="closeFab()" style="background:none; border:none; color:rgb(var(--color-text-main)); font-size:20px;"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="input-group">
-                <input type="text" id="soundSearchInput" class="code-input" placeholder="Search..." onkeydown="if(event.key==='Enter') filterSounds(this.value)">
-                <button class="btn-search" onclick="filterSounds(document.getElementById('soundSearchInput').value)"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
+            <input type="text" class="code-input" placeholder="Search Sounds..." oninput="filterSounds(this.value)">
             <div id="soundGrid" class="sound-grid"></div>
         </div>
     </div>
 
     <script>
-        // === 1. GLOBAL CONFIG & URL UPDATED ===
+        // === 1. GLOBAL CONFIG ===
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
-        const TMDB_API = '3fd2be6f0c70a2a598f084ddfb75487c';
+        
         let ws = null;
-        let profile = { name: 'User', avatar: '👨‍💻', badge: 'Newbie', isVip: false };
+        let profile = { name: 'User', avatar: '👤', status: 'Ready' };
         let accountId = localStorage.getItem('syncbeat_device_id') || ('DEV-' + Math.random().toString(36).substring(2,7).toUpperCase());
         localStorage.setItem('syncbeat_device_id', accountId);
 
         let roomState = { active: false, id: null, type: null, role: 'MEMBER' };
-        let activeAction = ''; let targetType = ''; let isAutoTheme = true;
-        let activePlayer = null; let ytPlayerObj = null; let syncInterval = null; let progressInterval = null;
-        let isPlaying = false; let isHostScrubbing = false;
+        let activeAction = ''; 
+        let targetType = '';   
+        let isAutoTheme = true;
+        
+        let activePlayer = null; 
+        let ytPlayerObj = null;
+        let syncInterval = null;
+        let progressInterval = null;
+        let isPlaying = false;
+        let isHostScrubbing = false;
+        let adaptiveSyncEnabled = true;
 
-        const allAvatars = ['👨‍💻','🥷','🧙‍♂️','🧛','🧟','🦸‍♂️','🦹‍♂️','🧙‍♀️','👩‍🚀','👨‍🎤','🕵️‍♂️','💂','👷','🤴','👸','🧝‍♂️','🧛‍♂️','🧞‍♂️','🧜‍♂️','🧚‍♂️','👽','🤖','👻','💀','👾'];
+        // Emoji Categories for Video/Movie Rooms
         const emojiCategories = {
-            'smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🥳'],
-            'gestures': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊'],
-            'animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤','🐣']
+            'smileys': ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😋','😜','🤪','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','💀','👻','🤖'],
+            'gestures': ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','💪'],
+            'animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🐢','🐍','🐙','🦐','🦞','🦀','🐟','🐬','🐳','🦈'],
+            'hearts': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','❣️','💕','💞','💓','💗','💖','💘','💝','💯','💫','💥','💢','💦','💨','💬','💭','💤','⭐','🌟','✨','⚡','🔥']
         };
         let activeEmojiCategory = 'smileys';
 
+        const masterSounds = [
+            {id:'airhorn', name:'Airhorn'}, {id:'cricket', name:'Cricket'}, {id:'wow', name:'Wow'},
+            {id:'boom', name:'Vine Boom'}, {id:'punch', name:'Punch'}, {id:'fail', name:'Fail'}
+        ];
+
         // === 2. INITIALIZATION ===
         window.onload = () => {
-            renderAvatarGrid(); loadProfile(); buildSoundboard(); renderEmojiGrid(); changeTheme('golden');
+            loadProfile();
+            buildSoundboard(masterSounds);
+            renderEmojiGrid();
+            changeTheme('golden');
         };
 
         function showToast(msg) {
-            const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
@@ -340,287 +358,287 @@
             event.currentTarget.classList.add('active');
         }
 
-        // --- RELIABLE MULTI-TIER PROXY FETCHER ---
-        async function reliableFetch(urls) {
-            for (let url of urls) {
-                try {
-                    const res = await fetch(url);
-                    if (res.ok) { return await res.json(); }
-                } catch (e) { console.warn("Proxy failed, failing over to next..."); }
+        // --- DYNAMIC THEME EXTRACTION ---
+        function changeTheme(theme) {
+            if(theme === 'golden') {
+                isAutoTheme = true;
+                document.documentElement.removeAttribute('data-theme');
+                clearInlineTheme();
+            } else {
+                isAutoTheme = false;
+                document.documentElement.setAttribute('data-theme', theme);
+                clearInlineTheme();
             }
-            throw new Error("All proxy servers are currently unavailable.");
         }
-
-        // --- PROFILE, VIP & AVATARS ---
-        function renderAvatarGrid() {
-            const grid = document.getElementById('avatarGridBox');
-            allAvatars.forEach(av => {
-                const btn = document.createElement('div');
-                btn.className = 'avatar-btn'; btn.textContent = av;
-                btn.onclick = () => setAvatar(av, btn);
-                grid.appendChild(btn);
-            });
+        function clearInlineTheme() {
+            const root = document.documentElement;
+            const props = ['--color-accent', '--color-bg-base', '--color-bg-card', '--color-text-main', '--color-text-muted', '--color-border', '--color-shadow', '--color-btn-text'];
+            props.forEach(p => root.style.removeProperty(p));
         }
+        function applyThumbnailTheme() { 
+            if (!isAutoTheme) return; 
+            const img = document.getElementById('uiThumbnail'); 
+            if (!img.complete || img.naturalHeight === 0) return; 
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); 
+            canvas.width = img.naturalWidth || img.width; canvas.height = img.naturalHeight || img.height; 
+            try { 
+                ctx.drawImage(img, 0, 0); const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data; 
+                let r=0, g=0, b=0, count=0; 
+                for (let i = 0; i < data.length; i += 16) { r += data[i]; g += data[i+1]; b += data[i+2]; count++; } 
+                r = Math.floor(r/count); g = Math.floor(g/count); b = Math.floor(b/count); 
+                const luminance = 0.299*r + 0.587*g + 0.114*b; 
+                if (luminance < 60) { r = Math.min(255, r + 60); g = Math.min(255, g + 60); b = Math.min(255, b + 60); } 
+                const accentStr = `${r} ${g} ${b}`; const bgBase = `${Math.floor(r*0.08)} ${Math.floor(g*0.08)} ${Math.floor(b*0.08)}`; const bgCard = `${Math.floor(r*0.12)} ${Math.floor(g*0.12)} ${Math.floor(b*0.12)}`; const textMain = `${Math.floor(r + (255-r)*0.85)} ${Math.floor(g + (255-g)*0.85)} ${Math.floor(b + (255-b)*0.85)}`; const textMuted = `${Math.floor(r*0.8)} ${Math.floor(g*0.8)} ${Math.floor(b*0.8)}`; const border = `${Math.floor(r*0.4)} ${Math.floor(g*0.4)} ${Math.floor(b*0.4)}`; const btnText = (0.299*r + 0.587*g + 0.114*b) > 128 ? '0 0 0' : '255 255 255'; 
+                const root = document.documentElement; 
+                root.style.setProperty('--color-accent', accentStr); root.style.setProperty('--color-bg-base', bgBase); root.style.setProperty('--color-bg-card', bgCard); root.style.setProperty('--color-text-main', textMain); root.style.setProperty('--color-text-muted', textMuted); root.style.setProperty('--color-border', border); root.style.setProperty('--color-shadow', accentStr); root.style.setProperty('--color-btn-text', btnText); 
+            } catch (e) { clearInlineTheme(); } 
+        } 
+        document.getElementById('uiThumbnail').onload = () => { applyThumbnailTheme(); };
 
         function loadProfile() {
             profile.name = localStorage.getItem('sb_name') || 'User';
-            profile.avatar = localStorage.getItem('sb_avatar') || '👨‍💻';
-            profile.badge = localStorage.getItem('sb_badge') || 'Newbie';
-            profile.isVip = localStorage.getItem('sb_vip') === 'true';
-
+            profile.avatar = localStorage.getItem('sb_avatar') || '👤';
             document.getElementById('profileName').value = profile.name;
-            document.getElementById('badgeSelector').value = profile.badge;
-            
             document.querySelectorAll('.avatar-btn').forEach(b => {
-                if(b.innerText === profile.avatar) b.classList.add('active');
+                if(b.innerText === profile.avatar) {
+                    document.querySelectorAll('.avatar-btn').forEach(btn=>btn.classList.remove('active'));
+                    b.classList.add('active');
+                }
             });
-
-            if(profile.isVip) document.getElementById('vipStatusText').style.display = 'block';
         }
-
         function saveProfile() {
             profile.name = document.getElementById('profileName').value.trim() || 'User';
-            profile.badge = document.getElementById('badgeSelector').value;
             localStorage.setItem('sb_name', profile.name);
             localStorage.setItem('sb_avatar', profile.avatar);
-            localStorage.setItem('sb_badge', profile.badge);
-            showToast("Profile Saved!");
+            showToast("Settings Saved");
         }
-
         function setAvatar(emoji, el) {
             profile.avatar = emoji;
-            document.querySelectorAll('.avatar-btn').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active'); saveProfile();
-        }
-
-        function claimVIP() {
-            const val = document.getElementById('promoInput').value.trim();
-            if(val === 'EDIT.OG_') {
-                profile.isVip = true; localStorage.setItem('sb_vip', 'true');
-                document.getElementById('vipStatusText').style.display = 'block';
-                showToast("VIP Badge Unlocked!");
-                document.getElementById('promoInput').value = '';
-            } else { showToast("Invalid Code"); }
-        }
-
-        function getProfilePayload() { return `${profile.avatar}|||${profile.name}|||${profile.badge}|||${profile.isVip}`; }
-
-        // --- DYNAMIC THEME EXTRACTION ---
-        function changeTheme(theme) {
-            if(theme === 'golden') { isAutoTheme = true; document.documentElement.removeAttribute('data-theme'); clearInlineTheme(); } 
-            else { isAutoTheme = false; document.documentElement.setAttribute('data-theme', theme); clearInlineTheme(); }
-        }
-        function clearInlineTheme() {
-            const props = ['--color-accent', '--color-bg-base', '--color-bg-card', '--color-text-main', '--color-text-muted', '--color-border', '--color-shadow', '--color-btn-text'];
-            props.forEach(p => document.documentElement.style.removeProperty(p));
+            document.querySelectorAll('.avatar-btn').forEach(btn=>btn.classList.remove('active'));
+            el.classList.add('active');
+            saveProfile();
         }
 
         // === 3. ROOM CREATION/JOIN FLOW ===
         function openRoomModal(action) {
-            activeAction = action; document.getElementById('typeModalTitle').textContent = action === 'CREATE' ? 'Create a Room' : 'Join a Room'; document.getElementById('typeModal').classList.add('show');
+            activeAction = action;
+            document.getElementById('typeModalTitle').textContent = action === 'CREATE' ? 'Create a Room' : 'Join a Room';
+            document.getElementById('typeModal').classList.add('show');
         }
-        function closeModals() { document.getElementById('typeModal').classList.remove('show'); }
         
+        function closeModals() {
+            document.getElementById('typeModal').classList.remove('show');
+            document.getElementById('joinCodeModal').classList.remove('show');
+        }
+
         function executeRoomFlow(type) {
-            targetType = type; closeModals();
-            initiateRoom(targetType, 'HOST', 'SYNC-' + Math.random().toString(36).substring(2,6).toUpperCase());
+            targetType = type;
+            closeModals();
+            if (activeAction === 'CREATE') {
+                initiateRoom(targetType, 'HOST', 'SYNC-' + Math.random().toString(36).substring(2,6).toUpperCase());
+            } else {
+                document.getElementById('joinTypeLabel').textContent = targetType.toUpperCase();
+                document.getElementById('joinCodeModal').classList.add('show');
+            }
         }
 
-        function quickJoin() {
-            const type = document.getElementById('quickJoinType').value;
-            const code = document.getElementById('quickJoinCode').value.trim().toUpperCase();
+        function finalizeJoin() {
+            const code = document.getElementById('joinRoomInput').value.trim().toUpperCase();
             if(code.length < 4) return showToast("Invalid Code");
-            initiateRoom(type, 'MEMBER', code);
+            closeModals();
+            initiateRoom(targetType, 'MEMBER', code);
         }
 
-        // === 4. WEBSOCKET SIGNALING ===
+        // === 4. WEBSOCKET ARCHITECTURE ===
         function initiateRoom(type, role, code) {
             showToast("Connecting to Server...");
-            if(ws) ws.close(); ws = new WebSocket(WS_URL);
+            if(ws) ws.close();
+            ws = new WebSocket(WS_URL);
             
             ws.onopen = () => {
-                const payloadStr = getProfilePayload();
+                const payloadStr = `${profile.avatar} ${profile.name}`;
                 if(role === 'HOST') {
                     ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: payloadStr, accountId: accountId, roomType: type }));
                     ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: code, name: payloadStr, accountId: accountId, roomType: type }));
-                } else { ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: payloadStr, accountId: accountId, roomType: type })); }
+                } else {
+                    ws.send(JSON.stringify({ type: 'JOIN_ROOM', code: code, name: payloadStr, accountId: accountId, roomType: type }));
+                }
             };
 
             ws.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
                 if(msg.type === 'ROOM_HOSTED_SUCCESS' || msg.type === 'ROOM_JOIN_SUCCESS') {
-                    if (msg.type === 'ROOM_JOIN_SUCCESS' && msg.roomType && msg.roomType !== type) {
-                        showToast(`Error: Code is for a ${msg.roomType.toUpperCase()} room!`); ws.close(); return;
+                    if (msg.type === 'ROOM_JOIN_SUCCESS' && msg.roomType && msg.roomType !== targetType) {
+                        showToast(`Error: This code belongs to a ${msg.roomType.toUpperCase()} room!`);
+                        ws.close(); return;
                     }
-                    roomState = { active: true, id: code, type: type, role: role }; setupRoomUI();
+                    roomState = { active: true, id: code, type: type, role: role };
+                    setupRoomUI();
                 }
                 if(msg.type === 'ROOM_NOT_FOUND') { showToast("Room not found."); ws.close(); }
                 if(msg.type === 'ROOM_CLOSED') { showToast("Host closed the room."); leaveRoom(); }
                 if(msg.type === 'PEER_LIST') { updateParticipants(msg.peers); }
+                
+                // Synchronized Playback Events
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
+                
+                // YouTube Search Integration 
+                if(msg.type === 'YOUTUBE_RESULT') { 
+                    document.getElementById('mediaTitle').textContent = msg.title || "Media Loaded";
+                    if(msg.roomType === 'music' || roomState.type === 'music') {
+                        loadAudioMedia(msg.url);
+                    } else if (msg.roomType === 'youtube' || roomState.type === 'youtube') {
+                        loadYouTubeMedia(msg.ytId || msg.url);
+                    }
+                }
+                
+                // Social Features
                 if(msg.type === 'SOUNDBOARD') { playLocalSound(msg.sound); }
-                if(msg.type === 'SOUNDBOARD_URL') { playAudioURL(msg.url); }
                 if(msg.type === 'REACTION') { renderFloatingEmoji(msg.emoji); }
+                if(msg.type === 'CHAT_MESSAGE') { showChatPopup(`${msg.sender}: ${msg.text}`); }
             };
         }
 
-        // === 5. UNIFIED ROOM UI WITH SEARCH LISTS ===
+        // === 5. UNIFIED ROOM UI ===
         function setupRoomUI() {
-            document.getElementById('bottomNav').style.display = 'none'; document.getElementById('roomView').classList.add('active'); document.getElementById('globalFab').classList.remove('hidden');
-            document.getElementById('roomHeaderTitle').textContent = `${roomState.type.toUpperCase()} ROOM`; document.getElementById('roomRoleLabel').textContent = roomState.role; document.getElementById('roomTypeBadge').textContent = roomState.type.toUpperCase(); document.getElementById('displayRoomCode').textContent = roomState.id;
+            document.getElementById('bottomNav').style.display = 'none';
+            document.getElementById('roomView').classList.add('active');
+            document.getElementById('globalFab').classList.remove('hidden');
+            
+            document.getElementById('roomHeaderTitle').textContent = `${roomState.type.toUpperCase()} ROOM`;
+            document.getElementById('roomRoleLabel').textContent = roomState.role;
+            document.getElementById('roomTypeBadge').textContent = roomState.type.toUpperCase();
+            document.getElementById('displayRoomCode').textContent = roomState.id;
 
             document.querySelectorAll('.iframe-wrapper').forEach(w => w.classList.add('hidden'));
-            document.getElementById('movieIframe').classList.add('hidden'); document.getElementById('movieVideo').classList.add('hidden'); document.getElementById('uiThumbnail').src = '';
+            document.getElementById('movieVideo').classList.add('hidden');
+            document.getElementById('uiThumbnail').src = '';
             clearInlineTheme();
 
-            const hostInput = document.getElementById('hostMediaInputArea'); const playBtn = document.getElementById('playPauseBtn'); hostInput.innerHTML = '';
+            const hostInput = document.getElementById('hostMediaInputArea');
+            const playBtn = document.getElementById('playPauseBtn');
+            hostInput.innerHTML = '';
             
+            // Conditionally show Live Chat vs Stickers
+            if(roomState.type === 'music') {
+                document.getElementById('stickersCard').classList.add('hidden');
+                document.getElementById('chatCard').classList.remove('hidden');
+            } else {
+                document.getElementById('stickersCard').classList.remove('hidden');
+                document.getElementById('chatCard').classList.add('hidden');
+            }
+
+            // Setup Host Media Loaders
             if (roomState.role === 'HOST') {
-                hostInput.classList.remove('hidden'); playBtn.disabled = false;
+                hostInput.classList.remove('hidden');
+                playBtn.disabled = false;
                 
-                let placeholderStr = roomState.type === 'youtube' ? "Paste YouTube Link or Search..." : `Search ${roomState.type.toUpperCase()}...`;
-                if(roomState.type === 'music') placeholderStr = "Search YouTube Audio...";
-                
-                hostInput.innerHTML = `
-                    <div class="input-group">
-                        <input type="text" id="masterSearchInput" class="code-input" placeholder="${placeholderStr}" onkeydown="if(event.key==='Enter') executeMediaSearch()">
-                        <button class="btn-search" onclick="executeMediaSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
-                    <div id="searchResultsBox" class="search-results-box hidden"></div>`;
-
                 if (roomState.type === 'movie') {
-                    hostInput.innerHTML += `
-                        <div style="font-size:11px; text-align:center; color:rgb(var(--color-text-muted)); margin:8px 0;">OR</div>
-                        <label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Host Local File:</label>
-                        <input type="file" accept="video/*" onchange="loadLocalMedia(this)" style="width:100%; color:rgb(var(--color-text-main)); margin-top:4px;">`;
-                }
-            } else { hostInput.classList.add('hidden'); playBtn.disabled = true; }
-
-            // Both Youtube and Music room now use the YouTube iFrame
-            if (roomState.type === 'youtube' || roomState.type === 'music') {
-                document.getElementById('wrap-youtube').classList.remove('hidden');
-                if(!ytPlayerObj) {
-                    ytPlayerObj = new YT.Player('ytPlayerDiv', { height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls':0, 'disablekb':1 }, events: { 'onStateChange': onPlayerStateChange }});
+                    hostInput.innerHTML = `<label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Local Video File:</label>
+                                           <input type="file" accept="video/*" onchange="loadLocalMedia(this, 'movie')" style="width:100%; color:rgb(var(--color-text-main)); margin-top:4px;">`;
+                } else if (roomState.type === 'music') {
+                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search YouTube for Audio..." onkeydown="if(event.key==='Enter') searchYouTube(this.value, 'music')">`;
+                } else if (roomState.type === 'youtube') {
+                    hostInput.innerHTML = `<input type="text" class="code-input" placeholder="Search YouTube for Video..." onkeydown="if(event.key==='Enter') searchYouTube(this.value, 'youtube')">`;
                 }
             } else {
-                document.getElementById(`wrap-${roomState.type}`).classList.remove('hidden');
+                hostInput.classList.add('hidden');
+                playBtn.disabled = true;
+            }
+
+            document.getElementById(`wrap-${roomState.type}`).classList.remove('hidden');
+            
+            if(roomState.type === 'youtube' && !ytPlayerObj) {
+                ytPlayerObj = new YT.Player('ytPlayerDiv', { 
+                    height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls':0, 'disablekb':1 },
+                    events: { 'onStateChange': onPlayerStateChange }
+                });
             }
 
             if(roomState.role === 'HOST') startHostBroadcast();
             startProgressLoop();
         }
 
-        // FULL MEMORY WIPE FIX
         function leaveRoom() {
             if(ws) { if(roomState.role === 'HOST') ws.send(JSON.stringify({type: 'CLOSE_ROOM'})); ws.close(); }
             clearInterval(syncInterval); clearInterval(progressInterval);
             
             if(ytPlayerObj && ytPlayerObj.stopVideo) ytPlayerObj.stopVideo();
-            
             document.getElementById('movieVideo').src = '';
-            document.getElementById('movieIframe').src = ''; document.getElementById('uiThumbnail').src = '';
-            document.getElementById('mediaTitle').textContent = 'Waiting for Media...';
-            document.getElementById('progressFill').style.width = `0%`;
-            document.getElementById('timeCurrent').textContent = "0:00";
-            document.getElementById('timeTotal').textContent = "0:00";
+            document.getElementById('musicAudio').src = '';
+            document.getElementById('uiThumbnail').src = '';
+            clearInlineTheme();
             
-            const sInput = document.getElementById('masterSearchInput'); if(sInput) sInput.value = '';
-            const sBox = document.getElementById('searchResultsBox'); if(sBox) { sBox.innerHTML = ''; sBox.classList.add('hidden'); }
-            
-            clearInlineTheme(); activePlayer = null; isPlaying = false;
-            document.getElementById('roomView').classList.remove('active'); document.getElementById('globalFab').classList.add('hidden'); document.getElementById('bottomNav').style.display = 'flex'; roomState.active = false;
+            document.getElementById('roomView').classList.remove('active');
+            document.getElementById('globalFab').classList.add('hidden');
+            document.getElementById('bottomNav').style.display = 'flex';
+            roomState.active = false;
         }
 
-        // === 6. UNIFIED SEARCH & MEDIA LOADING LOGIC ===
-        async function executeMediaSearch() {
-            let query = document.getElementById('masterSearchInput').value.trim(); if(!query) return;
-            
-            if((roomState.type === 'youtube' || roomState.type === 'music') && (query.includes('youtube.com/') || query.includes('youtu.be/'))) {
-                loadDirectYouTube(query); return;
+        // === 6. MEDIA LOADING LOGIC ===
+        function searchYouTube(query, type) {
+            if(!query) return;
+            document.getElementById('mediaTitle').textContent = "Searching YouTube...";
+            if(ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'YOUTUBE_SEARCH', query: query, roomType: type }));
             }
-
-            const resBox = document.getElementById('searchResultsBox'); resBox.classList.remove('hidden'); resBox.innerHTML = '<div style="text-align:center; padding:10px; font-size:12px;">Searching...</div>';
-
-            try {
-                if(roomState.type === 'movie') {
-                    const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&query=${encodeURIComponent(query)}`); const data = await res.json();
-                    resBox.innerHTML = ''; if(data.results.length === 0) resBox.innerHTML = '<div>No results.</div>';
-                    data.results.forEach(m => {
-                        const div = document.createElement('div'); div.className = 'search-result-item'; const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : '';
-                        div.innerHTML = `<img src="${poster}"> <span>${m.title}</span>`;
-                        div.onclick = async () => {
-                            resBox.classList.add('hidden'); document.getElementById('mediaTitle').textContent = m.title; document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(poster)}`;
-                            const extRes = await fetch(`https://api.themoviedb.org/3/movie/${m.id}/external_ids?api_key=${TMDB_API}`); const extData = await extRes.json(); const embedUrl = `https://autoembed.co/movie/imdb/${extData.imdb_id}`;
-                            activePlayer = document.getElementById('movieIframe'); activePlayer.classList.remove('hidden'); document.getElementById('movieVideo').classList.add('hidden'); activePlayer.src = embedUrl;
-                            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'iframe', title: m.title, url: embedUrl, posterUrl: poster }));
-                        }; resBox.appendChild(div);
-                    });
-                } 
-                else if(roomState.type === 'youtube' || roomState.type === 'music') {
-                    
-                    if (roomState.type === 'music') query += " audio song";
-
-                    const pipedInstances = [
-                        `https://api.piped.projectsegfau.lt/search?q=${encodeURIComponent(query)}&filter=all`,
-                        `https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=all`,
-                        `https://pipedapi.smnz.de/search?q=${encodeURIComponent(query)}&filter=all`,
-                        `https://piped-api.lunar.icu/search?q=${encodeURIComponent(query)}&filter=all`
-                    ];
-                    
-                    const data = await reliableFetch(pipedInstances);
-                    
-                    resBox.innerHTML = ''; const vids = data.items.filter(i => i.type === 'stream'); if(vids.length === 0) resBox.innerHTML = '<div>No results.</div>';
-                    vids.forEach(v => {
-                        const div = document.createElement('div'); div.className = 'search-result-item'; div.innerHTML = `<img src="${v.thumbnail}"> <span>${v.title}</span>`;
-                        div.onclick = () => {
-                            resBox.classList.add('hidden'); document.getElementById('mediaTitle').textContent = v.title; document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(v.thumbnail)}`;
-                            if(ytPlayerObj && ytPlayerObj.loadVideoById) {
-                                activePlayer = ytPlayerObj; ytPlayerObj.loadVideoById({videoId: v.url.split('v=')[1], startSeconds: 0});
-                                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'youtube', ytId: v.url.split('v=')[1], posterUrl: v.thumbnail, title: v.title }));
-                            }
-                        }; resBox.appendChild(div);
-                    });
-                }
-            } catch(e) { resBox.innerHTML = '<div style="color:red; padding:10px; text-align:center;">Search failed. Try again or paste a link.</div>'; }
         }
 
-        function loadDirectYouTube(url) {
-            let id = url; const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
-            if(match) id = match[1]; if(!id) return;
-            document.getElementById('searchResultsBox').classList.add('hidden');
-            document.getElementById('mediaTitle').textContent = "YouTube Video Uploaded";
-            const poster = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-            document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(poster)}`;
+        function loadYouTubeMedia(urlOrId) {
+            let id = urlOrId;
+            const match = urlOrId.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+            if(match) id = match[1];
+            
+            document.getElementById('mediaTitle').textContent = "YouTube Video Loaded";
+            const posterUrl = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+            document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(posterUrl)}`;
+            
             if(ytPlayerObj && ytPlayerObj.loadVideoById) {
-                activePlayer = ytPlayerObj; ytPlayerObj.loadVideoById({videoId: id, startSeconds: 0});
-                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'youtube', ytId: id, posterUrl: poster, title: "YouTube Video" }));
+                activePlayer = ytPlayerObj;
+                ytPlayerObj.loadVideoById({videoId: id, startSeconds: 0});
+                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'youtube', ytId: id, posterUrl: posterUrl }));
             }
         }
 
-        function loadLocalMedia(input) {
-            const file = input.files[0]; if(!file) return;
-            const url = URL.createObjectURL(file); activePlayer = document.getElementById('movieVideo'); activePlayer.classList.remove('hidden'); document.getElementById('movieIframe').classList.add('hidden');
-            document.getElementById('mediaTitle').textContent = file.name; activePlayer.src = url; setupHTML5Listeners(activePlayer);
+        function loadAudioMedia(url) {
+            activePlayer = document.getElementById('musicAudio');
+            activePlayer.src = url;
+            setupHTML5Listeners(activePlayer);
+            ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'audio', url: url }));
+        }
+
+        function loadLocalMedia(input, type) {
+            const file = input.files[0];
+            if(!file) return;
+            const url = URL.createObjectURL(file);
+            activePlayer = document.getElementById('movieVideo');
+            activePlayer.classList.remove('hidden');
+            
+            document.getElementById('mediaTitle').textContent = file.name;
+            activePlayer.src = url;
+            setupHTML5Listeners(activePlayer);
             ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'local', title: file.name }));
         }
 
         function handleRemoteMediaLoad(msg) {
             if(roomState.role === 'HOST') return;
             if(msg.posterUrl) document.getElementById('uiThumbnail').src = `https://wsrv.nl/?url=${encodeURIComponent(msg.posterUrl)}`;
-            if(msg.title) document.getElementById('mediaTitle').textContent = msg.title;
             
-            if(msg.mode === 'iframe') { 
-                activePlayer = document.getElementById('movieIframe'); activePlayer.classList.remove('hidden'); document.getElementById('movieVideo').classList.add('hidden'); activePlayer.src = msg.url; 
+            if(msg.mode === 'youtube' && ytPlayerObj) {
+                document.getElementById('mediaTitle').textContent = "Synchronized YouTube";
+                activePlayer = ytPlayerObj;
+                ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: 0});
             }
-            else if(msg.mode === 'youtube' && ytPlayerObj) { 
-                activePlayer = ytPlayerObj; ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: 0}); 
+            if(msg.mode === 'audio') {
+                activePlayer = document.getElementById('musicAudio');
+                activePlayer.src = msg.url;
             }
-            else if(msg.mode === 'local') { 
-                document.getElementById('mediaTitle').textContent = `Host selected: ${msg.title}. Select your matching local copy.`;
+            if(msg.mode === 'local') {
+                document.getElementById('mediaTitle').textContent = `Host selected: ${msg.title}. Select your local copy to sync.`;
                 const inputArea = document.getElementById('hostMediaInputArea');
                 inputArea.classList.remove('hidden');
-                inputArea.innerHTML = `<label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Same File:</label><input type="file" accept="video/*" onchange="loadLocalMedia(this)" style="color:rgb(var(--color-text-main)); margin-top:4px;">`;
+                inputArea.innerHTML = `<label style="font-size:11px; color:rgb(var(--color-accent)); font-weight:bold;">Select Same File:</label><input type="file" accept="video/*" onchange="loadLocalMedia(this, 'movie')" style="color:rgb(var(--color-text-main)); margin-top:4px;">`;
             }
         }
 
@@ -633,31 +651,38 @@
             if(e.data === YT.PlayerState.PLAYING) { isPlaying = true; updatePlayBtn(); if(roomState.role==='HOST') ws.send(JSON.stringify({type:'CONTROL', action:'play', time:ytPlayerObj.getCurrentTime()})); }
             if(e.data === YT.PlayerState.PAUSED) { isPlaying = false; updatePlayBtn(); if(roomState.role==='HOST') ws.send(JSON.stringify({type:'CONTROL', action:'pause', time:ytPlayerObj.getCurrentTime()})); }
         }
+
         function togglePlayPause() {
             if(!activePlayer) return;
-            if(roomState.type === 'youtube' || roomState.type === 'music') { if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo(); } else { if(isPlaying) activePlayer.pause(); else activePlayer.play(); }
+            if(roomState.type === 'youtube') {
+                if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo();
+            } else {
+                if(isPlaying) activePlayer.pause(); else activePlayer.play();
+            }
         }
         function updatePlayBtn() { document.getElementById('playPauseBtn').innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>'; }
 
         function startHostBroadcast() {
             clearInterval(syncInterval);
             syncInterval = setInterval(() => {
-                if(isPlaying && activePlayer) { 
-                    let t = (roomState.type === 'youtube' || roomState.type === 'music') ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime; ws.send(JSON.stringify({ type: 'SYNC_TIME', time: t }));
+                if(isPlaying && activePlayer) {
+                    let t = roomState.type === 'youtube' ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
+                    ws.send(JSON.stringify({ type: 'SYNC_TIME', time: t }));
                 }
             }, 2000);
         }
 
         function handleRemoteSync(msg) {
             if(roomState.role === 'HOST' || !activePlayer) return;
-            let current = (roomState.type === 'youtube' || roomState.type === 'music') ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
-            const targetTime = msg.time + 0.15; 
+            const targetTime = msg.time + 0.15;
+            let current = roomState.type === 'youtube' ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
             
-            if(msg.action === 'play') { if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.playVideo(); else activePlayer.play(); }
-            else if(msg.action === 'pause') { if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
+            if(msg.action === 'play') { if(roomState.type === 'youtube') ytPlayerObj.playVideo(); else activePlayer.play(); }
+            else if(msg.action === 'pause') { if(roomState.type === 'youtube') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
             
-            if (Math.abs(current - targetTime) > 1.5 || msg.action === 'seek') {
-                if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.seekTo(targetTime, true); else activePlayer.currentTime = targetTime;
+            if(Math.abs(current - targetTime) > 1.5 || msg.action === 'seek') {
+                if(roomState.type === 'youtube') ytPlayerObj.seekTo(targetTime, true);
+                else activePlayer.currentTime = targetTime;
             }
         }
 
@@ -665,99 +690,136 @@
             clearInterval(progressInterval);
             progressInterval = setInterval(() => {
                 if(!activePlayer || isHostScrubbing) return;
-                
                 let cur = 0, dur = 0;
-                if(roomState.type === 'youtube' || roomState.type === 'music') { if(ytPlayerObj && ytPlayerObj.getCurrentTime) { cur = ytPlayerObj.getCurrentTime(); dur = ytPlayerObj.getDuration(); } } 
-                else { cur = activePlayer.currentTime; dur = activePlayer.duration; }
-                if(dur > 0 && dur !== Infinity) { document.getElementById('progressFill').style.width = `${(cur/dur)*100}%`; document.getElementById('timeCurrent').textContent = formatTime(cur); document.getElementById('timeTotal').textContent = formatTime(dur); }
+                if(roomState.type === 'youtube') {
+                    if(ytPlayerObj && ytPlayerObj.getCurrentTime) { cur = ytPlayerObj.getCurrentTime(); dur = ytPlayerObj.getDuration(); }
+                } else {
+                    cur = activePlayer.currentTime; dur = activePlayer.duration;
+                }
+                if(dur > 0) {
+                    document.getElementById('progressFill').style.width = `${(cur/dur)*100}%`;
+                    document.getElementById('timeCurrent').textContent = formatTime(cur);
+                    document.getElementById('timeTotal').textContent = formatTime(dur);
+                }
             }, 500);
         }
         function formatTime(s) { const m=Math.floor(s/60); const sc=Math.floor(s%60); return `${m}:${sc<10?'0':''}${sc}`; }
 
         function handleScrub(e) {
             if(roomState.role !== 'HOST' || !activePlayer) return;
-            const track = document.getElementById('progressTrack'); const rect = track.getBoundingClientRect(); const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            let dur = (roomState.type === 'youtube' || roomState.type === 'music') ? ytPlayerObj.getDuration() : activePlayer.duration; let newTime = pct * dur;
-            if(roomState.type === 'youtube' || roomState.type === 'music') ytPlayerObj.seekTo(newTime, true); else activePlayer.currentTime = newTime;
+            const track = document.getElementById('progressTrack');
+            const rect = track.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            let dur = roomState.type === 'youtube' ? ytPlayerObj.getDuration() : activePlayer.duration;
+            let newTime = pct * dur;
+            
+            if(roomState.type === 'youtube') ytPlayerObj.seekTo(newTime, true);
+            else activePlayer.currentTime = newTime;
+            
             ws.send(JSON.stringify({ type: 'CONTROL', action: 'seek', time: newTime }));
         }
 
-        // === 8. IN-ROOM EMOJIS & GLOBAL FAB SOUNDS (1000+) ===
-        function switchEmojiCategory(e, key) { activeEmojiCategory = key; document.querySelectorAll('.kb-tab-btn').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); renderEmojiGrid(); }
-        function renderEmojiGrid() {
-            const grid = document.getElementById('kbEmojiGrid'); grid.innerHTML = '';
-            emojiCategories[activeEmojiCategory].forEach(emoji => {
-                const b = document.createElement('button'); b.className = 'emoji-key'; b.textContent = emoji;
-                b.onclick = () => triggerGlobalEvent('REACTION', emoji); grid.appendChild(b);
-            });
-        }
-        function openFab() { document.getElementById('fabModal').classList.add('show'); }
-        function closeFab() { document.getElementById('fabModal').classList.remove('show'); }
-        const defaultSounds = [{id:'airhorn', name:'Airhorn'}, {id:'boom', name:'Vine Boom'}];
-        function buildSoundboard() {
-            const grid = document.getElementById('soundGrid'); grid.innerHTML = '';
-            defaultSounds.forEach(s => { const b = document.createElement('button'); b.className = 'sound-btn'; b.textContent = s.name; b.onclick = () => { triggerGlobalEvent('SOUNDBOARD', s.id); closeFab(); }; grid.appendChild(b); });
-        }
+        // === 8. SOCIAL FEATURES (Chat, Stickers, Soundboard) ===
         
-        async function filterSounds(query) {
-            const grid = document.getElementById('soundGrid'); if(!query) { buildSoundboard(); return; }
-            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color: rgb(var(--color-text-muted)); padding: 20px;">Searching...</div>';
-            try {
-                const targetUrl = encodeURIComponent(`https://www.myinstants.com/api/v1/instants/?format=json&name=${encodeURIComponent(query)}`);
-                
-                const corsProxies = [
-                    `https://api.allorigins.win/raw?url=${targetUrl}`,
-                    `https://corsproxy.io/?${targetUrl}`,
-                    `https://api.codetabs.com/v1/proxy?quest=${decodeURIComponent(targetUrl)}`
-                ];
-                
-                let data;
-                for(let proxy of corsProxies) {
-                    try { const res = await fetch(proxy); if(res.ok) { data = await res.json(); break; } } catch(e) {}
-                }
-                
-                if(!data) throw new Error();
-                
-                grid.innerHTML = '';
-                if(data.results && data.results.length > 0) {
-                    data.results.forEach(s => { const b = document.createElement('button'); b.className = 'sound-btn'; b.textContent = s.name; b.onclick = () => { triggerGlobalEvent('SOUNDBOARD_URL', s.sound); closeFab(); }; grid.appendChild(b); });
-                } else { grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px;">No sounds found.</div>'; }
-            } catch(e) { grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; font-size: 13px; color:rgb(var(--color-accent));">Error connecting to API.</div>'; }
+        // --- Live Chat Logic ---
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
+            input.value = '';
+            
+            if(ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'CHAT_MESSAGE', sender: profile.name, text: msg }));
+            }
+            showChatPopup(`${profile.name}: ${msg}`);
         }
 
+        function showChatPopup(text) {
+            const el = document.createElement('div');
+            el.className = 'chat-popup';
+            el.textContent = text;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 4000); 
+        }
+
+        // --- Stickers Logic ---
+        function switchEmojiCategory(e, key) {
+            activeEmojiCategory = key;
+            document.querySelectorAll('.kb-tab-btn').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            renderEmojiGrid();
+        }
+
+        function renderEmojiGrid() {
+            const grid = document.getElementById('kbEmojiGrid');
+            grid.innerHTML = '';
+            emojiCategories[activeEmojiCategory].forEach(emoji => {
+                const b = document.createElement('button');
+                b.className = 'emoji-key';
+                b.textContent = emoji;
+                b.onclick = () => triggerGlobalEvent('REACTION', emoji);
+                grid.appendChild(b);
+            });
+        }
+        
+        function renderFloatingEmoji(emoji) {
+            const el = document.createElement('div'); el.className = 'floating-reaction'; el.textContent = emoji;
+            el.style.left = (Math.random() * (window.innerWidth - 80) + 20) + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2200);
+        }
+
+        // --- Soundboard Logic ---
+        function buildSoundboard(soundList) {
+            const grid = document.getElementById('soundGrid');
+            grid.innerHTML = '';
+            soundList.forEach(s => {
+                const b = document.createElement('button');
+                b.className = 'sound-btn'; b.textContent = s.name;
+                b.onclick = () => { triggerGlobalEvent('SOUNDBOARD', s.id); closeFab(); };
+                grid.appendChild(b);
+            });
+        }
+        
+        function filterSounds(query) {
+            const val = query.toLowerCase().trim();
+            if(!val) { buildSoundboard(masterSounds); return; }
+            const filtered = masterSounds.filter(s => s.name.toLowerCase().includes(val));
+            buildSoundboard(filtered);
+        }
+
+        function openFab() { document.getElementById('fabModal').classList.add('show'); }
+        function closeFab() { document.getElementById('fabModal').classList.remove('show'); }
+
         function triggerGlobalEvent(type, payload) {
-            if(type === 'SOUNDBOARD') playLocalSound(payload); if(type === 'SOUNDBOARD_URL') playAudioURL(payload); if(type === 'REACTION') renderFloatingEmoji(payload);
+            if(type === 'SOUNDBOARD') playLocalSound(payload);
+            if(type === 'REACTION') renderFloatingEmoji(payload);
             if(ws && ws.readyState === WebSocket.OPEN) {
                 if(type === 'SOUNDBOARD') ws.send(JSON.stringify({ type: 'SOUNDBOARD', sound: payload }));
-                if(type === 'SOUNDBOARD_URL') ws.send(JSON.stringify({ type: 'SOUNDBOARD_URL', url: payload }));
                 if(type === 'REACTION') ws.send(JSON.stringify({ type: 'REACTION', emoji: payload }));
             }
         }
-        function playLocalSound(id) { const a = document.getElementById(`sfx_${id}`); if(a) { a.currentTime = 0; a.play().catch(e => console.warn("Audio blocked.")); } }
-        function playAudioURL(url) { const audio = new Audio(url); audio.play().catch(e => console.warn("Audio blocked.")); }
-        function renderFloatingEmoji(emoji) {
-            const el = document.createElement('div'); el.className = 'floating-reaction'; el.textContent = emoji; el.style.left = (Math.random() * (window.innerWidth - 80) + 20) + 'px';
-            document.body.appendChild(el); setTimeout(() => el.remove(), 2200);
+
+        function playLocalSound(id) {
+            const original = document.getElementById(`sfx_${id}`);
+            if(original) { 
+                // Clone the node to allow overlapping playback without DOMException errors
+                const clone = original.cloneNode();
+                clone.play().catch(e => console.warn("Browser blocked audio.", e)); 
+            }
         }
 
+        // --- Utility ---
         function updateParticipants(peers) {
             document.getElementById('peerCount').textContent = peers.length;
             const container = document.getElementById('peerListContainer'); container.innerHTML = '';
-
             peers.forEach(p => {
                 const div = document.createElement('div'); div.className = 'peer-item';
-                
-                let av = '👤', n = p.name, bg = 'Newbie', vip = false;
-                if(p.name.includes('|||')) {
-                    const parts = p.name.split('|||');
-                    av = parts[0]; n = parts[1]; bg = parts[2]; vip = (parts[3] === 'true');
-                }
-
-                let badgeHtml = `<span class="badge-tag ${vip ? 'badge-vip' : 'badge-normal'}">${bg}</span>`;
-                div.innerHTML = `<div><span style="margin-right:6px; font-size:16px;">${av}</span> <b>${n}</b> ${badgeHtml}</div> <span style="font-size:10px; background:rgb(var(--color-accent)); color:rgb(var(--color-btn-text)); padding:4px 8px; border-radius:6px; font-weight:800;">${p.role}</span>`;
+                div.innerHTML = `<div><b>${p.name}</b></div> <span style="font-size:10px; background:rgb(var(--color-border)); color:rgb(var(--color-accent)); padding:4px 8px; border-radius:6px; font-weight:800;">${p.role}</span>`;
                 container.appendChild(div);
             });
         }
+
         function copyRoomCode() { navigator.clipboard.writeText(roomState.id); showToast("Copied Code!"); }
     </script>
 </body>
