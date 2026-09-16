@@ -63,8 +63,15 @@
         ::-webkit-scrollbar { display: none; }
         .search-results-box { max-height: 250px; overflow-y: auto; scrollbar-width: none; }
         
-        /* Ensures YouTube Iframe stays above the black background */
         #wrap-youtube iframe { position: relative; z-index: 10; }
+
+        .emoji-keyboard-container { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 12px; margin-top: 10px; }
+        .keyboard-tabs-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; }
+        .kb-tab-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; color: #94a3b8; }
+        .kb-tab-btn.active { background: #0891b2; color: #fff; border-color: #06b6d4; }
+        .emoji-grid-box { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-height: 180px; overflow-y: auto; padding-top: 10px; }
+        .emoji-key { background: none; border: none; font-size: 24px; cursor: pointer; border-radius: 8px; text-align: center; transition: transform 0.1s; }
+        .emoji-key:hover { transform: scale(1.2); background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="h-screen w-screen flex flex-col items-center">
@@ -104,11 +111,16 @@
             
             <div class="card space-y-4 relative overflow-hidden">
                 <div id="vipBgGlow" class="absolute inset-0 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 hidden"></div>
-                <div class="relative z-10">
-                    <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Profile & Device</h2>
-                    <input type="text" id="profileName" onchange="saveProfile()" placeholder="Display Name" class="w-full bg-black/50 border border-gray-600 p-3 rounded-xl mb-2 text-white focus:outline-none">
+                <div class="relative z-10 space-y-3">
+                    <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Profile & Device</h2>
+                    <input type="text" id="profileName" placeholder="Display Name" class="w-full bg-black/50 border border-gray-600 p-3 rounded-xl text-white focus:outline-none focus:border-cyan-400">
                     <div class="text-[10px] text-gray-500 font-mono">DEVICE ID: <span id="deviceIdDisplay"></span></div>
-                    <div id="vipBadgeDisplay" class="hidden mt-2"><span class="bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs px-2 py-1 rounded font-bold">💎 VIP UNLOCKED</span></div>
+                    <div id="vipBadgeDisplay" class="hidden"><span class="bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs px-2 py-1 rounded font-bold">💎 VIP UNLOCKED</span></div>
+                    
+                    <!-- SAVE BUTTON ADDED HERE -->
+                    <button onclick="saveAllSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i> SAVE ALL SETTINGS
+                    </button>
                 </div>
             </div>
 
@@ -208,7 +220,6 @@
 
                 <div id="mediaTitle" class="absolute top-10 w-full text-center text-xs font-bold text-gray-500 z-10 drop-shadow-md pointer-events-none">Waiting for media...</div>
 
-                <!-- Fixed YouTube Player wrapper (ensure block and z-10 so it isn't hidden behind black background) -->
                 <div id="wrap-youtube" class="w-full aspect-video hidden relative z-10">
                     <div id="ytPlayerDiv"></div>
                 </div>
@@ -247,18 +258,35 @@
             </div>
 
             <!-- Live Chat -->
-            <div class="card flex flex-col h-64 z-10 relative">
+            <div class="card flex flex-col min-h-[16rem] max-h-[35rem] z-10 relative transition-all duration-300">
                 <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
-                    <h3 class="text-xs font-bold text-gray-400">LIVE CHAT</h3>
-                    <div class="flex gap-2">
+                    <h3 class="text-xs font-bold text-gray-400">LIVE CHAT & REACTIONS</h3>
+                    <div class="flex gap-2 items-center">
                         <button onclick="sendReaction('❤️')" class="text-xl hover:scale-110 transition-transform">❤️</button>
                         <button onclick="sendReaction('😂')" class="text-xl hover:scale-110 transition-transform">😂</button>
                         <button onclick="sendReaction('🔥')" class="text-xl hover:scale-110 transition-transform">🔥</button>
-                        <button onclick="sendReaction('👏')" class="text-xl hover:scale-110 transition-transform">👏</button>
+                        <button onclick="toggleEmojiKeyboard()" class="text-[10px] bg-gray-800 text-gray-300 px-2 py-1 rounded font-bold border border-gray-600 ml-1">⌨️ EXPAND</button>
                     </div>
                 </div>
+
+                <!-- Extended Emoji Keyboard -->
+                <div id="emojiKeyboardSection" class="emoji-keyboard-container hidden mb-2">
+                    <div class="keyboard-tabs-row" id="kbCategoryTabs">
+                        <button class="kb-tab-btn active" onclick="switchEmojiCategory(event, 'smileys')">😀 Smileys</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'gestures')">👋 Gestures</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'animals')">🐶 Animals</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'food')">🍿 Food</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'activities')">⚽ Activities</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'travel')">🚗 Travel</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'objects')">💡 Objects</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'symbols')">❤️ Symbols</button>
+                        <button class="kb-tab-btn" onclick="switchEmojiCategory(event, 'flags')">🏁 Flags</button>
+                    </div>
+                    <div class="emoji-grid-box" id="kbEmojiGrid"></div>
+                </div>
+
                 <div id="chatBox" class="chat-container flex-1 mb-2 text-sm"></div>
-                <div class="flex gap-2">
+                <div class="flex gap-2 mt-auto">
                     <input type="text" id="chatInput" placeholder="Message..." class="flex-1 bg-black/50 border border-gray-600 rounded-xl px-3 py-2 text-sm focus:outline-none" onkeypress="if(event.key==='Enter') sendChatMessage()">
                     <button onclick="sendChatMessage()" class="bg-white/10 px-4 rounded-xl hover:bg-white/20 transition-colors"><i class="fa-solid fa-paper-plane"></i></button>
                 </div>
@@ -270,7 +298,6 @@
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200';
         
-        // --- DATA SETS & TASKS ---
         const ALL_TASKS = [
             { id: 't1', metric: 'chats', target: 5, rewardType: 'avatar', rewardVal: '🐱 Anime Cat', desc: 'Send 5 chat messages' },
             { id: 't2', metric: 'host', target: 2, rewardType: 'category', rewardVal: 'Room Master', desc: 'Host 2 rooms' },
@@ -279,6 +306,19 @@
             { id: 't5', metric: 'chats', target: 20, rewardType: 'avatar', rewardVal: '🧑‍🚀 Space Explorer', desc: 'Send 20 chat messages' },
             { id: 't6', metric: 'host', target: 5, rewardType: 'category', rewardVal: 'Night Owl', desc: 'Host 5 rooms' }
         ];
+
+        const EMOJI_DB = {
+            'smileys': ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾'],
+            'gestures': ['👋','🤚','🖐','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀','👁','👅','👄','💋','🩸'],
+            'animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐽','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🪱','🐛','🦋','🐌','🐞','🐜','🪰','🪲','🪳','🦟','🦗','🕷','🕸','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🦭','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿','🦔','🐉','🐲','🌵','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🎍','🪴','🎋','🍃','🍂','🍁','🍄','🐚','🪨','🌾','💐','🌷','🌹','🥀','🌺','🌸','🌼','🌻','🌞','🌝','🌛','🌜','🌚','🌕','🌖','🌗','🌘','🌑','🌒','🌓','🌔','🌙','🌎','🌍','🌏','🪐','💫','⭐️','🌟','✨','⚡️','☄️','💥','🔥','🌪','🌈','☀️','🌤','⛅️','🌥','☁️','🌦','🌧','⛈','🌩','🌨','❄️','☃️','⛄️','🌬','💨','💧','💦','☔️','☂️','🌊','🌫'],
+            'food': ['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🫔','サラダ','🥘','🫕','🥫','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥠','🥮','🍢','🍡','🍧','🍨','🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🥛','🍼','🫖','☕️','🍵','🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊','🥄','🍴','🍽','🥣','🥡','🥢','🧂'],
+            'activities': ['⚽️','🏀','🏈','⚾️','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳️','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸','🥌','🎿','⛷','🏂','🪂','🏋️‍♀️','🏋️‍♂️','🤼‍♀️','🤼‍♂️','🤸‍♀️','🤸‍♂️','⛹️‍♀️','⛹️‍♂️','🤺','🤾‍♀️','🤾‍♂️','🏌️‍♀️','🏌️‍♂️','🏇','🧘‍♀️','🧘‍♂️','🏄‍♀️','🏄‍♂️','🏊‍♀️','🏊‍♂️','🤽‍♀️','🤽‍♂️','🚣‍♀️','🚣‍♂️','🧗‍♀️','🧗‍♂️','🚵‍♀️','🚵‍♂️','🚴‍♀️','🚴‍♂️','🏆','🥇','🥈','🥉','🏅','🎖','🏵','🎗','🎫','🎟','🎪','🤹‍♀️','🤹‍♂️','🎭','🩰','🎨','🎬','🎤','🎧','🎼','🎹','🥁','🪘','🎷','🎺','🪗','🎸','🪕','🎻','🎲','♟','🎯','🎳','🎮','🎰','🧩'],
+            'travel': ['🚗','🚕','🚙','🚌','🚎','🏎','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🦯','🦽','🦼','🛴','🚲','🛵','🏍','🛺','🚨','🚔','🚍','🚘','🚖','🚡','🚠','🚟','🚃','🚋','🚞','🚝','🚄','🚅','🚈','🚂','🚆','🚇','🚊','✈️','🛫','🛬','🛩','💺','🚀','🛸','🚁','🛶','⛵️','🚤','🛥','🛳','⛴','🚢','⚓️','🪝','⛽️','🚧','🚦','🚥','🚏','🗺','🗿','🗽','🗼','🏰','🏯','🏟','🎡','🎢','🎠','⛲️','⛱','🏖','🏝','🏜','🌋','⛰','🏔','🗻','🏕','⛺️','🛖','🏠','🏡','🏘','🏚','🏗','🏭','🏢','🏬','🏣','🏤','🏥','🏦','🏨','🏪','🏫','🏩','💒','🏛','⛪️','🕌','🕍','🛕','🕋','⛩','🛤','🛣','🗾','🎑','🏞','🌅','🌄','🌠','🎇','🎆','🌇','🌆','🏙','🌃','🌌','🌉','🌁'],
+            'objects': ['⌚️','📱','📲','💻','⌨️','🖥','🖨','🖱','🖲','🕹','🗜','💽','💾','💿','📀','📼','📷','📸','📹','🎥','📽','🎞','📞','☎️','📟','📠','📺','📻','🎙','🎚','🎛','🧭','⏱','⏲','⏰','🕰','⌛️','⏳','📡','🔋','🔌','💡','🔦','🕯','🪔','🧯','🛢','💸','💵','💴','💶','💷','🪙','💰','💳','💎','⚖️','🪜','🧰','🪛','🔧','🔨','⚒','🛠','⛏','🪚','🔩','⚙️','🪤','🧱','⛓','🧲','🔫','💣','🧨','🪓','🔪','🗡','⚔️','🛡','🚬','⚰️','🪦','⚱️','🏺','🔮','📿','🧿','💈','⚗️','🔭','🔬','🕳','🩹','🩺','💊','💉','🩸','🧬','🦠','🧫','🧪','🌡','🧹','🪠','🧺','🧻','🚽','🚰','🚿','🛁','🛀','🧼','🪥','🪒','🧽','🪣','🧴','🛎','🔑','🗝','🚪','🪑','🛋','🛏','🛌','🧸','🪆','🖼','🪞','🪟','🛍','🛒','🎁','🎈','🎏','🎀','🪄','🪅','🎊','🎉','🎎','🏮','🎐','🧧','✉️','📩','📨','📧','💌','📥','📤','📦','🏷','📪','📫','📬','📭','📮','📯','📜','📃','📄','📑','🧾','📊','📈','📉','🗒','🗓','📆','📅','🗑','📇','🗃','🗳','🗄','📋','📁','📂','🗂','🗞','📰','📓','📔','📒','📕','📗','📘','📙','📚','📖','🔖','🧷','🔗','📎','🖇','📐','📏','🧮','📌','📍','✂️','🖊','🖋','✒️','🖌','🖍','📝','✏️','🔍','🔎','🔏','🔐','🔒','🔓'],
+            'symbols': ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','❣️','💕','💞','💓','💗','💖','💘','💝','💟','☮️','✝️','☪️','🕉','☸️','✡️','🔯','🕎','☯️','☦️','🛐','⛎','♈️','♉️','♊️','♋️','♌️','♍️','♎️','♏️','♐️','♑️','♒️','♓️','🆔','⚛️','🉑','☢️','☣️','📴','📳','🈶','🈚️','🈸','🈺','🈷️','✴️','🆚','💮','🉐','㊙️','㊗️','🈴','🈵','🈹','🈲','🅰️','🅱️','🆎','🆑','🅾️','🆘','❌','⭕️','🛑','⛔️','📛','🚫','💯','💢','♨️','🚷','🚯','🚳','🚱','🔞','📵','🚭','❗️','❕','❓','❔','‼️','⁉️','🔅','🔆','〽️','⚠️','🚸','🔱','⚜️','🔰','♻️','✅','🈯️','💹','❇️','✳️','❎','🌐','💠','Ⓜ️','🌀','💤','🏧','🚾','♿️','🅿️','🛗','🈳','🈂️','🛂','🛃','🛄','🛅','🚹','🚺','🚼','⚧','🚻','🚮','🎦','📶','🈁','🔣','ℹ️','🔤','🔡','🔠','🆖','🆗','🆙','🆒','🆕','🆓','0️⃣','1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟','🔢','#️⃣','*️⃣','⏏️','▶️','⏸','⏯','⏹','⏺','⏭','⏮','⏩','⏪','⏫','⏬','◀️','🔼','🔽','➡️','⬅️','⬆️','⬇️','↗️','↘️','↙️','↖️','↕️','↔️','↪️','↩️','⤴️','⤵️','🔀','🔁','🔂','🔄','🔃','🎵','🎶','➕','➖','➗','✖️','♾','💲','💱','™️','©️','®️','〰️','➰','➿','✔️','☑️','🔘','🔴','🟠','🟡','🟢','🔵','🟣','⚫️','⚪️','🟤','🔺','🔻','🔸','🔹','🔶','🔷','🔳','🔲','▪️','▫️','◾️','◽️','◼️','◻️','🟥','🟧','🟨','🟩','🟦','🟪','⬛️','⬜️','🟫','🔈','🔇','🔉','🔊','🔔','🔕','📣','📢','💬','💭','🗯','♠️','♣️','♥️','♦️','🃏','🎴','🀄️','🕐','🕑','🕒','🕓','🕔','🕕','🕖','🕗','🕘','🕙','🕚','🕛','🕜','🕜','🕞','🕟','🕠','🕡','🕢','🕣','🕤','🕥','🕦','🕧'],
+            'flags': ['🏁','🚩','🎌','🏴','🏳️','🏳️‍🌈','🏳️‍⚧️','🏴‍☠️','🇦🇫','🇦🇽','🇦🇱','🇩🇿','🇦🇸','🇦🇩','🇦🇴','🇦🇮','🇦🇶','🇦🇬','🇦🇷','🇦🇲','🇦🇼','🇦🇺','🇦🇹','🇦🇿','🇧🇸','🇧🇭','🇧🇩','🇧🇧','🇧🇾','🇧🇪','🇧🇿','🇧🇯','🇧🇲','🇧🇹','🇧🇴','🇧🇦','🇧🇼','🇧🇷','🇮🇴','🇻🇬','🇧🇳','🇧🇬','🇧🇫','🇧🇮','🇰🇭','🇨🇲','🇨🇦','🇮🇨','🇨🇻','🇧🇶','🇰🇾','🇨🇫','🇹🇩','🇨🇱','🇨🇳','🇨🇽','🇨🇨','🇨🇴','🇰🇲','🇨🇬','🇨🇩','🇨🇰','🇨🇷','🇨🇮','🇭🇷','🇨🇺','🇨🇼','🇨🇾','🇨🇿','🇩🇰','🇩🇯','🇩🇲','🇩🇴','🇪🇨','🇪🇬','🇸🇻','🇬🇶','🇪🇷','🇪🇪','🇸🇿','🇪🇹','🇪🇺','🇫🇰','🇫🇴','🇫🇯','🇫🇮','🇫🇷','🇬🇫','🇵🇫','🇹🇫','🇬🇦','🇬🇲','🇬🇪','🇩🇪','🇬🇭','🇬🇮','🇬🇷','🇬🇱','🇬🇩','🇬🇵','🇬🇺','🇬🇹','🇬🇬','🇬🇳','🇬🇼','🇬🇾','🇭🇹','🇭🇳','🇭🇰','🇭🇺','🇮🇸','🇮🇳','🇮🇩','🇮🇷','🇮🇶','🇮🇪','🇮🇲','🇮🇱','🇮🇹','🇯🇲','🇯🇵','🇯🇪','🇯🇴','🇰🇿','🇰🇪','🇰🇮','🇽🇰','🇰🇼','🇰🇬','🇱🇦','🇱🇻','🇱🇧','🇱🇸','🇱🇷','🇱🇾','🇱🇮','🇱🇹','🇱🇺','🇲🇴','🇲🇬','🇲🇼','🇲🇾','🇲🇻','🇲🇱','🇲🇹','🇲🇭','🇲🇶','🇲🇷','🇲🇺','🇾🇹','🇲🇽','🇫🇲','🇲🇩','🇲🇨','🇲🇳','🇲🇪','🇲🇸','🇲🇦','🇲🇿','🇲🇲','🇳🇦','🇳🇷','🇳🇵','🇳🇱','🇳🇨','🇳🇿','🇳🇮','🇳🇪','🇳🇬','🇳🇺','🇳🇫','🇰🇵','🇲🇰','🇲🇵','🇳🇴','🇴🇲','🇵🇰','🇵🇼','🇵🇸','🇵🇦','🇵🇬','🇵🇾','🇵🇪','🇵🇭','🇵🇳','🇵🇱','🇵🇹','🇵🇷','🇶🇦','🇷🇪','🇷🇴','🇷🇺','🇷🇼','🇼🇸','🇸🇲','🇸🇹','🇸🇦','🇸🇳','🇷🇸','🇸🇨','🇸🇱','🇸🇬','🇸🇽','🇸🇰','🇸🇮','🇬🇸','🇸🇧','🇸🇴','🇿🇦','🇰🇷','🇸🇸','🇪🇸','🇱🇰','🇧🇱','🇸🇭','🇰🇳','🇱🇨','🇵🇲','🇻🇨','🇸🇩','🇸🇷','🇸🇪','🇨🇭','🇸🇾','🇹🇼','🇹🇯','🇹🇿','🇹🇭','🇹🇱','🇹🇬','🇹🇰','🇹🇴','🇹🇹','🇹🇳','🇹🇷','🇹🇲','🇹🇨','🇹🇻','🇺🇬','🇺🇦','🇦🇪','🇬🇧','🏴󠁧󠁢󠁥󠁮󠁧󠁿','🏴󠁧󠁢󠁳󠁣󠁴󠁿','🏴󠁧󠁢󠁷󠁬󠁳󠁿','🇺🇸','🇺🇾','🇺🇿','🇻🇺','🇻🇦','🇻🇪','🇻🇳','🇼🇫','🇪🇭','🇾🇪','🇿🇲','🇿🇼']
+        };
+        let activeEmojiCategory = 'smileys';
 
         let user = { 
             name: 'Guest', 
@@ -324,6 +364,35 @@
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
+        // --- EMOJI KEYBOARD LOGIC ---
+        function toggleEmojiKeyboard() {
+            const kb = document.getElementById('emojiKeyboardSection');
+            kb.classList.toggle('hidden');
+            if(!kb.classList.contains('hidden')) {
+                renderEmojiGrid();
+            }
+        }
+
+        function switchEmojiCategory(e, categoryKey) {
+            activeEmojiCategory = categoryKey;
+            document.querySelectorAll('.kb-tab-btn').forEach(btn => btn.classList.remove('active'));
+            if(e && e.currentTarget) e.currentTarget.classList.add('active');
+            renderEmojiGrid();
+        }
+
+        function renderEmojiGrid() {
+            const grid = document.getElementById('kbEmojiGrid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            (EMOJI_DB[activeEmojiCategory] || []).forEach(emoji => {
+                const btn = document.createElement('button');
+                btn.className = 'emoji-key';
+                btn.textContent = emoji;
+                btn.onclick = () => sendReaction(emoji);
+                grid.appendChild(btn);
+            });
+        }
+
         // --- PROGRESS & TRACKING ---
         function trackStat(metric, amount = 1) {
             user.stats[metric] += amount;
@@ -359,7 +428,6 @@
             user.category = localStorage.getItem('sb_category') || '';
             user.isVip = localStorage.getItem('sb_vip') === 'true';
             
-            // Load saved progress
             try {
                 user.stats = JSON.parse(localStorage.getItem('sb_stats')) || { chats: 0, host: 0, reacts: 0, join: 0 };
                 user.claimedTasks = JSON.parse(localStorage.getItem('sb_claimed')) || [];
@@ -392,7 +460,6 @@
         }
 
         function renderSettings() {
-            // Render Tasks
             const tList = document.getElementById('tasksList');
             tList.innerHTML = '';
             ALL_TASKS.forEach(t => {
@@ -421,7 +488,6 @@
                     </div>`;
             });
 
-            // Render Avatars
             const avGrid = document.getElementById('avatarGrid');
             avGrid.innerHTML = '';
             user.unlockedAvatars.forEach(a => {
@@ -432,7 +498,6 @@
                 avGrid.appendChild(btn);
             });
 
-            // Render Categories
             const catGrid = document.getElementById('categoryGrid');
             catGrid.innerHTML = '';
             if(user.unlockedCategories.length === 0) {
@@ -447,9 +512,15 @@
             });
         }
 
-        function saveProfile() {
-            user.name = document.getElementById('profileName').value || 'Guest';
-            localStorage.setItem('sb_name', user.name); updateHeader(); showToast("Profile Updated");
+        // --- SAVE ALL SETTINGS FUNCTION ---
+        function saveAllSettings() {
+            const nameInput = document.getElementById('profileName').value.trim();
+            user.name = nameInput || 'Guest';
+            localStorage.setItem('sb_name', user.name);
+            localStorage.setItem('sb_avatar', user.avatar);
+            localStorage.setItem('sb_category', user.category);
+            updateHeader();
+            showToast("All settings saved successfully!");
         }
 
         function redeemCode() {
@@ -489,9 +560,7 @@
             ws = new WebSocket(WS_URL);
             
             ws.onopen = () => {
-                // Send complex payload so peers can render Connected Devices properly
                 const payloadStr = `${user.avatar.split(' ')[0]}|${user.name}|${user.isVip}|${user.category}`;
-                
                 if(role === 'HOST') {
                     ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
                     ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
@@ -502,17 +571,12 @@
 
             ws.onmessage = (e) => {
                 const msg = JSON.parse(e.data);
-                
                 if(msg.type === 'ROOM_HOSTED_SUCCESS' || msg.type === 'ROOM_JOIN_SUCCESS') {
                     room = { active: true, code: code, type: msg.roomType || type, role: role };
                     setupRoomUI();
                 }
-                
                 if(msg.type === 'ROOM_NOT_FOUND') { showToast("Room not found or already closed."); ws.close(); }
-                
-                // HOST LEAVE -> WIPE DATA AND CLOSE
                 if(msg.type === 'ROOM_CLOSED') { showToast("Host closed the room. Returning to menu."); forceLeaveRoom(); }
-                
                 if(msg.type === 'PEER_LIST') { renderConnectedDevices(msg.peers); }
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
@@ -526,7 +590,6 @@
         function renderConnectedDevices(peers) {
             document.getElementById('peerCount').textContent = peers.length;
             document.getElementById('connectedCountUI').textContent = peers.length;
-            
             const list = document.getElementById('connectedDevicesList');
             list.innerHTML = '';
             
@@ -568,7 +631,6 @@
             document.getElementById('movieInputArea').classList.add('hidden');
             document.getElementById('youtubeMusicInputArea').classList.add('hidden');
             
-            // Reset player visibility entirely
             document.getElementById('wrap-youtube').className = "w-full aspect-video hidden relative z-10";
             document.getElementById('wrap-music-ui').className = "w-full aspect-video hidden flex-col items-center justify-center bg-gray-900 relative z-10";
             document.getElementById('movieVideo').className = "w-full aspect-video hidden relative z-10";
@@ -587,7 +649,6 @@
                 });
             }
 
-            // Reveal appropriate player box
             if(room.type === 'youtube') {
                 document.getElementById('wrap-youtube').classList.remove('hidden');
                 document.getElementById('wrap-youtube').classList.add('block');
@@ -605,7 +666,6 @@
         }
 
         function leaveRoom() {
-            // Delete room data by sending CLOSE_ROOM if host
             if(room.role === 'HOST' && ws && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({type: 'CLOSE_ROOM'}));
             }
@@ -614,11 +674,30 @@
 
         function forceLeaveRoom() {
             if(ws) ws.close();
-            room.active = false;
+            room = { active: false, code: '', type: '', role: 'MEMBER' };
             clearInterval(syncInterval); clearInterval(progressInterval);
             
-            if(ytPlayerObj && typeof ytPlayerObj.stopVideo === 'function') ytPlayerObj.stopVideo();
-            document.getElementById('movieVideo').src = '';
+            if(ytPlayerObj && typeof ytPlayerObj.stopVideo === 'function') {
+                ytPlayerObj.stopVideo();
+            }
+            
+            const movieVideo = document.getElementById('movieVideo');
+            movieVideo.pause();
+            movieVideo.removeAttribute('src');
+            movieVideo.load();
+            
+            document.getElementById('chatBox').innerHTML = ''; 
+            document.getElementById('connectedDevicesList').innerHTML = ''; 
+            document.getElementById('mediaTitle').textContent = 'Waiting for media...';
+            document.getElementById('musicTitleUi').textContent = 'Track Name';
+            document.getElementById('musicArtistUi').textContent = 'Artist';
+            document.getElementById('musicThumbUi').src = '';
+            
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('timeCurrent').textContent = '0:00';
+            document.getElementById('timeTotal').textContent = '0:00';
+
+            document.getElementById('mediaSearchInput').value = '';
             
             document.getElementById('roomView').classList.remove('active');
             document.getElementById('bottomNav').style.display = 'flex';
@@ -673,7 +752,6 @@
         function displaySearchResults(results) {
             const container = document.getElementById('searchResultsBox');
             container.innerHTML = '';
-            
             results.forEach(video => {
                 const item = document.createElement('div');
                 item.className = "flex items-start gap-3 p-3 hover:bg-gray-800 cursor-pointer transition-colors";
@@ -694,24 +772,16 @@
         function playSearchResult(videoData) {
             if (!ytPlayerObj) return;
             document.getElementById('mediaTitle').textContent = room.type === 'youtube' ? "Video Loading..." : "Audio Loading...";
-            
             if (room.type === 'music') {
                 document.getElementById('musicTitleUi').textContent = videoData.title;
                 document.getElementById('musicArtistUi').textContent = videoData.uploaderName;
                 document.getElementById('musicThumbUi').src = videoData.thumbUrl;
             }
-
             activePlayer = ytPlayerObj;
             ytPlayerObj.loadVideoById({videoId: videoData.videoId, startSeconds: 0});
-            
             if (ws && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ 
-                    type: 'LOAD_VIDEO', 
-                    mode: room.type, 
-                    ytId: videoData.videoId,
-                    title: videoData.title,
-                    artist: videoData.uploaderName,
-                    thumb: videoData.thumbUrl
+                    type: 'LOAD_VIDEO', mode: room.type, ytId: videoData.videoId, title: videoData.title, artist: videoData.uploaderName, thumb: videoData.thumbUrl
                 }));
             }
         }
@@ -725,15 +795,11 @@
             activePlayer = document.getElementById('movieVideo');
             activePlayer.src = url;
             setupHTML5Listeners(activePlayer);
-            
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'movie', title: file.name }));
-            }
+            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'movie', title: file.name }));
         }
 
         function handleRemoteMediaLoad(msg) {
             if(room.role === 'HOST') return;
-            
             if((msg.mode === 'youtube' || msg.mode === 'music') && ytPlayerObj) {
                 document.getElementById('mediaTitle').textContent = msg.mode === 'youtube' ? "Host is playing Video" : "Host is playing Audio";
                 if(msg.mode === 'music') {
@@ -764,11 +830,8 @@
         function togglePlayPause() {
             if(room.role === 'MEMBER') return showToast("Host controls playback!");
             if(!activePlayer) return;
-            if(room.type === 'youtube' || room.type === 'music') {
-                if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo();
-            } else {
-                if(isPlaying) activePlayer.pause(); else activePlayer.play();
-            }
+            if(room.type === 'youtube' || room.type === 'music') { if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo(); } 
+            else { if(isPlaying) activePlayer.pause(); else activePlayer.play(); }
         }
 
         function updatePlayBtn() { document.getElementById('playPauseBtn').innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>'; }
@@ -785,11 +848,10 @@
 
         function handleRemoteSync(msg) {
             if(room.role === 'HOST' || !activePlayer) return;
-            const targetTime = msg.time + 0.15; // Network latency buffer
+            const targetTime = msg.time + 0.15; 
             lastHostTime = targetTime; 
             
             let current = (room.type === 'youtube' || room.type === 'music') ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
-            
             if(msg.action === 'play') { if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.playVideo(); else activePlayer.play(); }
             else if(msg.action === 'pause') { if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
             
@@ -815,7 +877,6 @@
             } else {
                 if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.seekTo(newTime, true);
                 else activePlayer.currentTime = newTime;
-                
                 if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'CONTROL', action: 'seek', time: newTime }));
                 lastHostTime = newTime;
             }
@@ -825,7 +886,6 @@
             clearInterval(progressInterval);
             progressInterval = setInterval(() => {
                 if(!activePlayer) return;
-                
                 let cur = 0, dur = 0;
                 if((room.type === 'youtube' || room.type === 'music') && ytPlayerObj && typeof ytPlayerObj.getCurrentTime === 'function') { 
                     cur = ytPlayerObj.getCurrentTime(); dur = ytPlayerObj.getDuration(); 
@@ -833,7 +893,6 @@
                     cur = activePlayer.currentTime; dur = activePlayer.duration; 
                 }
                 
-                // Meticulous Strict Member Snap-back logic (Checks if member used native controls to scrub)
                 if (room.role === 'MEMBER') {
                     if (Math.abs(cur - lastHostTime) > 2.0 && lastHostTime > 0) {
                         showToast("Host controls playback! Correcting sync...");
@@ -874,7 +933,6 @@
             renderChat(user.name, text, user.isVip);
             trackStat('chats');
             if(ws && ws.readyState === WebSocket.OPEN) {
-                // To display chats with correct user context globally, you pass sender details
                 const fullSenderInfo = `${user.name}${user.isVip ? '|VIP' : ''}`;
                 ws.send(JSON.stringify({ type: 'CHAT', sender: fullSenderInfo, text: text, isVip: user.isVip }));
             }
@@ -884,12 +942,13 @@
         function renderChat(sender, text, isVip) {
             let sName = sender;
             let sVip = isVip;
-            if(typeof sender === 'string' && sender.includes('|VIP')) {
-                sName = sender.split('|')[0];
-                sVip = true;
+            if(typeof sender === 'string' && sender.includes('|VIP')) { 
+                sName = sender.split('|')[0]; 
+                sVip = true; 
             }
             const box = document.getElementById('chatBox');
-            box.innerHTML += `<div><span class="font-bold ${sVip ? 'text-pink-400 vip-glow' : 'text-cyan-400'}">${sName}:</span> <span class="text-white">${text}</span></div>`;
+            const nameClass = sVip ? 'text-xs text-pink-400 vip-glow tracking-wide' : 'font-bold text-cyan-400';
+            box.innerHTML += `<div><span class="font-bold ${nameClass}">${sName}:</span> <span class="text-white">${text}</span></div>`;
             box.scrollTop = box.scrollHeight;
         }
 
@@ -901,4 +960,3 @@
     </script>
 </body>
 </html>
-
