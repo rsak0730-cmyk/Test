@@ -16,6 +16,33 @@
         :root {
             --color-accent: 0 255 204; --color-bg-base: 15 23 42; --color-bg-card: 30 41 59; 
             --color-text-main: 255 255 255; --color-text-muted: 148 163 184; --color-border: 51 65 85; 
+            --card-radius: 20px; --glass-blur: 12px;
+        }
+
+        /* --- THEME CUSTOMIZATIONS (IOS / SAMSUNG LIQUID GLASS) --- */
+        body.theme-ios {
+            --color-bg-base: 0 0 0;
+            --color-bg-card: 28 28 30;
+            --color-border: 58 58 60;
+            --card-radius: 28px;
+            --glass-blur: 25px;
+        }
+
+        body.theme-samsung {
+            --color-bg-base: 12 12 12;
+            --color-bg-card: 24 24 24;
+            --color-border: 45 45 45;
+            --card-radius: 36px;
+            --glass-blur: 20px;
+        }
+
+        body.theme-cyber {
+            --color-accent: 255 0 127;
+            --color-bg-base: 5 5 15;
+            --color-bg-card: 15 10 30;
+            --color-border: 255 0 127;
+            --card-radius: 12px;
+            --glass-blur: 10px;
         }
 
         body { 
@@ -23,10 +50,11 @@
             color: rgb(var(--color-text-main)); 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             overflow-x: hidden; -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.4s ease;
         }
 
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .card { background: rgb(var(--color-bg-card)); border-radius: 20px; padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(var(--glass-blur)); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .card { background: rgb(var(--color-bg-card)); border-radius: var(--card-radius); padding: 16px; margin-bottom: 14px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4); border: 1px solid rgb(var(--color-border) / 0.4); transition: all 0.3s ease; }
         
         .vip-glow {
             background: linear-gradient(90deg, #ff007f, #7928ca, #00d2ff, #ff007f);
@@ -64,7 +92,7 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        .modal-content { background: rgb(var(--color-bg-card)); padding: 24px; border-radius: 24px; width: 90%; max-width: 380px; transform: scale(0.95); transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-content { background: rgb(var(--color-bg-card)); padding: 24px; border-radius: var(--card-radius); width: 90%; max-width: 380px; transform: scale(0.95); transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
         .modal-overlay.show .modal-content { transform: scale(1); }
 
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #00d2ff; color: #000; padding: 12px 24px; border-radius: 20px; font-weight: 800; z-index: 999; transition: 0.4s; box-shadow: 0 10px 25px rgba(0,210,255,0.5); }
@@ -125,9 +153,6 @@
                     <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Profile & Device</h2>
                     <input type="text" id="profileName" placeholder="Display Name" class="w-full bg-black/50 border border-gray-600 p-3 rounded-xl text-white focus:outline-none focus:border-cyan-400">
                     <div class="text-[10px] text-gray-500 font-mono">DEVICE ID: <span id="deviceIdDisplay"></span></div>
-                    <div id="vipBadgeDisplay" class="hidden"><span class="bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs px-2 py-1 rounded font-bold">💎 VIP UNLOCKED</span></div>
-                    <div id="royalBadgeDisplay" class="hidden"><span class="bg-amber-500/20 border border-amber-500 text-amber-400 text-xs px-2 py-1 rounded font-bold">👑 ROYAL HATCH UNLOCKED</span></div>
-                    <div id="primeBadgeDisplay" class="hidden"><span class="bg-purple-500/20 border border-purple-500 text-purple-400 text-xs px-2 py-1 rounded font-bold">🛡️ PRIME GLASS UNLOCKED</span></div>
                     
                     <button onclick="saveAllSettings()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all active:scale-95">
                         <i class="fa-solid fa-floppy-disk mr-2"></i> SAVE ALL SETTINGS
@@ -135,11 +160,23 @@
                 </div>
             </div>
 
-            <!-- UNLOCKED BADGES SHOWCASE UI -->
+            <!-- UNLOCKED BADGES WITH EQUIPPING SYSTEM -->
             <div class="card space-y-3">
-                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Your Unlocked Badges</h2>
-                <div id="userBadgesShowcase" class="flex flex-wrap gap-2">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Equip / Manage Badges</h2>
+                <div id="badgeEquipContainer" class="flex flex-col gap-2">
                     <span class="text-xs text-gray-500 italic">No special badges unlocked yet. Redeem codes to collect them!</span>
+                </div>
+            </div>
+
+            <!-- DYNAMIC THEME & UI CUSTOMIZER UI (Unlocked ONLY via Royal/Prime Badges) -->
+            <div id="themeCustomizerSection" class="card space-y-3 hidden border border-amber-500/40">
+                <h2 class="text-xs font-bold text-amber-400 uppercase tracking-widest">✨ Liquid Glass & UI Theme Customizer</h2>
+                <p class="text-[11px] text-gray-400">Unlocked via Royal/Prime Badges. Select your preferred app design framework:</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setAppTheme('default')" id="themeBtn-default" class="p-2 rounded-xl text-xs font-bold bg-gray-800 border border-gray-600">Standard Dark</button>
+                    <button onclick="setAppTheme('ios')" id="themeBtn-ios" class="p-2 rounded-xl text-xs font-bold bg-gray-800 border border-gray-600">iOS Liquid</button>
+                    <button onclick="setAppTheme('samsung')" id="themeBtn-samsung" class="p-2 rounded-xl text-xs font-bold bg-gray-800 border border-gray-600">OneUI 9</button>
+                    <button onclick="setAppTheme('cyber')" id="themeBtn-cyber" class="p-2 rounded-xl text-xs font-bold bg-gray-800 border border-gray-600">Cyber Neon</button>
                 </div>
             </div>
 
@@ -210,7 +247,6 @@
 
         <div class="p-4 space-y-4">
             
-            <!-- Host Controls -->
             <div id="hostControls" class="card hidden space-y-3 border border-cyan-500/30 overflow-visible relative z-40">
                 <h3 class="text-xs font-bold text-cyan-400">HOST MEDIA CONTROLS</h3>
                 
@@ -228,7 +264,6 @@
                 </div>
             </div>
 
-            <!-- Media Player Container -->
             <div class="bg-black rounded-2xl border border-gray-800 overflow-hidden relative shadow-2xl z-10">
                 <div id="mediaTitle" class="absolute top-10 w-full text-center text-xs font-bold text-gray-500 z-10 drop-shadow-md pointer-events-none">Waiting for media...</div>
 
@@ -256,7 +291,6 @@
                         <span id="timeCurrent">0:00</span><span id="timeTotal">0:00</span>
                     </div>
 
-                    <!-- CONTROLS ROW WITH FLOATING SYNC STATUS & ROLE ON EITHER SIDE OF PLAY BUTTON -->
                     <div class="flex items-center justify-between mt-2 px-2">
                         <div class="bg-black/70 backdrop-blur px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 border border-white/10">
                             <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> <span>LIVE SYNC</span>
@@ -273,13 +307,11 @@
                 </div>
             </div>
 
-            <!-- Connected Devices UI -->
             <div class="card z-10 relative mt-4">
                 <h3 class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Connected Devices (<span id="connectedCountUI">1</span>)</h3>
                 <div id="connectedDevicesList" class="flex flex-col gap-2 max-h-40 overflow-y-auto"></div>
             </div>
 
-            <!-- Live Chat -->
             <div class="card flex flex-col min-h-[16rem] max-h-[35rem] z-10 relative transition-all duration-300">
                 <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-2">
                     <h3 class="text-xs font-bold text-gray-400">LIVE CHAT & REACTIONS</h3>
@@ -291,7 +323,6 @@
                     </div>
                 </div>
 
-                <!-- Extended Emoji Keyboard -->
                 <div id="emojiKeyboardSection" class="emoji-keyboard-container hidden mb-2">
                     <div class="keyboard-tabs-row" id="kbCategoryTabs">
                         <button class="kb-tab-btn active" onclick="switchEmojiCategory(event, 'smileys')">😀 Smileys</button>
@@ -320,7 +351,6 @@
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200';
         
-        // --- 50+ TASKS & ACHIEVEMENTS GENERATOR ---
         const ALL_TASKS = [];
         const avatarsPool = ['🐱 Anime Cat', '🎬 Movie Buff', '🧑‍🚀 Space Explorer', '🥷 Neon Warrior', '🌌 Cosmic', '🕹️ Arcade', '🎹 Synthwave', '🧙 Fantasy', '🚀 Astronaut', '🎧 Neon DJ'];
         const categoriesPool = ['Room Master', 'Reaction King', 'Night Owl', 'Music Lover', 'Movie Fan', 'Chat Legend', 'Social Star', 'Sync Expert', 'VIP Pioneer', 'Elite Host'];
@@ -361,6 +391,7 @@
             hasRoyalHat: false,
             hasPrimeGlass: false,
             activeTheme: 'default',
+            equippedBadge: 'none', // 'vip', 'royal', 'prime', or 'none'
             deviceId: '',
             unlockedAvatars: ['🤖 Cyberpunk'],
             unlockedCategories: [],
@@ -385,7 +416,6 @@
             }
         });
 
-        // --- INIT ---
         window.onload = () => {
             initDevice();
             renderSettings();
@@ -465,6 +495,7 @@
             user.hasRoyalHat = localStorage.getItem('sb_royal') === 'true';
             user.hasPrimeGlass = localStorage.getItem('sb_prime') === 'true';
             user.activeTheme = localStorage.getItem('sb_theme') || 'default';
+            user.equippedBadge = localStorage.getItem('sb_equipped') || 'none';
             
             try {
                 user.stats = JSON.parse(localStorage.getItem('sb_stats')) || { chats: 0, host: 0, reacts: 0, join: 0 };
@@ -483,42 +514,83 @@
             const nameEl = document.getElementById('headerName');
             nameEl.textContent = user.name;
             
-            nameEl.className = user.hasRoyalHat ? 'royal-glow font-bold text-lg' : (user.isVip ? 'vip-glow font-bold text-lg' : 'text-white font-bold');
+            nameEl.className = (user.equippedBadge === 'royal' || user.equippedBadge === 'prime') ? 'royal-glow font-bold text-lg' : (user.equippedBadge === 'vip' ? 'vip-glow font-bold text-lg' : 'text-white font-bold');
             
-            if(user.isVip) document.getElementById('vipBadgeDisplay').classList.remove('hidden');
-            if(user.hasRoyalHat) document.getElementById('royalBadgeDisplay').classList.remove('hidden');
-            if(user.hasPrimeGlass) document.getElementById('primeBadgeDisplay').classList.remove('hidden');
-            
-            renderBadgesShowcase();
+            renderBadgeEquipUI();
+            checkThemeCustomizerVisibility();
         }
 
-        function renderBadgesShowcase() {
-            const showcase = document.getElementById('userBadgesShowcase');
-            if(!showcase) return;
-            showcase.innerHTML = '';
+        function renderBadgeEquipUI() {
+            const container = document.getElementById('badgeEquipContainer');
+            if(!container) return;
+            container.innerHTML = '';
             
             let hasAny = false;
+            
             if(user.isVip) {
-                showcase.innerHTML += `<span class="bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-xs px-3 py-1 rounded-full font-bold">💎 VIP Badge</span>`;
                 hasAny = true;
+                let isEquipped = user.equippedBadge === 'vip';
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-black/40 p-2.5 rounded-xl border border-gray-700">
+                        <span class="text-xs font-bold text-cyan-400">💎 VIP Badge</span>
+                        <button onclick="equipBadge('vip')" class="text-[10px] font-bold px-3 py-1 rounded-lg ${isEquipped ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-300'}">${isEquipped ? 'EQUIPPED' : 'EQUIP'}</button>
+                    </div>`;
             }
             if(user.hasRoyalHat) {
-                showcase.innerHTML += `<span class="bg-amber-500/20 border border-amber-500 text-amber-400 text-xs px-3 py-1 rounded-full font-bold">👑 Royal Hat Badge</span>`;
                 hasAny = true;
+                let isEquipped = user.equippedBadge === 'royal';
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-black/40 p-2.5 rounded-xl border border-gray-700">
+                        <span class="text-xs font-bold text-amber-400">👑 Royal Hat Badge</span>
+                        <button onclick="equipBadge('royal')" class="text-[10px] font-bold px-3 py-1 rounded-lg ${isEquipped ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-300'}">${isEquipped ? 'EQUIPPED' : 'EQUIP'}</button>
+                    </div>`;
             }
             if(user.hasPrimeGlass) {
-                showcase.innerHTML += `<span class="bg-purple-500/20 border border-purple-500 text-purple-400 text-xs px-3 py-1 rounded-full font-bold">🛡️ Prime Glass Badge</span>`;
                 hasAny = true;
+                let isEquipped = user.equippedBadge === 'prime';
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-black/40 p-2.5 rounded-xl border border-gray-700">
+                        <span class="text-[11px] font-bold text-purple-400">🛡️ Prime Glass Badge</span>
+                        <button onclick="equipBadge('prime')" class="text-[10px] font-bold px-3 py-1 rounded-lg ${isEquipped ? 'bg-green-600 text-white' : 'bg-gray-800 text-gray-300'}">${isEquipped ? 'EQUIPPED' : 'EQUIP'}</button>
+                    </div>`;
             }
+
             if(!hasAny) {
-                showcase.innerHTML = `<span class="text-xs text-gray-500 italic">No special badges unlocked yet. Redeem codes to collect them!</span>`;
+                container.innerHTML = `<span class="text-xs text-gray-500 italic">No special badges unlocked yet. Redeem codes to collect them!</span>`;
             }
+        }
+
+        function equipBadge(badgeType) {
+            if(user.equippedBadge === badgeType) {
+                user.equippedBadge = 'none';
+            } else {
+                user.equippedBadge = badgeType;
+            }
+            localStorage.setItem('sb_equipped', user.equippedBadge);
+            updateHeader();
+            showToast(`Badge status updated!`);
+        }
+
+        function checkThemeCustomizerVisibility() {
+            const customizer = document.getElementById('themeCustomizerSection');
+            if(user.hasRoyalHat || user.hasPrimeGlass) {
+                customizer.classList.remove('hidden');
+            } else {
+                customizer.classList.add('hidden');
+            }
+        }
+
+        function setAppTheme(themeName) {
+            user.activeTheme = themeName;
+            localStorage.setItem('sb_theme', themeName);
+            applyThemeStyles();
+            showToast(`Theme applied: ${themeName.toUpperCase()}`);
         }
 
         function applyThemeStyles() {
             const bodyEl = document.body;
-            bodyEl.classList.remove('theme-ios', 'theme-samsung', 'theme-default');
-            if(user.hasPrimeGlass && user.activeTheme !== 'default') {
+            bodyEl.classList.remove('theme-ios', 'theme-samsung', 'theme-cyber');
+            if(user.activeTheme !== 'default') {
                 bodyEl.classList.add(`theme-${user.activeTheme}`);
             }
         }
@@ -604,19 +676,17 @@
             } else if (code === 'MANISH.OG') {
                 user.hasRoyalHat = true;
                 localStorage.setItem('sb_royal', 'true');
-                user.activeTheme = 'ios';
-                localStorage.setItem('sb_theme', 'ios');
+                user.equippedBadge = 'royal';
+                localStorage.setItem('sb_equipped', 'royal');
                 updateHeader();
-                applyThemeStyles();
-                showToast("MANISH.OG UNLOCKED: Royal Hat & Liquid Glass Themes Activated!");
+                showToast("MANISH.OG UNLOCKED: Royal Hat & Theme Customizer Unlocked!");
             } else if (code === 'OG.OG') {
                 user.hasPrimeGlass = true;
                 localStorage.setItem('sb_prime', 'true');
-                user.activeTheme = 'samsung';
-                localStorage.setItem('sb_theme', 'samsung');
+                user.equippedBadge = 'prime';
+                localStorage.setItem('sb_equipped', 'prime');
                 updateHeader();
-                applyThemeStyles();
-                showToast("OG.OG UNLOCKED: Prime Glass & OneUI 9 Design Styles Activated!");
+                showToast("OG.OG UNLOCKED: Prime Glass & UI Customizer Unlocked!");
             } else { 
                 showToast("Invalid Reward Code"); 
             }
@@ -651,7 +721,7 @@
             ws = new WebSocket(WS_URL);
             
             ws.onopen = () => {
-                const payloadStr = `${user.avatar.split(' ')[0]}|${user.name}|${user.isVip}|${user.category}|${user.hasRoyalHat}|${user.hasPrimeGlass}`;
+                const payloadStr = `${user.avatar.split(' ')[0]}|${user.name}|${user.equippedBadge}|${user.category}`;
                 if(role === 'HOST') {
                     ws.send(JSON.stringify({ type: 'HOST_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
                     ws.send(JSON.stringify({ type: 'CREATE_ROOM', code: code, name: payloadStr, accountId: user.deviceId, roomType: type }));
@@ -672,7 +742,7 @@
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
                 if(msg.type === 'REACTION') { renderFloatingReaction(msg.emoji); }
-                if(msg.type === 'CHAT') { renderChat(msg.sender, msg.text, msg.isVip, msg.hasRoyalHat); }
+                if(msg.type === 'CHAT') { renderChat(msg.sender, msg.text, msg.equippedBadge); }
             };
 
             ws.onerror = () => { showToast("Server connection error."); };
@@ -685,17 +755,16 @@
             list.innerHTML = '';
             
             peers.forEach(peer => {
-                let pAvatar = '🤖', pName = peer.name, pVip = 'false', pCat = '', pRoyal = 'false';
+                let pAvatar = '🤖', pName = peer.name, pBadge = 'none', pCat = '';
                 if(peer.name.includes('|')) {
                     const parts = peer.name.split('|');
-                    pAvatar = parts[0]; pName = parts[1]; pVip = parts[2]; pCat = parts[3]; pRoyal = parts[4] || 'false';
+                    pAvatar = parts[0]; pName = parts[1]; pBadge = parts[2]; pCat = parts[3];
                 }
 
-                const vipHtml = pVip === 'true' ? '<span class="text-[8px] bg-cyan-500/20 text-cyan-400 border border-cyan-400 px-1 rounded font-bold tracking-widest mt-1">VIP</span>' : '';
-                const royalHtml = pRoyal === 'true' ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 border border-amber-400 px-1 rounded font-bold tracking-widest mt-1">👑 ROYAL</span>' : '';
+                const badgeHtml = pBadge === 'vip' ? '<span class="text-[8px] bg-cyan-500/20 text-cyan-400 border border-cyan-400 px-1 rounded font-bold tracking-widest mt-1">VIP</span>' : (pBadge === 'royal' || pBadge === 'prime' ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 border border-amber-400 px-1 rounded font-bold tracking-widest mt-1">👑 ROYAL</span>' : '');
                 const catHtml = pCat ? `<span class="text-[8px] text-gray-400 border border-gray-600 px-1 rounded mt-1">${pCat}</span>` : '';
 
-                const nameStyle = pRoyal === 'true' ? 'royal-glow font-bold' : (pVip === 'true' ? 'vip-glow font-bold' : 'text-white font-bold');
+                const nameStyle = (pBadge === 'royal' || pBadge === 'prime') ? 'royal-glow font-bold' : (pBadge === 'vip' ? 'vip-glow font-bold' : 'text-white font-bold');
 
                 list.innerHTML += `
                     <div class="flex justify-between items-center bg-black/40 p-2 rounded-xl border border-gray-800">
@@ -703,7 +772,7 @@
                             <span class="text-2xl">${pAvatar}</span>
                             <div class="flex flex-col">
                                 <span class="text-sm ${nameStyle}">${pName}</span>
-                                <div class="flex flex-wrap gap-1">${vipHtml}${royalHtml}${catHtml}</div>
+                                <div class="flex flex-wrap gap-1">${badgeHtml}${catHtml}</div>
                             </div>
                         </div>
                         <span class="text-[10px] font-bold px-2 py-1 rounded ${peer.role === 'HOST' ? 'bg-green-500/20 text-green-400' : 'bg-gray-800 text-gray-400'}">${peer.role}</span>
@@ -1020,31 +1089,29 @@
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if(!text) return;
-            renderChat(user.name, text, user.isVip, user.hasRoyalHat);
+            renderChat(user.name, text, user.equippedBadge);
             trackStat('chats');
             if(ws && ws.readyState === WebSocket.OPEN) {
-                const fullSenderInfo = `${user.name}|${user.isVip}|${user.hasRoyalHat}`;
+                const fullSenderInfo = `${user.name}|${user.equippedBadge}`;
                 ws.send(JSON.stringify({ type: 'CHAT', sender: fullSenderInfo, text: text }));
             }
             input.value = '';
         }
 
-        function renderChat(sender, text, isVip, hasRoyalHat) {
+        function renderChat(sender, text, equippedBadge) {
             let sName = sender;
-            let sVip = isVip;
-            let sRoyal = hasRoyalHat;
+            let sBadge = equippedBadge || 'none';
             
             if(typeof sender === 'string' && sender.includes('|')) { 
                 const parts = sender.split('|');
                 sName = parts[0]; 
-                sVip = parts[1] === 'true';
-                sRoyal = parts[2] === 'true';
+                sBadge = parts[1] || 'none';
             }
             
             const box = document.getElementById('chatBox');
             let nameClass = 'font-bold text-cyan-400';
-            if(sRoyal) nameClass = 'text-xs royal-glow tracking-wide';
-            else if(sVip) nameClass = 'text-xs vip-glow tracking-wide';
+            if(sBadge === 'royal' || sBadge === 'prime') nameClass = 'text-xs royal-glow tracking-wide';
+            else if(sBadge === 'vip') nameClass = 'text-xs vip-glow tracking-wide';
 
             box.innerHTML += `<div><span class="${nameClass}">${sName}:</span> <span class="text-white">${text}</span></div>`;
             box.scrollTop = box.scrollHeight;
