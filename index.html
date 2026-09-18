@@ -19,7 +19,6 @@
             --card-radius: 20px; --glass-blur: 12px;
         }
 
-        /* --- 20+ THEME DESIGNS --- */
         body.theme-ios { --color-bg-base: 0 0 0; --color-bg-card: 28 28 30; --color-border: 58 58 60; --card-radius: 28px; --glass-blur: 25px; }
         body.theme-samsung { --color-bg-base: 12 12 12; --color-bg-card: 24 24 24; --color-border: 45 45 45; --card-radius: 36px; --glass-blur: 20px; }
         body.theme-cyber { --color-accent: 255 0 127; --color-bg-base: 5 5 15; --color-bg-card: 15 10 30; --color-border: 255 0 127; --card-radius: 12px; --glass-blur: 10px; }
@@ -131,8 +130,7 @@
     <div id="toast">Notification</div>
 
     <div class="w-full max-w-md p-4 flex-1 overflow-y-auto pb-24 relative">
-        
-        <!-- ================= MAIN TAB ================= -->
+        <!-- MAIN TAB -->
         <div id="tab-main" class="view active">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">SYNCPLAY</h1>
@@ -157,7 +155,7 @@
             </div>
         </div>
 
-        <!-- ================= SETTINGS TAB ================= -->
+        <!-- SETTINGS TAB -->
         <div id="tab-settings" class="view">
             <h1 class="text-2xl font-black mb-6">SETTINGS</h1>
             
@@ -174,7 +172,6 @@
                 </div>
             </div>
 
-            <!-- UNLOCKED BADGES WITH EQUIPPING SYSTEM -->
             <div class="card space-y-3">
                 <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Equip / Manage Badges</h2>
                 <div id="badgeEquipContainer" class="flex flex-col gap-2">
@@ -182,7 +179,6 @@
                 </div>
             </div>
 
-            <!-- DYNAMIC THEME & UI CUSTOMIZER UI (20+ Themes) -->
             <div id="themeCustomizerSection" class="card space-y-3 hidden border border-amber-500/40">
                 <h2 class="text-xs font-bold text-amber-400 uppercase tracking-widest">✨ 20+ Liquid Glass & UI Themes Customizer</h2>
                 <p class="text-[11px] text-gray-400">Unlocked via Royal/Prime Badges. Select your preferred app design framework:</p>
@@ -219,7 +215,6 @@
                 </div>
             </div>
 
-            <!-- TASKS & ACHIEVEMENTS (50+ Tasks) -->
             <div class="card space-y-4">
                 <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">TASKS & ACHIEVEMENTS (50+ TASKS)</h2>
                 <div id="tasksList" class="flex flex-col gap-3 max-h-60 overflow-y-auto"></div>
@@ -237,24 +232,24 @@
         </div>
     </div>
 
-    <!-- ================= BOTTOM NAVIGATION ================= -->
+    <!-- BOTTOM NAVIGATION -->
     <div id="bottomNav" class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass rounded-3xl flex justify-around p-3 z-40">
         <button onclick="switchTab('main')" id="nav-main" class="text-cyan-400 flex flex-col items-center flex-1 transition-colors"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] font-bold mt-1">MAIN</span></button>
         <button onclick="switchTab('settings')" id="nav-settings" class="text-gray-500 flex flex-col items-center flex-1 transition-colors"><i class="fa-solid fa-gear text-xl"></i><span class="text-[10px] font-bold mt-1">SETTINGS</span></button>
     </div>
 
-    <!-- ================= ROOM TYPE MODAL ================= -->
+    <!-- ROOM TYPE MODAL -->
     <div id="typeModal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-lg font-bold mb-4">Select Room Type</h3>
             <div class="space-y-3">
                 <button onclick="createRoom('movie')" class="w-full glass p-4 rounded-xl flex items-center gap-4 hover:bg-white/10 text-left">
                     <i class="fa-solid fa-film text-2xl text-cyan-400"></i>
-                    <div><div class="font-bold">Movie Room</div><div class="text-xs text-gray-400">Local Files Only</div></div>
+                    <div><div class="font-bold">Movie Room</div><div class="text-xs text-gray-400">Host Streams Direct (P2P)</div></div>
                 </button>
                 <button onclick="createRoom('music')" class="w-full glass p-4 rounded-xl flex items-center gap-4 hover:bg-white/10 text-left">
                     <i class="fa-solid fa-music text-2xl text-cyan-400"></i>
-                    <div><div class="font-bold">Music Room</div><div class="text-xs text-gray-400">Audio + Thumbnail</div></div>
+                    <div><div class="font-bold">Music Room</div><div class="text-xs text-gray-400">Audio Sync + Thumbnail</div></div>
                 </button>
                 <button onclick="createRoom('youtube')" class="w-full glass p-4 rounded-xl flex items-center gap-4 hover:bg-white/10 text-left">
                     <i class="fa-brands fa-youtube text-2xl text-cyan-400"></i>
@@ -265,8 +260,20 @@
         </div>
     </div>
 
-    <!-- ================= FULL SCREEN ROOM VIEW ================= -->
+    <!-- FULL SCREEN ROOM VIEW -->
     <div id="roomView">
+        <!-- USER INTERACTION OVERLAY TO UNLOCK BROWSER AUDIO/AUTOPLAY -->
+        <div id="interactionOverlay" class="fixed inset-0 bg-black/90 z-[100] hidden flex-col items-center justify-center backdrop-blur-md px-6 text-center">
+            <div class="w-16 h-16 rounded-full bg-cyan-600/30 flex items-center justify-center text-cyan-400 text-3xl mb-4 animate-bounce">
+                <i class="fa-solid fa-headphones"></i>
+            </div>
+            <h2 class="text-xl font-bold text-white mb-2">Sync Stream Audio</h2>
+            <p class="text-xs text-gray-400 max-w-xs mb-6">Browsers block automatic sound until you interact. Tap below to unlock instant audio.</p>
+            <button onclick="unlockAudioAndJoin()" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black px-8 py-4 rounded-2xl shadow-[0_0_20px_rgba(8,145,178,0.5)] active:scale-95 transition-all">
+                JOIN & UNMUTE NOW
+            </button>
+        </div>
+
         <div class="glass p-4 flex justify-between items-center sticky top-0 z-50">
             <button onclick="leaveRoom()" class="bg-red-500/20 text-red-400 px-3 py-1 rounded-lg font-bold text-xs">LEAVE</button>
             <div class="text-center">
@@ -282,7 +289,7 @@
                 <h3 class="text-xs font-bold text-cyan-400">HOST MEDIA CONTROLS</h3>
                 
                 <div id="movieInputArea" class="hidden">
-                    <label class="block text-xs text-gray-400 mb-1">Select Local File (Members must select same file):</label>
+                    <label class="block text-xs text-gray-400 mb-1">Select Local Movie (Streams live to peers via P2P):</label>
                     <input type="file" accept="video/*" onchange="loadLocalMedia(this)" class="w-full text-sm">
                 </div>
                 
@@ -382,6 +389,10 @@
         const WS_URL = 'wss://syncbeat-backend1.onrender.com';
         const YOUTUBE_API_KEY = 'AIzaSyDzvPXVkAkiW6xMzo6zV67lpMNRF_lM200';
         
+        const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+        let rtcPeerConnections = {};
+        let localMediaStream = null;
+
         const ALL_TASKS = [];
         const avatarsPool = ['🐱 Anime Cat', '🎬 Movie Buff', '🧑‍🚀 Space Explorer', '🥷 Neon Warrior', '🌌 Cosmic', '🕹️ Arcade', '🎹 Synthwave', '🧙 Fantasy', '🚀 Astronaut', '🎧 Neon DJ'];
         const categoriesPool = ['Room Master', 'Reaction King', 'Night Owl', 'Music Lover', 'Movie Fan', 'Chat Legend', 'Social Star', 'Sync Expert', 'VIP Pioneer', 'Elite Host'];
@@ -405,7 +416,7 @@
             'smileys': ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾'],
             'gestures': ['👋','🤚','🖐','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀','👁','👅','👄','💋','🩸'],
             'animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐽','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🪱','🐛','🦋','🐌','🐞','🐜','🪰','🪲','🪳','🦟','🦗','🕷','🕸','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🦭','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿','🦔','🐉','🐲','🌵','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🎍','🪴','🎋','🍃','🍂','🍁','🍄','🐚','🪨','🌾','💐','🌷','🌹','🥀','🌺','🌸','🌼','🌻','🌞','🌝','🌛','🌜','🌚','🌕','🌖','🌗','🌘','🌑','🌒','🌓','🌔','🌙','🌎','🌍','🌏','🪐','💫','⭐️','🌟','✨','⚡️','☄️','💥','🔥','🌪','🌈','☀️','🌤','⛅️','🌥','☁️','🌦','🌧','⛈','🌩','🌨','❄️','☃️','⛄️','🌬','💨','💧','💦','☔️','☂️','🌊','🌫'],
-            'food': ['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🫔','サラダ','🥘','🫕','🥫','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥠','🥮','🍢','🍡','🍧','🍨','🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🥛','🍼','🫖','☕️','🍵','🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊','🥄','🍴','🍽','🥣','🥡','🥢','🧂'],
+            'food': ['🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭','🍔','🍟','🍕','🫓','🥪','🥙','🧆','🌮','🌯','🫔','🥗','🥘','🫕','🥫','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥠','🥮','🍢','🍡','🍧','🍨','🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🥛','🍼','🫖','☕️','🍵','🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊','🥄','🍴','🍽','🥣','🥡','🥢','🧂'],
             'activities': ['⚽️','🏀','🏈','⚾️','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳️','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸','🥌','🎿','⛷','🏂','🪂','🏋️‍♀️','🏋️‍♂️','🤼‍♀️','🤼‍♂️','🤸‍♀️','🤸‍♂️','⛹️‍♀️','⛹️‍♂️','🤺','🤾‍♀️','🤾‍♂️','🏌️‍♀️','🏌️‍♂️','🏇','🧘‍♀️','🧘‍♂️','🏄‍♀️','🏄‍♂️','🏊‍♀️','🏊‍♂️','🤽‍♀️','🤽‍♂️','🚣‍♀️','🚣‍♂️','🧗‍♀️','🧗‍♂️','🚵‍♀️','🚵‍♂️','🚴‍♀️','🚴‍♂️','🏆','🥇','🥈','🥉','🏅','🎖','🏵','🎗','🎫','🎟','🎪','🤹‍♀️','🤹‍♂️','🎭','🩰','🎨','🎬','🎤','🎧','🎼','🎹','🥁','🪘','🎷','🎺','🪗','🎸','🪕','🎻','🎲','♟','🎯','🎳','🎮','🎰','🧩'],
             'travel': ['🚗','🚕','🚙','🚌','🚎','🏎','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🦯','🦽','🦼','🛴','🚲','🛵','🏍','🛺','🚨','🚔','🚍','🚘','🚖','🚡','🚠','🚟','🚃','🚋','🚞','🚝','🚄','🚅','🚈','🚂','🚆','🚇','🚊','✈️','🛫','🛬','🛩','💺','🚀','🛸','🚁','🛶','⛵️','🚤','🛥','🛳','⛴','🚢','⚓️','🪝','⛽️','🚧','🚦','🚥','🚏','🗺','🗿','🗽','🗼','🏰','🏯','🏟','🎡','🎢','🎠','⛲️','⛱','🏖','🏝','🏜','🌋','⛰','🏔','🗻','🏕','⛺️','🛖','🏠','🏡','🏘','🏚','🏗','🏭','🏢','🏬','🏣','🏤','🏥','🏦','🏨','🏪','🏫','🏩','💒','🏛','⛪️','🕌','🕍','🛕','🕋','⛩','🛤','🛣','🗾','🎑','🏞','🌅','🌄','🌠','🎇','🎆','🌇','🌆','🏙','🌃','🌌','🌉','🌁'],
             'objects': ['⌚️','📱','📲','💻','⌨️','🖥','🖨','🖱','🖲','🕹','🗜','💽','💾','💿','📀','📼','📷','📸','📹','🎥','📽','🎞','📞','☎️','📟','📠','📺','📻','🎙','🎚','🎛','🧭','⏱','⏲','⏰','🕰','⌛️','⏳','📡','🔋','🔌','💡','🔦','🕯','🪔','🧯','🛢','💸','💵','💴','💶','💷','🪙','💰','💳','💎','⚖️','🪜','🧰','🪛','🔧','🔨','⚒','🛠','⛏','🪚','🔩','⚙️','🪤','🧱','⛓','🧲','🔫','💣','🧨','🪓','🔪','🗡','⚔️','🛡','🚬','⚰️','🪦','⚱️','🏺','🔮','📿','🧿','💈','⚗️','🔭','🔬','🕳','🩹','🩺','💊','💉','🩸','🧬','🦠','🧫','🧪','🌡','🧹','🪠','🧺','🧻','🚽','🚰','🚿','🛁','🛀','🧼','🪥','🪒','🧽','🪣','🧴','🛎','🔑','🗝','🚪','🪑','🛋','🛏','🛌','🧸','🪆','🖼','🪞','🪟','🛍','🛒','🎁','🎈','🎏','🎀','🪄','🪅','🎊','🎉','🎎','🏮','🎐','🧧','✉️','📩','📨','📧','💌','📥','📤','📦','🏷','📪','📫','📬','📭','📮','📯','📜','📃','📄','📑','🧾','📊','📈','📉','🗒','🗓','📆','📅','🗑','📇','🗃','🗳','🗄','📋','📁','📂','🗂','🗞','📰','📓','📔','📒','📕','📗','📘','📙','📚','📖','🔖','🧷','🔗','📎','🖇','📐','📏','🧮','📌','📍','✂️','🖊','🖋','✒️','🖌','🖍','📝','✏️','🔍','🔎','🔏','🔐','🔒','🔓'],
@@ -439,6 +450,7 @@
         let syncInterval = null;
         let progressInterval = null;
         let lastHostTime = 0;
+        let currentLoadedMedia = null;
 
         document.addEventListener('click', (e) => {
             const searchArea = document.getElementById('youtubeMusicInputArea');
@@ -460,6 +472,24 @@
             const t = document.getElementById('toast');
             t.textContent = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function unlockAudioAndJoin() {
+            document.getElementById('interactionOverlay').classList.remove('flex');
+            document.getElementById('interactionOverlay').classList.add('hidden');
+            
+            if (ytPlayerObj && typeof ytPlayerObj.unMute === 'function') {
+                ytPlayerObj.unMute();
+                ytPlayerObj.setVolume(100);
+                if (isPlaying) ytPlayerObj.playVideo();
+            }
+            
+            const movieVideo = document.getElementById('movieVideo');
+            if (movieVideo) {
+                movieVideo.muted = false;
+                if (isPlaying) movieVideo.play().catch(err => console.log("Awaiting live stream..."));
+            }
+            showToast("Audio & Stream Synchronized!");
         }
 
         function toggleEmojiKeyboard() {
@@ -512,7 +542,6 @@
             renderSettings();
         }
 
-        // --- PERSISTENCE: NO DATA LOST ON REFRESH ---
         function saveUserData() {
             localStorage.setItem('sb_name', user.name);
             localStorage.setItem('sb_avatar', user.avatar);
@@ -616,11 +645,7 @@
         }
 
         function equipBadge(badgeType) {
-            if(user.equippedBadge === badgeType) {
-                user.equippedBadge = 'none';
-            } else {
-                user.equippedBadge = badgeType;
-            }
+            user.equippedBadge = (user.equippedBadge === badgeType) ? 'none' : badgeType;
             saveUserData();
             updateHeader();
             showToast(`Badge status updated!`);
@@ -782,7 +807,7 @@
                 }
             };
 
-            ws.onmessage = (e) => {
+            ws.onmessage = async (e) => {
                 const msg = JSON.parse(e.data);
                 if(msg.type === 'ROOM_HOSTED_SUCCESS' || msg.type === 'ROOM_JOIN_SUCCESS') {
                     room = { active: true, code: code, type: msg.roomType || type, role: role };
@@ -790,11 +815,38 @@
                 }
                 if(msg.type === 'ROOM_NOT_FOUND') { showToast("Room not found or already closed."); ws.close(); }
                 if(msg.type === 'ROOM_CLOSED') { showToast("Host closed the room. Returning to menu."); forceLeaveRoom(); }
-                if(msg.type === 'PEER_LIST') { renderConnectedDevices(msg.peers); }
+                
+                if(msg.type === 'PEER_LIST') { 
+                    renderConnectedDevices(msg.peers); 
+                    // Host re-broadcasts the current media state to late joiners
+                    if(room.role === 'HOST' && currentLoadedMedia && ws.readyState === WebSocket.OPEN) {
+                        let curTime = 0;
+                        if(room.type === 'youtube' || room.type === 'music') curTime = ytPlayerObj ? ytPlayerObj.getCurrentTime() : 0;
+                        else if(activePlayer) curTime = activePlayer.currentTime;
+                        
+                        ws.send(JSON.stringify({
+                            ...currentLoadedMedia,
+                            time: curTime,
+                            isPlaying: isPlaying
+                        }));
+                    }
+                }
+                
                 if(msg.type === 'LOAD_VIDEO') { handleRemoteMediaLoad(msg); }
                 if(msg.type === 'CONTROL' || msg.type === 'SYNC_TIME' || msg.type === 'SEEK_TIME') { handleRemoteSync(msg); }
                 if(msg.type === 'REACTION') { renderFloatingReaction(msg.emoji); }
                 if(msg.type === 'CHAT') { renderChat(msg.sender, msg.text, msg.equippedBadge); }
+
+                // WebRTC Signaling Handlers for P2P Movie Stream
+                if(msg.type === 'RTC_OFFER' && room.role === 'MEMBER') {
+                    handleRtcOffer(msg.offer);
+                }
+                if(msg.type === 'RTC_ANSWER' && room.role === 'HOST') {
+                    handleRtcAnswer(msg.senderId, msg.answer);
+                }
+                if(msg.type === 'RTC_ICE') {
+                    handleRtcCandidate(msg.senderId, msg.candidate);
+                }
             };
 
             ws.onerror = () => { showToast("Server connection error."); };
@@ -862,11 +914,14 @@
                 if(room.type === 'movie') document.getElementById('movieInputArea').classList.remove('hidden');
                 else document.getElementById('youtubeMusicInputArea').classList.remove('hidden');
                 startHostBroadcast();
+            } else {
+                document.getElementById('interactionOverlay').classList.remove('hidden');
+                document.getElementById('interactionOverlay').classList.add('flex');
             }
 
             if((room.type === 'youtube' || room.type === 'music') && !ytPlayerObj) {
                 ytPlayerObj = new YT.Player('ytPlayerDiv', { 
-                    height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls':1, 'disablekb':0, 'playsinline':1 },
+                    height:'100%', width:'100%', playerVars: { 'autoplay':1, 'controls': room.role === 'HOST' ? 1 : 0, 'disablekb':0, 'playsinline':1 },
                     events: { 'onStateChange': onPlayerStateChange }
                 });
             }
@@ -875,6 +930,7 @@
                 document.getElementById('wrap-youtube').classList.remove('hidden');
                 document.getElementById('wrap-youtube').classList.add('block');
             } else if (room.type === 'music') {
+                // Ensure iframe plays audio while visually hidden
                 document.getElementById('wrap-youtube').className = "absolute w-1 h-1 opacity-0 pointer-events-none -z-50";
                 document.getElementById('wrap-music-ui').classList.remove('hidden');
                 document.getElementById('wrap-music-ui').classList.add('flex');
@@ -897,14 +953,23 @@
         function forceLeaveRoom() {
             if(ws) ws.close();
             room = { active: false, code: '', type: '', role: 'MEMBER' };
+            currentLoadedMedia = null;
             clearInterval(syncInterval); clearInterval(progressInterval);
             
+            if(localMediaStream) {
+                localMediaStream.getTracks().forEach(track => track.stop());
+                localMediaStream = null;
+            }
+            Object.values(rtcPeerConnections).forEach(pc => pc.close());
+            rtcPeerConnections = {};
+
             if(ytPlayerObj && typeof ytPlayerObj.stopVideo === 'function') {
                 ytPlayerObj.stopVideo();
             }
             
             const movieVideo = document.getElementById('movieVideo');
             movieVideo.pause();
+            movieVideo.srcObject = null;
             movieVideo.removeAttribute('src');
             movieVideo.load();
             
@@ -920,6 +985,8 @@
             document.getElementById('timeTotal').textContent = '0:00';
 
             document.getElementById('mediaSearchInput').value = '';
+            document.getElementById('interactionOverlay').classList.remove('flex');
+            document.getElementById('interactionOverlay').classList.add('hidden');
             
             document.getElementById('roomView').classList.remove('active');
             document.getElementById('bottomNav').style.display = 'flex';
@@ -1000,26 +1067,116 @@
             }
             activePlayer = ytPlayerObj;
             ytPlayerObj.loadVideoById({videoId: videoData.videoId, startSeconds: 0});
+            
+            currentLoadedMedia = {
+                type: 'LOAD_VIDEO',
+                mode: room.type,
+                ytId: videoData.videoId,
+                title: videoData.title,
+                artist: videoData.uploaderName,
+                thumb: videoData.thumbUrl
+            };
+
             if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ 
-                    type: 'LOAD_VIDEO', mode: room.type, ytId: videoData.videoId, title: videoData.title, artist: videoData.uploaderName, thumb: videoData.thumbUrl
-                }));
+                ws.send(JSON.stringify(currentLoadedMedia));
             }
         }
 
-        function loadLocalMedia(input) {
+        // HOST: Streams local video directly via WebRTC without requiring peers to upload
+        async function loadLocalMedia(input) {
             const file = input.files[0];
             if(!file) return;
-            const url = URL.createObjectURL(file);
-            document.getElementById('mediaTitle').textContent = file.name;
-            activePlayer = document.getElementById('movieVideo');
-            activePlayer.src = url;
-            setupHTML5Listeners(activePlayer);
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'LOAD_VIDEO', mode: 'movie', title: file.name }));
+            
+            const videoEl = document.getElementById('movieVideo');
+            videoEl.src = URL.createObjectURL(file);
+            videoEl.muted = false;
+            await videoEl.play();
+            
+            document.getElementById('mediaTitle').textContent = "Streaming: " + file.name;
+            activePlayer = videoEl;
+            setupHTML5Listeners(videoEl);
+
+            if(videoEl.captureStream) {
+                localMediaStream = videoEl.captureStream();
+            } else if(videoEl.mozCaptureStream) {
+                localMediaStream = videoEl.mozCaptureStream();
+            }
+
+            currentLoadedMedia = { type: 'LOAD_VIDEO', mode: 'movie', title: file.name };
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(currentLoadedMedia));
+            }
+
+            // Create RTC offer to stream to peers
+            createRtcOffer();
+        }
+
+        function createRtcOffer() {
+            if(!localMediaStream) return;
+            const pc = new RTCPeerConnection(iceServers);
+            rtcPeerConnections['broadcast'] = pc;
+
+            localMediaStream.getTracks().forEach(track => pc.addTrack(track, localMediaStream));
+
+            pc.onicecandidate = (event) => {
+                if (event.candidate && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'RTC_ICE', candidate: event.candidate, senderId: user.deviceId }));
+                }
+            };
+
+            pc.createOffer().then(offer => {
+                return pc.setLocalDescription(offer);
+            }).then(() => {
+                if(ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'RTC_OFFER', offer: pc.localDescription, senderId: user.deviceId }));
+                }
+            });
+        }
+
+        function handleRtcOffer(offer) {
+            const pc = new RTCPeerConnection(iceServers);
+            rtcPeerConnections['host'] = pc;
+
+            pc.ontrack = (event) => {
+                const videoEl = document.getElementById('movieVideo');
+                videoEl.srcObject = event.streams[0];
+                activePlayer = videoEl;
+                videoEl.play().catch(e => console.log("Unlock screen needed for audio"));
+            };
+
+            pc.onicecandidate = (event) => {
+                if (event.candidate && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'RTC_ICE', candidate: event.candidate, senderId: user.deviceId }));
+                }
+            };
+
+            pc.setRemoteDescription(new RTCSessionDescription(offer))
+            .then(() => pc.createAnswer())
+            .then(answer => pc.setLocalDescription(answer))
+            .then(() => {
+                if(ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'RTC_ANSWER', answer: pc.localDescription, senderId: user.deviceId }));
+                }
+            });
+        }
+
+        function handleRtcAnswer(senderId, answer) {
+            const pc = rtcPeerConnections['broadcast'];
+            if(pc) {
+                pc.setRemoteDescription(new RTCSessionDescription(answer));
+            }
+        }
+
+        function handleRtcCandidate(senderId, candidate) {
+            const targetPc = room.role === 'HOST' ? rtcPeerConnections['broadcast'] : rtcPeerConnections['host'];
+            if (targetPc) {
+                targetPc.addIceCandidate(new RTCIceCandidate(candidate)).catch(e => console.log(e));
+            }
         }
 
         function handleRemoteMediaLoad(msg) {
             if(room.role === 'HOST') return;
+            
             if((msg.mode === 'youtube' || msg.mode === 'music') && ytPlayerObj) {
                 document.getElementById('mediaTitle').textContent = msg.mode === 'youtube' ? "Host is playing Video" : "Host is playing Audio";
                 if(msg.mode === 'music') {
@@ -1028,32 +1185,59 @@
                     document.getElementById('musicThumbUi').src = msg.thumb || "";
                 }
                 activePlayer = ytPlayerObj;
-                ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: 0});
-            }
-            else if(msg.mode === 'movie') {
-                document.getElementById('mediaTitle').textContent = `Host selected: ${msg.title}. Upload same file to view.`;
-                document.getElementById('movieInputArea').classList.remove('hidden');
-                document.getElementById('hostControls').classList.remove('hidden');
+                ytPlayerObj.loadVideoById({videoId: msg.ytId, startSeconds: msg.time || 0});
+            } else if(msg.mode === 'movie') {
+                document.getElementById('mediaTitle').textContent = `Live Host Stream: ${msg.title}`;
             }
         }
 
         function setupHTML5Listeners(player) {
-            player.onplay = () => { isPlaying = true; updatePlayBtn(); if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'CONTROL', action:'play', time:player.currentTime})); };
-            player.onpause = () => { isPlaying = false; updatePlayBtn(); if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'CONTROL', action:'pause', time:player.currentTime})); };
+            player.onplay = () => { 
+                isPlaying = true; 
+                updatePlayBtn(); 
+                if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) {
+                    ws.send(JSON.stringify({type:'CONTROL', action:'play', time:player.currentTime})); 
+                }
+            };
+            player.onpause = () => { 
+                isPlaying = false; 
+                updatePlayBtn(); 
+                if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) {
+                    ws.send(JSON.stringify({type:'CONTROL', action:'pause', time:player.currentTime})); 
+                }
+            };
         }
+
         function onPlayerStateChange(e) {
-            if(e.data === YT.PlayerState.PLAYING) { isPlaying = true; updatePlayBtn(); if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'CONTROL', action:'play', time:ytPlayerObj.getCurrentTime()})); }
-            if(e.data === YT.PlayerState.PAUSED) { isPlaying = false; updatePlayBtn(); if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'CONTROL', action:'pause', time:ytPlayerObj.getCurrentTime()})); }
+            if(e.data === YT.PlayerState.PLAYING) { 
+                isPlaying = true; 
+                updatePlayBtn(); 
+                if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) {
+                    ws.send(JSON.stringify({type:'CONTROL', action:'play', time:ytPlayerObj.getCurrentTime()})); 
+                }
+            }
+            if(e.data === YT.PlayerState.PAUSED) { 
+                isPlaying = false; 
+                updatePlayBtn(); 
+                if(room.role==='HOST' && ws.readyState===WebSocket.OPEN) {
+                    ws.send(JSON.stringify({type:'CONTROL', action:'pause', time:ytPlayerObj.getCurrentTime()})); 
+                }
+            }
         }
 
         function togglePlayPause() {
             if(room.role === 'MEMBER') return showToast("Host controls playback!");
             if(!activePlayer) return;
-            if(room.type === 'youtube' || room.type === 'music') { if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo(); } 
-            else { if(isPlaying) activePlayer.pause(); else activePlayer.play(); }
+            if(room.type === 'youtube' || room.type === 'music') { 
+                if(isPlaying) ytPlayerObj.pauseVideo(); else ytPlayerObj.playVideo(); 
+            } else { 
+                if(isPlaying) activePlayer.pause(); else activePlayer.play(); 
+            }
         }
 
-        function updatePlayBtn() { document.getElementById('playPauseBtn').innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>'; }
+        function updatePlayBtn() { 
+            document.getElementById('playPauseBtn').innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>'; 
+        }
 
         function startHostBroadcast() {
             clearInterval(syncInterval);
@@ -1071,8 +1255,12 @@
             lastHostTime = targetTime; 
             
             let current = (room.type === 'youtube' || room.type === 'music') ? ytPlayerObj.getCurrentTime() : activePlayer.currentTime;
-            if(msg.action === 'play') { if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.playVideo(); else activePlayer.play(); }
-            else if(msg.action === 'pause') { if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.pauseVideo(); else activePlayer.pause(); }
+            
+            if(msg.action === 'play') { 
+                if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.playVideo(); else activePlayer.play(); 
+            } else if(msg.action === 'pause') { 
+                if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.pauseVideo(); else activePlayer.pause(); 
+            }
             
             if(Math.abs(current - targetTime) > 1.5 || msg.action === 'seek') {
                 if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.seekTo(targetTime, true);
@@ -1114,7 +1302,6 @@
                 
                 if (room.role === 'MEMBER') {
                     if (Math.abs(cur - lastHostTime) > 2.0 && lastHostTime > 0) {
-                        showToast("Host controls playback! Correcting sync...");
                         if(room.type === 'youtube' || room.type === 'music') ytPlayerObj.seekTo(lastHostTime, true);
                         else activePlayer.currentTime = lastHostTime;
                         cur = lastHostTime; 
@@ -1128,7 +1315,12 @@
                 }
             }, 500);
         }
-        function formatTime(s) { const m=Math.floor(s/60); const sc=Math.floor(s%60); return `${m}:${sc<10?'0':''}${sc}`; }
+
+        function formatTime(s) { 
+            const m=Math.floor(s/60); 
+            const sc=Math.floor(s%60); 
+            return `${m}:${sc<10?'0':''}${sc}`; 
+        }
 
         function sendReaction(emoji) {
             renderFloatingReaction(emoji);
